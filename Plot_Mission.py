@@ -110,6 +110,7 @@ def plot_mission(results,line_style='bo-'):
         mass   = segment.conditions.weights.total_mass[:,0]
         altitude = segment.conditions.freestream.altitude[:,0]
         mdot   = segment.conditions.weights.vehicle_mass_rate[:,0]
+        # spray_rate = segment.sprayer_rate
         thrust =  segment.conditions.frames.body.thrust_force_vector[:,0]
         sfc    = 3600. * mdot / 0.1019715 / thrust	
 

@@ -10,6 +10,7 @@
 
 import SUAVE
 from SUAVE.Core import Units
+from sprayer import update_weights_sprayer
 
 import numpy as np
 
@@ -188,6 +189,9 @@ def base(analyses):
     segment.distance   = 3400. * Units.km
 
     # segment.conditions.weights.vehicle_mass_rate = 2 * Units['kg/s']
+
+    segment.process.iterate.conditions.weights = update_weights_sprayer
+    segment.sprayer_rate = 1.2 * Units['kg/s']
 
     # add to mission
     mission.append_segment(segment)

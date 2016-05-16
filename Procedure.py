@@ -308,7 +308,7 @@ def post_process(nexus):
     zero_fuel_weight         = payload+operating_empty
     
     summary.max_zero_fuel_margin    = (design_landing_weight - zero_fuel_weight)/zero_fuel_weight
-    summary.base_mission_fuelburn   = design_takeoff_weight - results.base.segments['descent_3'].conditions.weights.total_mass[-1]
+    summary.base_mission_fuelburn   = design_takeoff_weight - results.base.segments['descent_3'].conditions.weights.total_mass[-1] # - results.base.segments['cruise'].conditions.sprayer_rate
  
   
 

@@ -39,8 +39,20 @@ def main():
     # variable_sweep(problem)  #uncomment this to view some contours of the problem
     print 'fuel burn=', problem.summary.base_mission_fuelburn
     print 'fuel margin=', problem.all_constraints()
+
+
     
     Plot_Mission.plot_mission(problem.results)
+    # print problem.results.base.segments.cruise.conditions.keys()
+
+    # print problem.results.base.segments.cruise.conditions.propulsion
+
+    # print problem.results.base.segments.cruise.conditions.stability.dynamic.cn_r #'cn_r', 'cl_p', 'cl_beta', 'cm_q', 'cm_alpha_dot', 'cz_alpha']
+    # print problem.results.base.segments.cruise.conditions.stability.static.cm_alpha
+    # print problem.results.base.segments.cruise.conditions.stability.static.cn_beta
+
+
+
 
     # print problem.results
 
