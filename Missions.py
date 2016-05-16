@@ -176,7 +176,7 @@ def base(analyses):
     segment.atmosphere   = atmosphere
     segment.planet       = planet
 
-    segment.altitude_end = 65600. * Units.ft
+    segment.altitude_end = 20. * Units.km
     segment.air_speed    = 210.0  * Units['m/s']
     segment.climb_rate   = 7.   * Units['m/s']
 

@@ -239,7 +239,7 @@ def weight(nexus):
    
     
     weights = nexus.analyses.cruise.weights.evaluate()
-    print weights
+    # print weights # fix
     weights = nexus.analyses.landing.weights.evaluate()
     weights = nexus.analyses.takeoff.weights.evaluate()
     weights = nexus.analyses.short_field_takeoff.weights.evaluate()
@@ -324,7 +324,7 @@ def post_process(nexus):
     summary.max_zero_fuel_margin    = (design_landing_weight - zero_fuel_weight)/zero_fuel_weight
     summary.base_mission_fuelburn   = results.base.segments[-1].conditions.weights.fuel_burn[-1] #esults.base.segments[i].conditions.weights.fuel_burn0#results.base.segments.conditions.weights.fuel_burn                         #design_takeoff_weight - results.base.segments['descent_3'].conditions.weights.total_mass[-1] # - results.base.segments['cruise'].conditions.sprayer_rate
     summary.base_mission_sprayed = results.base.segments[-1].conditions.weights.spray[-1]
-
+    summary.nothing           = 0.0
 
     hf = vehicle.fuselages.fuselage.heights.at_wing_root_quarter_chord
     wf = vehicle.fuselages.fuselage.width

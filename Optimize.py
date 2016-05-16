@@ -38,7 +38,7 @@ def main():
     
     # variable_sweep(problem)  #uncomment this to view some contours of the problem
     print 'fuel burn=', problem.summary.base_mission_fuelburn
-    print 'fuel margin=', problem.all_constraints()
+    # print 'fuel margin=', problem.all_constraints()
 
 
     
@@ -86,11 +86,11 @@ def setup():
 
     #   [ tag                            , initial, (lb,ub)             , scaling , units ]
     problem.inputs = np.array([
-         [ 'wing_area'                    ,  567    , (   500. ,   600.   ) ,   420. , Units.meter**2],
-          ['cruise_speed', 190., (180., 210.), 200, Units['m/s'] ],
-          ['return_cruise_alt', 15.8, (8., 20.), 10, Units.km ]
+         [ 'wing_area'                    ,  480    , (   350. ,   650.   ) ,   500. , Units.meter**2], # was 480 before
+          ['cruise_speed', 684., (600., 900.), 500, Units['km/h'] ],
+          ['return_cruise_alt', 15.8, (8., 20.), 10, Units.km ],
         # []
-        # [ 'cruise_altitude'              ,  20    , (   19   ,    21.   ) ,   10.  , Units.km],
+        [ 'cruise_altitude'              ,  20    , (   19.5   ,    21.   ) ,   10.  , Units.km]
 
     ])
     
@@ -103,17 +103,20 @@ def setup():
     # throw an error if the user isn't specific about wildcards
     # [ tag, scaling, units ]
     problem.objective = np.array([
-        [ 'fuel_burn', 36000, Units.kg ]
+        [ 'Nothing', 1, Units.kg ]
     ])
     
     
     # -------------------------------------------------------------------
     # Constraints
     # -------------------------------------------------------------------
-    
+
+    # stuctural weight below some threshold
     # [ tag, sense, edge, scaling, units ]
     problem.constraints = np.array([
-        [ 'design_range_fuel_margin' , '>', 0., 1E-1, Units.less], #fuel margin defined here as fuel
+               # [ 'Nothing', '=', 0. ,1E-1, Units.kg]
+        [ 'fuel_burn', '<', 40000, 1, Units.kg ]
+        # [ 'design_range_fuel_margin' , '>', 0., 1E-1, Units.less], #fuel margin defined here as fuel
     ])
 
 
@@ -126,10 +129,12 @@ def setup():
     problem.aliases = [
         [ 'wing_area'                        ,   ['vehicle_configurations.*.wings.main_wing.areas.reference',
                                                   'vehicle_configurations.*.reference_area'                    ]],
-        [ 'cruise_altitude'                  , 'missions.base.segments.climb_5.altitude_end'                    ],
+        [ 'cruise_speed'                  , "missions.base.segments.cruise.air_speed"                    ],
+        [ 'cruise_altitude'                  , "missions.base.segments.climb_5.altitude_end"                    ],
         [ 'fuel_burn'                        ,    'summary.base_mission_fuelburn'                               ],
         [ 'design_range_fuel_margin'         ,    'summary.max_zero_fuel_margin'                                ],
-        [ 'return_cruise_alt'         ,    'missions.base.segments.descent_1.altitude_end'                      ]
+        [ 'return_cruise_alt'         ,    'missions.base.segments.descent_1.altitude_end'                      ],
+        ['Nothing'          , 'summary.nothing' ]
     ]    
 
 
