@@ -23,7 +23,7 @@ import SUAVE.Optimization.Package_Setups.scipy_setup as scipy_setup
 def main():
     problem = setup()
 
-    output = problem.objective()  #uncomment this line when using the default inputs
+    # output = problem.objective()  #uncomment this line when using the default inputs
     
     '''
     #uncomment these lines when you want to start an optimization problem from a different initial guess
@@ -32,8 +32,8 @@ def main():
     scaled_inputs                            = np.multiply(inputs,scaling)
     problem.optimization_problem.inputs[:,1] = scaled_inputs
     '''
-    # output = scipy_setup.SciPy_Solve(problem,solver='SLSQP')
-    
+    output = scipy_setup.SciPy_Solve(problem,solver='SLSQP')
+
  
     
     # variable_sweep(problem)  #uncomment this to view some contours of the problem
@@ -46,6 +46,16 @@ def main():
     # print problem.results.base.segments.cruise.conditions.keys()
 
     # print problem.results.base.segments.cruise.conditions.propulsion
+
+    cruise1_time =  problem.results.base.segments.cruise.conditions.frames.inertial.time[:,0] / Units.min
+    cruise1_dur = cruise1_time.max()-cruise1_time.min()
+    print "spraying duration=",cruise1_dur , " minutes"
+    print "aerosol released=", problem.summary.base_mission_sprayed  , " kg"
+
+    # segment.sprayer_rate
+
+    # print problem.results.base.segments.cruise.keys()
+    # print problem.results.base.segments.cruise.conditions.keys()
 
     # print problem.results.base.segments.cruise.conditions.stability.dynamic.cn_r #'cn_r', 'cl_p', 'cl_beta', 'cm_q', 'cm_alpha_dot', 'cz_alpha']
     # print problem.results.base.segments.cruise.conditions.stability.static.cm_alpha
@@ -77,8 +87,8 @@ def setup():
     #   [ tag                            , initial, (lb,ub)             , scaling , units ]
     problem.inputs = np.array([
          [ 'wing_area'                    ,  567    , (   500. ,   600.   ) ,   420. , Units.meter**2],
-         # ['cruise_speed', 190., (180., 210.), 200, Units['m/s'] ],
-         # ['return_cruise_alt', 15.8, (8., 20.), 10, Units.km ]
+          ['cruise_speed', 190., (180., 210.), 200, Units['m/s'] ],
+          ['return_cruise_alt', 15.8, (8., 20.), 10, Units.km ]
         # []
         # [ 'cruise_altitude'              ,  20    , (   19   ,    21.   ) ,   10.  , Units.km],
 
@@ -104,7 +114,6 @@ def setup():
     # [ tag, sense, edge, scaling, units ]
     problem.constraints = np.array([
         [ 'design_range_fuel_margin' , '>', 0., 1E-1, Units.less], #fuel margin defined here as fuel
-        ['fuel_burn', '<', 60500, 1, Units.kg]
     ])
 
 

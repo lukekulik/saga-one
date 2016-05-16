@@ -17,6 +17,7 @@ from SUAVE.Methods.Geometry.Two_Dimensional.Cross_Section.Propulsion.compute_tur
 from SUAVE.Methods.Center_of_Gravity.compute_component_centers_of_gravity import compute_component_centers_of_gravity
 from SUAVE.Methods.Center_of_Gravity.compute_aircraft_center_of_gravity import compute_aircraft_center_of_gravity
 from SUAVE.Methods.Aerodynamics.Fidelity_Zero.Lift.compute_max_lift_coeff import compute_max_lift_coeff
+from SUAVE.Methods.Flight_Dynamics.Dynamic_Stability.Full_Linearized_Equations.longitudinal import longitudinal
 
 
 # ----------------------------------------------------------------------        
@@ -297,6 +298,9 @@ def post_process(nexus):
 
             
     summary.max_throttle = max_throttle
+
+    # short_w_n, short_zeta, phugoid_w_n, phugoid_zeta = longitudinal(velocity, density, S_gross_w, mac, Cm_q, Cz_alpha, mass, Cm_alpha, Iy, Cm_alpha_dot, Cz_u, Cz_alpha_dot, Cz_q, Cw, Theta, Cx_u, Cx_alpha):
+
     
     # Fuel margin and base fuel calculations
 
@@ -306,11 +310,21 @@ def post_process(nexus):
     design_takeoff_weight    = vehicle.mass_properties.takeoff
     max_takeoff_weight       = nexus.vehicle_configurations.takeoff.mass_properties.max_takeoff
     zero_fuel_weight         = payload+operating_empty
-    
+    #
+    # print "Test"
+    # print
+    # print results.base.segments[0].conditions.weights.fuel_burn[:,0]
+
+    for i in range(1,len(results.base.segments)):
+        results.base.segments[i].conditions.weights.fuel_burn[:,0] += results.base.segments[i-1].conditions.weights.fuel_burn[-1]
+        results.base.segments[i].conditions.weights.spray[:,0] += results.base.segments[i-1].conditions.weights.spray[-1]
+
+
+
     summary.max_zero_fuel_margin    = (design_landing_weight - zero_fuel_weight)/zero_fuel_weight
-    summary.base_mission_fuelburn   = design_takeoff_weight - results.base.segments['descent_3'].conditions.weights.total_mass[-1] # - results.base.segments['cruise'].conditions.sprayer_rate
- 
-  
+    summary.base_mission_fuelburn   = results.base.segments[-1].conditions.weights.fuel_burn[-1] #esults.base.segments[i].conditions.weights.fuel_burn0#results.base.segments.conditions.weights.fuel_burn                         #design_takeoff_weight - results.base.segments['descent_3'].conditions.weights.total_mass[-1] # - results.base.segments['cruise'].conditions.sprayer_rate
+    summary.base_mission_sprayed = results.base.segments[-1].conditions.weights.spray[-1]
+
 
     hf = vehicle.fuselages.fuselage.heights.at_wing_root_quarter_chord
     wf = vehicle.fuselages.fuselage.width

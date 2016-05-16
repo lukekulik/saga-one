@@ -28,9 +28,6 @@ def setup(analyses):
     # ------------------------------------------------------------------
     base_mission = base(analyses)
     missions.base = base_mission 
- 
-
-    
 
 
 
@@ -59,6 +56,8 @@ def base(analyses):
 
     # base segment
     base_segment = Segments.Segment()
+    base_segment.process.iterate.conditions.weights = update_weights_sprayer
+
     atmosphere=SUAVE.Attributes.Atmospheres.Earth.US_Standard_1976()
     planet = SUAVE.Attributes.Planets.Earth()
     
@@ -66,7 +65,7 @@ def base(analyses):
     #   First Climb Segment: Constant Speed, Constant Rate
     # ------------------------------------------------------------------
 
-    segment = Segments.Climb.Constant_Speed_Constant_Rate()
+    segment = Segments.Climb.Constant_Speed_Constant_Rate(base_segment)
     segment.tag = "climb_1"
 
     # connect vehicle configuration
@@ -83,6 +82,9 @@ def base(analyses):
     segment.air_speed      = 118.0 * Units['m/s']
     segment.climb_rate     = 15. * Units['m/s']
 
+    # segment.process.iterate.conditions.weights = update_weights_sprayer
+    segment.sprayer_rate = 0 * Units['kg/s']
+
     # add to misison
     mission.append_segment(segment)
 
@@ -90,7 +92,7 @@ def base(analyses):
     #   Second Climb Segment: Constant Speed, Constant Rate
     # ------------------------------------------------------------------
 
-    segment = Segments.Climb.Constant_Speed_Constant_Rate()
+    segment = Segments.Climb.Constant_Speed_Constant_Rate(base_segment)
     segment.tag = "climb_2"
 
     # connect vehicle configuration
@@ -104,6 +106,9 @@ def base(analyses):
     segment.air_speed    = 148.0 * Units['m/s']
     segment.climb_rate   = 13. * Units['m/s']
 
+    # segment.process.iterate.conditions.weights = update_weights_sprayer
+    segment.sprayer_rate = 0 * Units['kg/s']
+
     # add to mission
     mission.append_segment(segment)
 
@@ -111,7 +116,7 @@ def base(analyses):
     #   Third Climb Segment: Constant Speed, Constant Climb Rate
     # ------------------------------------------------------------------
 
-    segment = Segments.Climb.Constant_Speed_Constant_Rate()
+    segment = Segments.Climb.Constant_Speed_Constant_Rate(base_segment)
     segment.tag = "climb_3"
 
     # connect vehicle configuration
@@ -125,6 +130,10 @@ def base(analyses):
     segment.air_speed    = 180.0  * Units['m/s']
     segment.climb_rate   = 10. * Units['m/s']
 
+    # segment.process.iterate.conditions.weights = update_weights_sprayer
+    segment.sprayer_rate = 0 * Units['kg/s']
+
+
     # add to mission
     mission.append_segment(segment)
     
@@ -132,7 +141,7 @@ def base(analyses):
     #   Fourth Climb Segment: Constant Speed, Constant Rate
     # ------------------------------------------------------------------
 
-    segment = Segments.Climb.Constant_Speed_Constant_Rate()
+    segment = Segments.Climb.Constant_Speed_Constant_Rate(base_segment)
     segment.tag = "climb_4"
 
     # connect vehicle configuration
@@ -146,6 +155,10 @@ def base(analyses):
     segment.air_speed    = 200.0* Units['m/s']
     segment.climb_rate   = 8. * Units['m/s']
 
+    # segment.process.iterate.conditions.weights = update_weights_sprayer
+    segment.sprayer_rate = 0 * Units['kg/s']
+
+
     # add to mission
     mission.append_segment(segment)   
     
@@ -153,7 +166,7 @@ def base(analyses):
     #   Fifth Climb Segment: Constant Speed, Constant Rate
     # ------------------------------------------------------------------
 
-    segment = Segments.Climb.Constant_Speed_Constant_Rate()
+    segment = Segments.Climb.Constant_Speed_Constant_Rate(base_segment)
     segment.tag = "climb_5"
 
     # connect vehicle configuration
@@ -167,6 +180,10 @@ def base(analyses):
     segment.air_speed    = 210.0  * Units['m/s']
     segment.climb_rate   = 7.   * Units['m/s']
 
+    # segment.process.iterate.conditions.weights = update_weights_sprayer
+    segment.sprayer_rate = 0 * Units['kg/s']
+
+
     # add to mission
     mission.append_segment(segment)    
     
@@ -175,7 +192,7 @@ def base(analyses):
     #   First Cruise Segment: constant speed, constant altitude
     # ------------------------------------------------------------------
 
-    segment = Segments.Cruise.Constant_Speed_Constant_Altitude()
+    segment = Segments.Cruise.Constant_Speed_Constant_Altitude(base_segment)
     segment.tag = "cruise"
 
     # connect vehicle configuration
@@ -190,8 +207,9 @@ def base(analyses):
 
     # segment.conditions.weights.vehicle_mass_rate = 2 * Units['kg/s']
 
-    segment.process.iterate.conditions.weights = update_weights_sprayer
-    segment.sprayer_rate = 1.2 * Units['kg/s']
+    # segment.process.iterate.conditions.weights = update_weights_sprayer
+    segment.sprayer_rate = 1.2121 * Units['kg/s']
+
 
     # add to mission
     mission.append_segment(segment)
@@ -200,7 +218,7 @@ def base(analyses):
     #   First Descent Segment: consant speed, constant segment rate
     # ------------------------------------------------------------------
 
-    segment = Segments.Descent.Constant_Speed_Constant_Rate()
+    segment = Segments.Descent.Constant_Speed_Constant_Rate(base_segment)
     segment.tag = "descent_1"
 
     # connect vehicle configuration
@@ -214,6 +232,10 @@ def base(analyses):
     segment.air_speed    = 684. * Units['km/h']
     segment.descent_rate = 2600. * Units['ft/min']
 
+    # segment.process.iterate.conditions.weights = update_weights_sprayer
+    segment.sprayer_rate = 0 * Units['kg/s']
+
+
     # add to mission
     mission.append_segment(segment)
 
@@ -221,7 +243,7 @@ def base(analyses):
     #   Second Cruise Segment: constant speed, constant altitude
     # ------------------------------------------------------------------
 
-    segment = Segments.Cruise.Constant_Speed_Constant_Altitude()
+    segment = Segments.Cruise.Constant_Speed_Constant_Altitude(base_segment)
     segment.tag = "cruise_2"
 
     # connect vehicle configuration
@@ -234,6 +256,10 @@ def base(analyses):
     segment.air_speed  = 684. * Units['km/h']
     segment.distance   = 3300. * Units.km
 
+    # segment.process.iterate.conditions.weights = update_weights_sprayer
+    segment.sprayer_rate = 0 * Units['kg/s']
+
+
     # add to mission
     mission.append_segment(segment)
 
@@ -242,7 +268,7 @@ def base(analyses):
     #   Second Descent Segment: consant speed, constant segment rate
     # ------------------------------------------------------------------
 
-    segment = Segments.Descent.Constant_Speed_Constant_Rate()
+    segment = Segments.Descent.Constant_Speed_Constant_Rate(base_segment)
     segment.tag = "descent_2"
 
     # connect vehicle configuration
@@ -256,6 +282,10 @@ def base(analyses):
     segment.air_speed    = 365.0 * Units.knots
     segment.descent_rate = 2300. * Units['ft/min']
 
+    # segment.process.iterate.conditions.weights = update_weights_sprayer
+    segment.sprayer_rate = 0 * Units['kg/s']
+
+
     # append to mission
     mission.append_segment(segment)
 
@@ -264,7 +294,7 @@ def base(analyses):
     #   Third Descent Segment: consant speed, constant segment rate
     # ------------------------------------------------------------------
 
-    segment = Segments.Descent.Constant_Speed_Constant_Rate()
+    segment = Segments.Descent.Constant_Speed_Constant_Rate(base_segment)
     segment.tag = "descent_3"
 
     # connect vehicle configuration
@@ -277,6 +307,10 @@ def base(analyses):
     segment.altitude_end = 0.0   * Units.km
     segment.air_speed    = 250.0 * Units.knots
     segment.descent_rate = 1500. * Units['ft/min']
+
+    # segment.process.iterate.conditions.weights = update_weights_sprayer
+    segment.sprayer_rate = 0 * Units['kg/s']
+
 
     # append to mission
     mission.append_segment(segment)

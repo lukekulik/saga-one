@@ -110,9 +110,18 @@ def plot_mission(results,line_style='bo-'):
         mass   = segment.conditions.weights.total_mass[:,0]
         altitude = segment.conditions.freestream.altitude[:,0]
         mdot   = segment.conditions.weights.vehicle_mass_rate[:,0]
+
         # spray_rate = segment.sprayer_rate
         thrust =  segment.conditions.frames.body.thrust_force_vector[:,0]
-        sfc    = 3600. * mdot / 0.1019715 / thrust	
+        sfc    = 3600. * mdot / 0.1019715 / thrust
+
+        # if segment.conditions.
+
+        fuel_burn = segment.conditions.weights.fuel_burn[:,0]
+        sprayed_weight = segment.conditions.weights.spray[:,0]
+
+
+
 
         axes = fig.add_subplot(3,1,1)
         axes.plot( time , altitude , line_style )
@@ -123,8 +132,12 @@ def plot_mission(results,line_style='bo-'):
 
         axes = fig.add_subplot(3,1,2)
         axes.plot( time , mass , 'ro-' )
+        axes.plot( time , fuel_burn , line_style )
+        axes.plot( time , sprayed_weight , 'go-' )
         axes.set_ylabel('Weight (kg)',axis_font)
         axes.grid(True)
+
+
 
         axes = fig.add_subplot(3,1,3)
         axes.plot( time , sfc , line_style )
@@ -143,6 +156,7 @@ def plot_mission(results,line_style='bo-'):
         velocity  = segment.conditions.freestream.velocity[:,0]
         Drag   = -segment.conditions.frames.wind.drag_force_vector[:,0]
         Thrust = segment.conditions.frames.body.thrust_force_vector[:,0]
+        spray_rate=segment.conditions.weights.sprayer[:,0]
 
         axes = fig.add_subplot(4,1,1)
         axes.plot( time , eta , line_style )
@@ -158,6 +172,7 @@ def plot_mission(results,line_style='bo-'):
 
         axes = fig.add_subplot(4,1,3)
         axes.plot( time , mdot , line_style )
+        axes.plot( time , spray_rate , 'go-' )
         axes.set_ylabel('Mass rate (kg/s)',axis_font)
         axes.grid(True)
 
