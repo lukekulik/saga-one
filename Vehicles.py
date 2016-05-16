@@ -8,8 +8,13 @@
 # ----------------------------------------------------------------------    
 
 import SUAVE
-from SUAVE.Core import Units
+from SUAVE.Core import Units, Data
+
 from SUAVE.Methods.Propulsion.turbofan_sizing import turbofan_sizing
+from AeroBat import AeroBatlossy
+from SUAVE.Methods.Power.Battery.Sizing import initialize_from_energy_and_power, initialize_from_mass
+
+import numpy as np
 
 # ----------------------------------------------------------------------
 #   Define the Vehicle
@@ -42,7 +47,7 @@ def base_setup():
     vehicle.mass_properties.takeoff                   = 140000 #50989. #51800.   # kg
     # vehicle.mass_properties.max_zero_fuel             = 104000. #60899.3  # kg
     # vehicle.mass_properties.cargo                     = 0.0 * Units.kg
-    vehicle.mass_properties.max_payload               = 40000. * Units.kg
+    # vehicle.mass_properties.max_payload               = 40000. * Units.kg
     # vehicle.mass_properties.max_fuel                  = 36000.
 
     vehicle.mass_properties.center_of_gravity         = [18. , 0, 0]
@@ -53,7 +58,7 @@ def base_setup():
     vehicle.envelope.limit_load    = 1.5
 
     # basic parameters
-    vehicle.reference_area         = 400.00
+    vehicle.reference_area         = 500 # selected in Optimize.py
     vehicle.passengers             = 0
     vehicle.systems.control        = "fully powered"
     vehicle.systems.accessories    = "medium range"
@@ -67,14 +72,14 @@ def base_setup():
 
     wing.sweep                   = 0.0 * Units.deg
     wing.thickness_to_chord      = 0.14
-    wing.taper                   = 0.28
+    wing.taper                   = 0.45
     wing.span_efficiency         = 0.95
 
-    wing.spans.projected         = 80
-    wing.areas.reference         = 400.0
 
-    wing.aspect_ratio            = (wing.spans.projected**2)/wing.areas.reference
+    wing.areas.reference         = 460.0
 
+    wing.aspect_ratio            = 11.6
+    wing.spans.projected         =  np.sqrt(wing.aspect_ratio*wing.areas.reference)
 
     # wing.chords.root             = 8.203
     # wing.chords.tip              = 1.460
@@ -184,33 +189,33 @@ def base_setup():
 
     fuselage = SUAVE.Components.Fuselages.Fuselage()
     fuselage.tag = 'fuselage'
-    fuselage.origin = [0,10,0] # yeyesyesyes
+    fuselage.origin = [0,0,0] # yeyesyesyes
     fuselage.number_coach_seats    = vehicle.passengers
     fuselage.seats_abreast         = 0
-    fuselage.seat_pitch            = 0.7455
+    # fuselage.seat_pitch            = 0.7455
 
     fuselage.fineness.nose         = 2.0
     fuselage.fineness.tail         = 3.0
 
-    fuselage.lengths.nose          = 6.0
-    fuselage.lengths.tail          = 9.0
-    fuselage.lengths.cabin         = 21.24
-    fuselage.lengths.total         = 36.24
+    fuselage.lengths.nose          = 1.0
+    fuselage.lengths.tail          = 1.0
+    fuselage.lengths.cabin         = 6
+    fuselage.lengths.total         = 8
     fuselage.lengths.fore_space    = 0.
     fuselage.lengths.aft_space     = 0.
 
-    fuselage.width                 = 1.9
+    fuselage.width                 = 1
 
-    fuselage.heights.maximum       = 1.9
-    fuselage.heights.at_quarter_length          = 1.9
-    fuselage.heights.at_three_quarters_length   = 1.9
-    fuselage.heights.at_wing_root_quarter_chord = 1.9
+    fuselage.heights.maximum       = 1
+    fuselage.heights.at_quarter_length          = 1
+    fuselage.heights.at_three_quarters_length   = 1
+    fuselage.heights.at_wing_root_quarter_chord = 1
 
-    fuselage.areas.side_projected  = 239.20
-    fuselage.areas.wetted          = 327.01
-    fuselage.areas.front_projected = 8.0110
+    fuselage.areas.side_projected  = 8.
+    fuselage.areas.wetted          = 21.05
+    fuselage.areas.front_projected = 0.78
 
-    fuselage.effective_diameter    = 1.9
+    fuselage.effective_diameter    = 1
 
     fuselage.differential_pressure = 0 * Units.pascal    # Maximum differential pressure
 
@@ -260,12 +265,86 @@ def base_setup():
     #AEROSOL MASS LOSS
     #Create Energy Network
     #create battery
-    battery = SUAVE.Components.Energy.Storages.Batteries.Variable_Mass.Lithium_Air()
-    battery.mass_gain_factor = 1*Units['kg/s']
-    battery.specific_energy=2000.*Units.Wh/Units.kg    #convert to Joules/kg
-    battery.specific_power=0.66*Units.kW/Units.kg
 
-    battery.tag = 'battery'
+
+    # build network
+
+    # #create battery
+    # battery = SUAVE.Components.Energy.Storages.Batteries.Variable_Mass.Lithium_Air()
+    # battery.tag = 'battery'
+    # battery.mass_gain_factor = -1.2*Units['kg/s'] #FIXME units might be wrong
+    # battery.mass_properties.mass = 40000.0 * Units.kg
+    # battery.specific_energy      = 1000.*Units.Wh/Units.kg
+    # battery.resistance           = 0.0
+    #
+    # # ducted_fan      = SUAVE.Components.Energy.Networks.Ducted_Fan()
+    # network         = AeroBatlossy()
+    # network.tag = 'network'
+    # # print "testtetetsts"
+    # network.battery = battery
+    #
+    # payload = SUAVE.Components.Energy.Peripherals.Payload()
+    # payload.power_draw           = 100. #Watts
+    # payload.mass_properties.mass = 0 * Units.kg
+    # network.payload                  = payload
+    #
+    # vehicle.energy_network = network #??
+    # # vehicle.append_component(network)
+    #
+
+    # working_fluid   = SUAVE.Attributes.Gases.Air
+
+
+
+    # net     = SUAVE.Components.Energy.Networks.Battery_Ducted_Fan()
+    # net.tag = 'network'
+
+
+
+
+    #
+    #
+    # battery = SUAVE.Components.Energy.Storages.Batteries.Variable_Mass.Lithium_Air()
+    # battery.mass_gain_factor = -1.2*Units['kg/s']
+    # battery.mass_properties.mass = 40000.0 * Units.kg
+    # battery.specific_energy      = 1000.*Units.Wh/Units.kg
+    # battery.resistance           = 0.0
+    # initialize_from_mass(battery,battery.mass_properties.mass)
+    # net.battery              = battery
+
+    # net.propulsor = ducted_fan
+    # net.append(ducted_fan)
+    # net.battery = battery
+    #
+    # net.nacelle_diameter  = ducted_fan.nacelle_diameter
+    # net.engine_length     = ducted_fan.engine_length
+    # net.number_of_engines = ducted_fan.number_of_engines
+    # net.motor_efficiency  =.95
+    # vehicle.propulsors.append(ducted_fan)
+    # vehicle.energy_network = net
+
+
+    #
+    # # Component 6 the Payload
+    # payload = SUAVE.Components.Energy.Peripherals.Payload()
+    # payload.power_draw           = 100. #Watts
+    # payload.mass_properties.mass = 0 * Units.kg
+    # net.payload                  = payload
+
+
+    # vehicle.append_component(net)
+
+
+    #
+    #
+    # battery = SUAVE.Components.Energy.Storages.Batteries.Variable_Mass.Lithium_Air()
+    # battery.mass_gain_factor = 1.2*Units['kg/s']
+    # battery.specific_energy=1000.*Units.Wh/Units.kg    #convert to Joules/kg
+    # battery.specific_power=1*Units.kW/Units.kg
+
+
+
+    # battery.tag = 'battery'
 
     # in diff parts:
        #initialize battery in mission
@@ -280,7 +359,7 @@ def base_setup():
     gt_engine                   = SUAVE.Components.Energy.Networks.Turbofan()
     gt_engine.tag               = 'turbofan'
 
-    gt_engine.number_of_engines = 4.0
+    gt_engine.number_of_engines = 2.0
     gt_engine.bypass_ratio      = 5.4 #higher breaks the convergence?
     gt_engine.engine_length     = 5.2
     gt_engine.nacelle_diameter  = 2.00
@@ -409,11 +488,11 @@ def base_setup():
     thrust.tag ='compute_thrust'
 
     #total design thrust (includes all the engines)
-    thrust.total_design             = 4*120000.0* Units.N #Newtons
+    thrust.total_design             = 120000.0* Units.N #Newtons
 
     #design sizing conditions
     altitude      = 65000.0*Units.ft
-    mach_number   = 0.8
+    mach_number   = 0.7
     isa_deviation = 0.
 
     # add thrust to the network

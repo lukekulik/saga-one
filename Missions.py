@@ -74,10 +74,12 @@ def base(analyses):
     # define segment attributes
     segment.atmosphere     = atmosphere
     segment.planet         = planet
+    # segment.battery_energy = 10 #Charge the battery to start
+
 
     segment.altitude_start = 0.0   * Units.km
     segment.altitude_end   = 3.048 * Units.km
-    segment.air_speed      = 138.0 * Units['m/s']
+    segment.air_speed      = 118.0 * Units['m/s']
     segment.climb_rate     = 15. * Units['m/s']
 
     # add to misison
@@ -98,7 +100,7 @@ def base(analyses):
     segment.planet       = planet
 
     segment.altitude_end = 3.657 * Units.km
-    segment.air_speed    = 168.0 * Units['m/s']
+    segment.air_speed    = 148.0 * Units['m/s']
     segment.climb_rate   = 13. * Units['m/s']
 
     # add to mission
@@ -119,7 +121,7 @@ def base(analyses):
     segment.planet       = planet
 
     segment.altitude_end = 11. * Units.km
-    segment.air_speed    = 200.0  * Units['m/s']
+    segment.air_speed    = 180.0  * Units['m/s']
     segment.climb_rate   = 10. * Units['m/s']
 
     # add to mission
@@ -140,7 +142,7 @@ def base(analyses):
     segment.planet       = planet
 
     segment.altitude_end = 15. * Units.km
-    segment.air_speed    = 230.0* Units['m/s']
+    segment.air_speed    = 200.0* Units['m/s']
     segment.climb_rate   = 8. * Units['m/s']
 
     # add to mission
@@ -161,7 +163,7 @@ def base(analyses):
     segment.planet       = planet
 
     segment.altitude_end = 65600. * Units.ft
-    segment.air_speed    = 230.0  * Units['m/s']
+    segment.air_speed    = 210.0  * Units['m/s']
     segment.climb_rate   = 7.   * Units['m/s']
 
     # add to mission
@@ -252,9 +254,6 @@ def base(analyses):
 
     # append to mission
     mission.append_segment(segment)
-
-
-
 
 
     # ------------------------------------------------------------------

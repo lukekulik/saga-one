@@ -64,6 +64,8 @@ def plot_mission(results,line_style='bo-'):
     axes = plt.gca()
     for i, segment in enumerate(results.base.segments.values()):
 
+        # print segment.conditions.aerodynamics.drag_breakdown.parasite['fuselage']
+
         time   = segment.conditions.frames.inertial.time[:,0] / Units.min
         drag_breakdown = segment.conditions.aerodynamics.drag_breakdown
         cdp = drag_breakdown.parasite.total[:,0]
@@ -129,9 +131,49 @@ def plot_mission(results,line_style='bo-'):
         axes.grid(True)
         
         axes.set_xlabel('Time (min)')
-    
-        
-        
+
+    fig = plt.figure("Misc",figsize=(8,10))
+    for segment in results.base.segments.values():
+
+        time   = segment.conditions.frames.inertial.time[:,0] / Units.min
+        eta  = segment.conditions.propulsion.throttle[:,0]
+        mach = segment.conditions.freestream.mach_number[:,0]
+        mdot   = segment.conditions.weights.vehicle_mass_rate[:,0]
+        velocity  = segment.conditions.freestream.velocity[:,0]
+        Drag   = -segment.conditions.frames.wind.drag_force_vector[:,0]
+        Thrust = segment.conditions.frames.body.thrust_force_vector[:,0]
+
+        axes = fig.add_subplot(4,1,1)
+        axes.plot( time , eta , line_style )
+        axes.set_ylabel('Throttle (%)',axis_font)
+        axes.grid(True)
+
+
+
+        axes = fig.add_subplot(4,1,2)
+        axes.plot( time , mach , 'ro-' )
+        axes.set_ylabel('Mach (-)',axis_font)
+        axes.grid(True)
+
+        axes = fig.add_subplot(4,1,3)
+        axes.plot( time , mdot , line_style )
+        axes.set_ylabel('Mass rate (kg/s)',axis_font)
+        axes.grid(True)
+
+        axes = fig.add_subplot(4,1,4)
+        axes.plot( time , Drag   , line_style )
+        axes.plot( time , Thrust , 'ro-' )
+        axes.set_xlabel('Time (min)')
+        axes.set_ylabel('Drag and Thrust (N)')
+        axes.grid(True)
+
+        axes.set_xlabel('Time (min)')
+
+
+
+
+    # aerosol disperion rate plot
+
     plt.show()
 
 

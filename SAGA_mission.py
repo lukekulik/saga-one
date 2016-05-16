@@ -34,7 +34,7 @@ from SUAVE.Input_Output.Results import  print_parasite_drag,  \
 
 def main():
 
-    configs, analyses = full_setup()
+    configs, analyses = full_setup()#
 
     simple_sizing(configs)
 

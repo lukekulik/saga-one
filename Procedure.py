@@ -38,6 +38,7 @@ def setup():
     #
     # find the weights
     procedure.weights = weight
+
     # finalizes the data dependencies
     procedure.finalize = finalize
     
@@ -213,6 +214,10 @@ def simple_sizing(nexus):
     base.store_diff()
     
     # done!
+
+    # battery=configs.base.energy_network['battery']
+    # battery.current_energy=battery.max_energy
+    # configs.cruise.energy_network['battery']=battery #make it so all configs handle the exact same battery object
     
     return nexus
 
@@ -233,6 +238,7 @@ def weight(nexus):
    
     
     weights = nexus.analyses.cruise.weights.evaluate()
+    print weights
     weights = nexus.analyses.landing.weights.evaluate()
     weights = nexus.analyses.takeoff.weights.evaluate()
     weights = nexus.analyses.short_field_takeoff.weights.evaluate()
@@ -243,6 +249,7 @@ def weight(nexus):
         #config.mass_properties.max_zero_fuel                = empty_weight+passenger_weight
         config.mass_properties.zero_fuel_center_of_gravity  = vehicle.mass_properties.zero_fuel_center_of_gravity
         config.fuel                                         = vehicle.fuel
+
     return nexus
 
 
