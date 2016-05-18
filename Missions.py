@@ -69,7 +69,7 @@ def base(analyses):
     segment.tag = "climb_1"
 
     # connect vehicle configuration
-    segment.analyses.extend( analyses.base )
+    segment.analyses.extend( analyses.takeoff )
 
     # define segment attributes
     segment.atmosphere     = atmosphere
@@ -78,9 +78,9 @@ def base(analyses):
 
 
     segment.altitude_start = 0.0   * Units.km
-    segment.altitude_end   = 3.048 * Units.km
+    segment.altitude_end   = 3 * Units.km
     segment.air_speed      = 118.0 * Units['m/s']
-    segment.climb_rate     = 15. * Units['m/s']
+    segment.climb_rate     = 12. * Units['m/s']
 
     # segment.process.iterate.conditions.weights = update_weights_sprayer
     segment.sprayer_rate = 0 * Units['kg/s']
@@ -102,9 +102,9 @@ def base(analyses):
     segment.atmosphere   = atmosphere
     segment.planet       = planet
 
-    segment.altitude_end = 3.657 * Units.km
+    segment.altitude_end = 6 * Units.km
     segment.air_speed    = 148.0 * Units['m/s']
-    segment.climb_rate   = 13. * Units['m/s']
+    segment.climb_rate   = 10. * Units['m/s']
 
     # segment.process.iterate.conditions.weights = update_weights_sprayer
     segment.sprayer_rate = 0 * Units['kg/s']
@@ -128,7 +128,7 @@ def base(analyses):
 
     segment.altitude_end = 11. * Units.km
     segment.air_speed    = 180.0  * Units['m/s']
-    segment.climb_rate   = 10. * Units['m/s']
+    segment.climb_rate   = 8. * Units['m/s']
 
     # segment.process.iterate.conditions.weights = update_weights_sprayer
     segment.sprayer_rate = 0 * Units['kg/s']
@@ -208,8 +208,9 @@ def base(analyses):
     # segment.conditions.weights.vehicle_mass_rate = 2 * Units['kg/s']
 
     # segment.process.iterate.conditions.weights = update_weights_sprayer
-    segment.sprayer_rate = 1.2121 * Units['kg/s']
-
+    aerosol_mass = 40000 * Units.kg
+    segment.sprayer_rate = 1.2121 * Units['kg/s'] #aerosol_mass / (segment.distance / segment.air_speed ) #* Units['kg/s'] #1.2121 * Units['kg/s']
+    print segment.sprayer_rate
 
     # add to mission
     mission.append_segment(segment)
@@ -298,7 +299,7 @@ def base(analyses):
     segment.tag = "descent_3"
 
     # connect vehicle configuration
-    segment.analyses.extend( analyses.cruise )
+    segment.analyses.extend( analyses.landing)
 
     # segment attributes
     segment.atmosphere   = atmosphere
@@ -321,50 +322,54 @@ def base(analyses):
     
     #
     #
-    # #------------------------------------------------------------------
-    # ###         Reserve mission
-    # #------------------------------------------------------------------
-    #
-    # # ------------------------------------------------------------------
-    # #   First Climb Segment: constant Mach, constant segment angle
-    # # ------------------------------------------------------------------
-    #
-    # # ------------------------------------------------------------------
-    # #   First Climb Segment: Constant Speed, Constant Throttle
-    # # ------------------------------------------------------------------
-    #
-    # segment = Segments.Climb.Constant_Speed_Constant_Rate()
-    # segment.tag = "reserve_climb"
-    #
-    # # connect vehicle configuration
-    # segment.analyses.extend( analyses.base )
-    #
-    # # define segment attributes
-    # segment.atmosphere     = atmosphere
-    # segment.planet         = planet
-    #
-    # segment.altitude_start = 0.0    * Units.km
-    # segment.altitude_end   = 15000. * Units.ft
-    # segment.air_speed      = 138.0  * Units['m/s']
-    # segment.climb_rate     = 3000.  * Units['ft/min']
-    #
-    # # add to misison
-    # mission.append_segment(segment)
-    #
-    #
-    #
-    # # ------------------------------------------------------------------
-    # #   Cruise Segment: constant speed, constant altitude
-    # # ------------------------------------------------------------------
-    #
-    # segment = Segments.Cruise.Constant_Mach_Constant_Altitude(base_segment)
-    # segment.tag = "reserve_cruise"
-    #
-    # segment.analyses.extend( analyses.cruise )
-    #
-    # segment.mach      = 0.5
-    # segment.distance  = 140.0 * Units.nautical_mile
-    # mission.append_segment(segment)
+    #------------------------------------------------------------------
+    ###         Reserve mission
+    #------------------------------------------------------------------
+
+    # ------------------------------------------------------------------
+    #   First Climb Segment: constant Mach, constant segment angle
+    # ------------------------------------------------------------------
+
+    # ------------------------------------------------------------------
+    #   First Climb Segment: Constant Speed, Constant Throttle
+    # ------------------------------------------------------------------
+
+    segment = Segments.Climb.Constant_Speed_Constant_Rate()
+    segment.tag = "reserve_climb"
+
+    # connect vehicle configuration
+    segment.analyses.extend( analyses.base )
+
+    # define segment attributes
+    segment.atmosphere     = atmosphere
+    segment.planet         = planet
+
+    segment.altitude_start = 0.0    * Units.km
+    segment.altitude_end   = 15000. * Units.ft
+    segment.air_speed      = 138.0  * Units['m/s']
+    segment.climb_rate     = 3000.  * Units['ft/min']
+
+    segment.sprayer_rate = 0 * Units['kg/s']
+
+    # add to misison
+    mission.append_segment(segment)
+
+
+
+    # ------------------------------------------------------------------
+    #   Cruise Segment: constant speed, constant altitude
+    # ------------------------------------------------------------------
+
+    segment = Segments.Cruise.Constant_Mach_Constant_Altitude(base_segment)
+    segment.tag = "reserve_cruise"
+
+    segment.analyses.extend( analyses.cruise )
+
+    segment.mach      = 0.5
+    segment.distance  = 1000.0 * Units.km # 1000km for the most critical case
+
+    segment.sprayer_rate = 0 * Units['kg/s']
+    mission.append_segment(segment)
     #
     # # ------------------------------------------------------------------
     # #   Loiter Segment: constant mach, constant time
@@ -377,35 +382,38 @@ def base(analyses):
     #
     # segment.mach = 0.5
     # segment.time = 30.0 * Units.minutes
+
+    # segment.sprayer_rate = 0 * Units['kg/s']
     #
     # mission.append_segment(segment)
     #
-    #
-    # # ------------------------------------------------------------------
-    # #  Final Descent Segment: consant speed, constant segment rate
-    # # ------------------------------------------------------------------
-    #
-    # segment = Segments.Descent.Linear_Mach_Constant_Rate(base_segment)
-    # segment.tag = "reserve_descent_1"
-    #
-    # segment.analyses.extend( analyses.landing )
-    # analyses.landing.aerodynamics.settings.spoiler_drag_increment = 0.00
-    #
-    #
-    # segment.altitude_end = 0.0   * Units.km
-    # segment.descent_rate = 3.0   * Units['m/s']
-    #
-    #
-    # segment.mach_end    = 0.24
-    # segment.mach_start  = 0.3
-    #
+
+    # ------------------------------------------------------------------
+    #  Final Descent Segment: consant speed, constant segment rate
+    # ------------------------------------------------------------------
+
+    segment = Segments.Descent.Linear_Mach_Constant_Rate(base_segment)
+    segment.tag = "reserve_descent_1"
+
+    segment.analyses.extend( analyses.landing )
+    analyses.landing.aerodynamics.settings.spoiler_drag_increment = 0.00
+
+
+    segment.altitude_end = 0.0   * Units.km
+    segment.descent_rate = 3.0   * Units['m/s']
+
+    segment.sprayer_rate = 0 * Units['kg/s']
+
+    segment.mach_end    = 0.24
+    segment.mach_start  = 0.3
+
     # append to mission
-    # mission.append_segment(segment)
-    
+    mission.append_segment(segment)
+
     #------------------------------------------------------------------
     ###         Reserve mission completed
     #------------------------------------------------------------------
-    
+
 
     return mission
 

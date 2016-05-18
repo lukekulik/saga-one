@@ -23,7 +23,7 @@ import SUAVE.Optimization.Package_Setups.scipy_setup as scipy_setup
 def main():
     problem = setup()
 
-    # output = problem.objective()  #uncomment this line when using the default inputs
+    output = problem.objective()  #uncomment this line when using the default inputs
     
     '''
     #uncomment these lines when you want to start an optimization problem from a different initial guess
@@ -32,7 +32,7 @@ def main():
     scaled_inputs                            = np.multiply(inputs,scaling)
     problem.optimization_problem.inputs[:,1] = scaled_inputs
     '''
-    output = scipy_setup.SciPy_Solve(problem,solver='SLSQP')
+    # output = scipy_setup.SciPy_Solve(problem,solver='SLSQP')
 
  
     
@@ -86,15 +86,35 @@ def setup():
 
     #   [ tag                            , initial, (lb,ub)             , scaling , units ]
     problem.inputs = np.array([
-         [ 'wing_area'                    ,  480    , (   350. ,   650.   ) ,   500. , Units.meter**2], # was 480 before
-          ['cruise_speed', 684., (600., 900.), 500, Units['km/h'] ],
-          ['return_cruise_alt', 15.8, (8., 20.), 10, Units.km ],
-        # []
-        [ 'cruise_altitude'              ,  20    , (   19.5   ,    21.   ) ,   10.  , Units.km]
+         [ 'wing_area'                    ,362    , (   350. ,   650.   ) ,   500. , Units.meter**2], # was 480 before
+          ['cruise_speed', 756, (600., 900.), 500, Units['km/h'] ],
+          # ['return_cruise_alt', 19.2, (8., 20.), 10, Units.km ],
+        ['AR',20,(10.2,20.2),10,Units.less]
+        # # []
+        # [ 'cruise_altitude'              ,  19.5    , (   19.5   ,    21.   ) ,   10.  , Units.km],
+        # [ 'c1_airspeed'              ,  90    , (   50   ,    250.   ) ,   100.  , Units['m/s']],
+        # [ 'c1_rate'              ,  15    , (   1   ,    25.   ) ,   10.  , Units['m/s']],
+        #
+        # [ 'c2_airspeed'              ,  110    , (   50   ,    250.   ) ,   100.  , Units['m/s']],
+        # [ 'c2_rate'              ,  11    , (   1   ,    25.   ) ,   10.  , Units['m/s']],
+        #
+        # [ 'c3_airspeed'              ,  120    , (   50   ,    250.   ) ,   100.  , Units['m/s']],
+        # [ 'c3_rate'              ,  8    , (   1   ,    25.   ) ,   10.  , Units['m/s']],
+        #
+        # [ 'c4_airspeed'              ,  150    , (   50   ,    250.   ) ,   100.  , Units['m/s']],
+        # [ 'c4_rate'              ,  6    , (   1   ,    25.   ) ,   10.  , Units['m/s']],
+        #
+        # [ 'c5_airspeed'              ,  200    , (   50   ,    250.   ) ,   100.  , Units['m/s']],
+        # [ 'c5_rate'              ,  4    , (   1   ,    25.   ) ,   10.  , Units['m/s']]
+
+# segment.altitude_end   = 3 * Units.km
+#     segment.air_speed      = 118.0 * Units['m/s']
+#     segment.climb_rate     = 15. * Units['m/s']
+
 
     ])
     
-   
+
     
     # -------------------------------------------------------------------
     # Objective
@@ -103,7 +123,8 @@ def setup():
     # throw an error if the user isn't specific about wildcards
     # [ tag, scaling, units ]
     problem.objective = np.array([
-        [ 'Nothing', 1, Units.kg ]
+        # [ 'Nothing', 1, Units.kg ]
+        [ 'fuel_burn',  40000, Units.kg ]
     ])
     
     
@@ -116,6 +137,7 @@ def setup():
     problem.constraints = np.array([
                # [ 'Nothing', '=', 0. ,1E-1, Units.kg]
         [ 'fuel_burn', '<', 40000, 1, Units.kg ]
+        # constraint on mission time?
         # [ 'design_range_fuel_margin' , '>', 0., 1E-1, Units.less], #fuel margin defined here as fuel
     ])
 
@@ -129,13 +151,28 @@ def setup():
     problem.aliases = [
         [ 'wing_area'                        ,   ['vehicle_configurations.*.wings.main_wing.areas.reference',
                                                   'vehicle_configurations.*.reference_area'                    ]],
+        [ 'AR'                        ,   'vehicle_configurations.*.wings.main_wing.aspect_ratio'           ],
         [ 'cruise_speed'                  , "missions.base.segments.cruise.air_speed"                    ],
         [ 'cruise_altitude'                  , "missions.base.segments.climb_5.altitude_end"                    ],
         [ 'fuel_burn'                        ,    'summary.base_mission_fuelburn'                               ],
         [ 'design_range_fuel_margin'         ,    'summary.max_zero_fuel_margin'                                ],
         [ 'return_cruise_alt'         ,    'missions.base.segments.descent_1.altitude_end'                      ],
-        ['Nothing'          , 'summary.nothing' ]
-    ]    
+        ['Nothing'          , 'summary.nothing' ],
+        ['c1_airspeed' , 'missions.base.segments.climb_1.air_speed'],
+        ['c1_rate' , 'missions.base.segments.climb_1.climb_rate'],
+
+        ['c2_airspeed' , 'missions.base.segments.climb_2.air_speed'],
+        ['c2_rate' , 'missions.base.segments.climb_2.climb_rate'],
+
+        ['c3_airspeed' , 'missions.base.segments.climb_3.air_speed'],
+        ['c3_rate' , 'missions.base.segments.climb_3.climb_rate'],
+
+        ['c4_airspeed' , 'missions.base.segments.climb_4.air_speed'],
+        ['c4_rate' , 'missions.base.segments.climb_4.climb_rate'],
+
+        ['c5_airspeed' , 'missions.base.segments.climb_5.air_speed'],
+        ['c5_rate' , 'missions.base.segments.climb_5.climb_rate']
+    ]
 
 
     # -------------------------------------------------------------------

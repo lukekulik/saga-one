@@ -113,7 +113,7 @@ def plot_mission(results,line_style='bo-'):
 
         # spray_rate = segment.sprayer_rate
         thrust =  segment.conditions.frames.body.thrust_force_vector[:,0]
-        sfc    = 3600. * mdot / 0.1019715 / thrust
+        sfc    = mdot  / thrust
 
         # if segment.conditions.
 

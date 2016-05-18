@@ -239,8 +239,9 @@ def weight(nexus):
    
     
     weights = nexus.analyses.cruise.weights.evaluate()
-    # print weights # fix
+    print weights # fix
     weights = nexus.analyses.landing.weights.evaluate()
+    print weights
     weights = nexus.analyses.takeoff.weights.evaluate()
     weights = nexus.analyses.short_field_takeoff.weights.evaluate()
     
