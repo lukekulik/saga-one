@@ -83,9 +83,11 @@ def find_target_range(nexus,mission):
     
     cruise_range=mission.design_range-(x_climb_1+x_climb_2+x_climb_3+x_climb_4+x_climb_5+x_descent_1+x_descent_2+x_descent_3)
 
-    segments['cruise'].distance=cruise_range
+    # segments['cruise_2'].distance=cruise_range # FIXME need to add other cruises
 
-    segments['cruise'].battery_energy=10000*Units['Wh']
+    # print segments.cruise.distance
+    # print cruise_range
+
 
     
     return nexus
@@ -96,7 +98,7 @@ def find_target_range(nexus,mission):
 def design_mission(nexus):
     
     mission = nexus.missions.base
-    mission.design_range = 7000.*Units.km
+    mission.design_range = 7000.*Units['km']
     find_target_range(nexus,mission)
 
     results = nexus.results
@@ -115,7 +117,7 @@ def simple_sizing(nexus):
     base=configs.base
 
     #find conditions
-    air_speed   = nexus.missions.base.segments['cruise'].air_speed 
+    air_speed   = nexus.missions.base.segments['cruise_2'].air_speed
     altitude    = nexus.missions.base.segments['climb_5'].altitude_end
     atmosphere  = SUAVE.Analyses.Atmospheric.US_Standard_1976()
     
@@ -157,6 +159,9 @@ def simple_sizing(nexus):
         
         turbofan_sizing(config.propulsors['turbofan'], mach_number, altitude)
         compute_turbofan_geometry(config.propulsors['turbofan'], conditions)
+
+
+        # engine_length, nacelle_diameter, areas.wette
         # diff the new data
         config.store_diff()
 
@@ -168,7 +173,7 @@ def simple_sizing(nexus):
     landing_conditions.freestream = Data()
 
     # landing weight
-    landing.mass_properties.landing = 0.85 * config.mass_properties.takeoff
+    # landing.mass_properties.landing = 0.85 * config.mass_properties.takeoff
     
     # Landing CL_max
     altitude = nexus.missions.base.segments[-1].altitude_end
@@ -216,10 +221,6 @@ def simple_sizing(nexus):
     
     # done!
 
-    # battery=configs.base.energy_network['battery']
-    # battery.current_energy=battery.max_energy
-    # configs.cruise.energy_network['battery']=battery #make it so all configs handle the exact same battery object
-    
     return nexus
 
 # ----------------------------------------------------------------------        
@@ -232,16 +233,16 @@ def weight(nexus):
     # weight analysis
     weights = nexus.analyses.base.weights.evaluate()
    
-    
+    # print "nexus_rest"
     compute_component_centers_of_gravity(vehicle)
     nose_load_fraction=.06
     compute_aircraft_center_of_gravity(vehicle,nose_load_fraction)
    
     
     weights = nexus.analyses.cruise.weights.evaluate()
-    print weights # fix
+    # print weights # FIXME
     weights = nexus.analyses.landing.weights.evaluate()
-    print weights
+    # print weights
     weights = nexus.analyses.takeoff.weights.evaluate()
     weights = nexus.analyses.short_field_takeoff.weights.evaluate()
     
@@ -317,6 +318,7 @@ def post_process(nexus):
     # print results.base.segments[0].conditions.weights.fuel_burn[:,0]
 
     for i in range(1,len(results.base.segments)):
+        print i
         results.base.segments[i].conditions.weights.fuel_burn[:,0] += results.base.segments[i-1].conditions.weights.fuel_burn[-1]
         results.base.segments[i].conditions.weights.spray[:,0] += results.base.segments[i-1].conditions.weights.spray[-1]
 
@@ -325,6 +327,8 @@ def post_process(nexus):
     summary.max_zero_fuel_margin    = (design_landing_weight - zero_fuel_weight)/zero_fuel_weight
     summary.base_mission_fuelburn   = results.base.segments[-1].conditions.weights.fuel_burn[-1] #esults.base.segments[i].conditions.weights.fuel_burn0#results.base.segments.conditions.weights.fuel_burn                         #design_takeoff_weight - results.base.segments['descent_3'].conditions.weights.total_mass[-1] # - results.base.segments['cruise'].conditions.sprayer_rate
     summary.base_mission_sprayed = results.base.segments[-1].conditions.weights.spray[-1]
+    summary.cruise_range = missions.base.segments.cruise_2.distance
+
     summary.nothing           = 0.0
 
     hf = vehicle.fuselages.fuselage.heights.at_wing_root_quarter_chord

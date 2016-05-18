@@ -17,11 +17,21 @@ import Plot_Mission
 import matplotlib.pyplot as plt
 from SUAVE.Optimization import Nexus, carpet_plot
 import SUAVE.Optimization.Package_Setups.scipy_setup as scipy_setup
+from SUAVE.Input_Output.Results import  print_parasite_drag,  \
+     print_compress_drag, \
+     print_engine_data,   \
+     print_mission_breakdown, \
+     print_weight_breakdown
+
 # ----------------------------------------------------------------------        
 #   Run the whole thing
-# ----------------------------------------------------------------------  
+# ----------------------------------------------------------------------
+
+output_folder = "output/"
+
 def main():
-    problem = setup()
+
+    problem = setup() # "problem" is a nexus
 
     output = problem.objective()  #uncomment this line when using the default inputs
     
@@ -37,7 +47,7 @@ def main():
  
     
     # variable_sweep(problem)  #uncomment this to view some contours of the problem
-    print 'fuel burn=', problem.summary.base_mission_fuelburn
+    print 'fuel burn: ', problem.summary.base_mission_fuelburn
     # print 'fuel margin=', problem.all_constraints()
 
 
@@ -47,10 +57,35 @@ def main():
 
     # print problem.results.base.segments.cruise.conditions.propulsion
 
-    cruise1_time =  problem.results.base.segments.cruise.conditions.frames.inertial.time[:,0] / Units.min
-    cruise1_dur = cruise1_time.max()-cruise1_time.min()
-    print "spraying duration=",cruise1_dur , " minutes"
-    print "aerosol released=", problem.summary.base_mission_sprayed  , " kg"
+    cruise1_time =  problem.results.base.segments.cruise_2.conditions.frames.inertial.time[:,0] / Units.min #FIXME
+    cruise1_dur = (cruise1_time.max()-cruise1_time.min())*Units.min/Units['h']
+    # print "cruise duration=",cruise1_dur , " hours"
+    print "aerosol released: ", problem.summary.base_mission_sprayed[0]  , " kg"
+    # print "cruise range: ",problem.summary.cruise_range/1000., " km"
+
+
+    print_weight_breakdown(problem.vehicle_configurations.base,filename = output_folder+'weight_breakdown.dat')
+    #
+    # # print engine data into file
+    print_engine_data(problem.vehicle_configurations.base,filename = output_folder+'engine_data.dat')
+    #
+    # # print parasite drag data into file
+    # # define reference condition for parasite drag
+    ref_condition = Data()
+    ref_condition.mach_number = 0.75 #FIXME
+    ref_condition.reynolds_number = 7e6 # FIXME
+    Analyses = Data()
+    Analyses.configs = problem.analyses
+
+    print_parasite_drag(ref_condition,problem.vehicle_configurations.cruise,Analyses,filename=output_folder+'parasite_drag.dat')
+    #
+    # print compressibility drag data into file
+
+    # print Analyses
+    print_compress_drag(problem.vehicle_configurations.cruise,Analyses,filename = output_folder+'compress_drag.dat')
+
+    # print mission breakdown
+    print_mission_breakdown(problem.results.base,filename=output_folder+'mission_breakdown.dat') #FIXME fuel weight adds aerosol = wrong!!!!!
 
     # segment.sprayer_rate
 
@@ -86,10 +121,11 @@ def setup():
 
     #   [ tag                            , initial, (lb,ub)             , scaling , units ]
     problem.inputs = np.array([
-         [ 'wing_area'                    ,362    , (   350. ,   650.   ) ,   500. , Units.meter**2], # was 480 before
+        #  [ 'wing_area'                    ,422    , (   350. ,   650.   ) ,   500. , Units.meter**2], # was 480 before
           ['cruise_speed', 756, (600., 900.), 500, Units['km/h'] ],
-          # ['return_cruise_alt', 19.2, (8., 20.), 10, Units.km ],
-        ['AR',20,(10.2,20.2),10,Units.less]
+          ['return_cruise_alt', 19.2, (8., 20.), 10, Units.km ],
+        # ['AR',20,(10.2,20.2),10,Units.less]
+
         # # []
         # [ 'cruise_altitude'              ,  19.5    , (   19.5   ,    21.   ) ,   10.  , Units.km],
         # [ 'c1_airspeed'              ,  90    , (   50   ,    250.   ) ,   100.  , Units['m/s']],
@@ -152,7 +188,8 @@ def setup():
         [ 'wing_area'                        ,   ['vehicle_configurations.*.wings.main_wing.areas.reference',
                                                   'vehicle_configurations.*.reference_area'                    ]],
         [ 'AR'                        ,   'vehicle_configurations.*.wings.main_wing.aspect_ratio'           ],
-        [ 'cruise_speed'                  , "missions.base.segments.cruise.air_speed"                    ],
+        [ 'cruise_speed'                  , ["missions.base.segments.cruise_2.air_speed",
+                                             "missions.base.segments.cruise_highlift.air_speed"]],
         [ 'cruise_altitude'                  , "missions.base.segments.climb_5.altitude_end"                    ],
         [ 'fuel_burn'                        ,    'summary.base_mission_fuelburn'                               ],
         [ 'design_range_fuel_margin'         ,    'summary.max_zero_fuel_margin'                                ],

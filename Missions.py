@@ -186,14 +186,44 @@ def base(analyses):
 
     # add to mission
     mission.append_segment(segment)    
-    
-    
+
+    # high_lift_cruise
+
     # ------------------------------------------------------------------
     #   First Cruise Segment: constant speed, constant altitude
     # ------------------------------------------------------------------
 
     segment = Segments.Cruise.Constant_Speed_Constant_Altitude(base_segment)
-    segment.tag = "cruise"
+    segment.tag = "cruise_highlift"
+
+    # connect vehicle configuration
+    segment.analyses.extend( analyses.high_lift_cruise )
+
+    # segment attributes
+    segment.atmosphere = atmosphere
+    segment.planet     = planet
+
+    segment.air_speed  = 684. * Units['km/h']
+    segment.distance   = 2500. * Units.km
+
+    # segment.conditions.weights.vehicle_mass_rate = 2 * Units['kg/s']
+
+    # segment.process.iterate.conditions.weights = update_weights_sprayer
+    # aerosol_mass = 40000 * Units.kg - payload mass
+    segment.sprayer_rate = 2.4706 * Units['kg/s'] #aerosol_mass / (segment.distance / segment.air_speed ) #* Units['kg/s'] #1.2121 * Units['kg/s']
+    # print segment.sprayer_rate
+
+    # add to mission
+    mission.append_segment(segment)
+
+
+    
+    # ------------------------------------------------------------------
+    #   Second Cruise Segment: constant speed, constant altitude
+    # ------------------------------------------------------------------
+
+    segment = Segments.Cruise.Constant_Speed_Constant_Altitude(base_segment)
+    segment.tag = "cruise_2"
 
     # connect vehicle configuration
     segment.analyses.extend( analyses.cruise )
@@ -203,14 +233,14 @@ def base(analyses):
     segment.planet     = planet
 
     segment.air_speed  = 684. * Units['km/h']
-    segment.distance   = 3400. * Units.km
+    segment.distance   = 900. * Units.km
 
     # segment.conditions.weights.vehicle_mass_rate = 2 * Units['kg/s']
 
     # segment.process.iterate.conditions.weights = update_weights_sprayer
     aerosol_mass = 40000 * Units.kg
-    segment.sprayer_rate = 1.2121 * Units['kg/s'] #aerosol_mass / (segment.distance / segment.air_speed ) #* Units['kg/s'] #1.2121 * Units['kg/s']
-    print segment.sprayer_rate
+    segment.sprayer_rate = 2.4706 * Units['kg/s'] #aerosol_mass / (segment.distance / segment.air_speed ) #* Units['kg/s'] #1.2121 * Units['kg/s']
+    # print segment.sprayer_rate
 
     # add to mission
     mission.append_segment(segment)
@@ -241,11 +271,11 @@ def base(analyses):
     mission.append_segment(segment)
 
     # ------------------------------------------------------------------
-    #   Second Cruise Segment: constant speed, constant altitude
+    #   Third Cruise Segment: constant speed, constant altitude
     # ------------------------------------------------------------------
 
     segment = Segments.Cruise.Constant_Speed_Constant_Altitude(base_segment)
-    segment.tag = "cruise_2"
+    segment.tag = "cruise_3"
 
     # connect vehicle configuration
     segment.analyses.extend( analyses.cruise )
@@ -316,10 +346,11 @@ def base(analyses):
     # append to mission
     mission.append_segment(segment)
 
+
+    #  ------------------------------------------------------------------
+    #   Mission definition complete
     # ------------------------------------------------------------------
-    #   Mission definition complete    
-    # ------------------------------------------------------------------
-    
+
     #
     #
     #------------------------------------------------------------------
@@ -334,11 +365,11 @@ def base(analyses):
     #   First Climb Segment: Constant Speed, Constant Throttle
     # ------------------------------------------------------------------
 
-    segment = Segments.Climb.Constant_Speed_Constant_Rate()
+    segment = Segments.Climb.Constant_Speed_Constant_Rate(base_segment)
     segment.tag = "reserve_climb"
 
     # connect vehicle configuration
-    segment.analyses.extend( analyses.base )
+    segment.analyses.extend( analyses.cruise )
 
     # define segment attributes
     segment.atmosphere     = atmosphere

@@ -19,7 +19,8 @@ import pylab as plt
 def plot_mission(results,line_style='bo-'):
     
     axis_font = {'fontname':'Arial', 'size':'14'}    
-
+    folder = "/Users/lkulik/Dropbox/Shared/DSE Conceptual Design/graphs/"
+    file_format = ".jpg"
 
     # ------------------------------------------------------------------
     #   Aerodynamics 
@@ -32,12 +33,13 @@ def plot_mission(results,line_style='bo-'):
         CDrag  = segment.conditions.aerodynamics.drag_coefficient[:,0]
         Drag   = -segment.conditions.frames.wind.drag_force_vector[:,0]
         Thrust = segment.conditions.frames.body.thrust_force_vector[:,0]
+        Position = segment.conditions.frames.inertial.position_vector[:,0]
         aoa = segment.conditions.aerodynamics.angle_of_attack[:,0] / Units.deg
         l_d = CLift/CDrag
 
 
         axes = fig.add_subplot(4,1,1)
-        axes.plot( time , CLift , line_style )
+        axes.plot( time , Position , line_style )
         axes.set_ylabel('Lift Coefficient',axis_font)
         axes.grid(True)
 
@@ -56,6 +58,8 @@ def plot_mission(results,line_style='bo-'):
         axes.set_xlabel('Time (min)',axis_font)
         axes.set_ylabel('AOA (deg)',axis_font)
         axes.grid(True)
+
+    plt.savefig(folder+"fig1"+file_format)
 
     # ------------------------------------------------------------------
     #   Aerodynamics 2
@@ -92,6 +96,8 @@ def plot_mission(results,line_style='bo-'):
     axes.set_xlabel('Time (min)')
     axes.set_ylabel('CD')
     axes.grid(True)
+
+    plt.savefig(folder+"fig2"+file_format)
 
     # ------------------------------------------------------------------
     #   Altitude, vehicle weight
@@ -145,6 +151,7 @@ def plot_mission(results,line_style='bo-'):
         axes.grid(True)
         
         axes.set_xlabel('Time (min)')
+    plt.savefig(folder+"fig3"+file_format)
 
     fig = plt.figure("Misc",figsize=(8,10))
     for segment in results.base.segments.values():
@@ -185,12 +192,12 @@ def plot_mission(results,line_style='bo-'):
 
         axes.set_xlabel('Time (min)')
 
-
+    plt.savefig(folder+"fig4"+file_format)
 
 
     # aerosol disperion rate plot
 
-    plt.show()
+    # plt.show()
 
 
     return
