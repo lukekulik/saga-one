@@ -99,7 +99,7 @@ def design_mission(nexus):
     
     mission = nexus.missions.base
     mission.design_range = 7000.*Units['km']
-    find_target_range(nexus,mission)
+    # find_target_range(nexus,mission)
 
     results = nexus.results
     results.base = mission.evaluate()
@@ -124,7 +124,7 @@ def simple_sizing(nexus):
     freestream  = atmosphere.compute_values(altitude)
     freestream0 = atmosphere.compute_values(6000.*Units.ft)  #cabin altitude
     
-    
+
     diff_pressure         = np.max(freestream0.pressure-freestream.pressure,0)
     fuselage              = base.fuselages['fuselage']
     fuselage.differential_pressure = diff_pressure 
@@ -247,7 +247,8 @@ def weight(nexus):
     weights = nexus.analyses.short_field_takeoff.weights.evaluate()
     
     empty_weight    =vehicle.mass_properties.operating_empty
-    passenger_weight=vehicle.passenger_weights.mass_properties.mass 
+    passenger_weight=0
+
     for config in nexus.vehicle_configurations:
         #config.mass_properties.max_zero_fuel                = empty_weight+passenger_weight
         config.mass_properties.zero_fuel_center_of_gravity  = vehicle.mass_properties.zero_fuel_center_of_gravity
@@ -307,18 +308,19 @@ def post_process(nexus):
     # Fuel margin and base fuel calculations
 
     operating_empty          = vehicle.mass_properties.operating_empty
-    payload                  = vehicle.passenger_weights.mass_properties.mass 
+    payload                  = vehicle.mass_properties.payload # FIXME fuel margin makes little sense when ejecting fuel
     design_landing_weight    = results.base.segments[-1].conditions.weights.total_mass[-1]
     design_takeoff_weight    = vehicle.mass_properties.takeoff
     max_takeoff_weight       = nexus.vehicle_configurations.takeoff.mass_properties.max_takeoff
     zero_fuel_weight         = payload+operating_empty
+
     #
     # print "Test"
     # print
     # print results.base.segments[0].conditions.weights.fuel_burn[:,0]
 
     for i in range(1,len(results.base.segments)):
-        print i
+        # print i
         results.base.segments[i].conditions.weights.fuel_burn[:,0] += results.base.segments[i-1].conditions.weights.fuel_burn[-1]
         results.base.segments[i].conditions.weights.spray[:,0] += results.base.segments[i-1].conditions.weights.spray[-1]
 
@@ -329,6 +331,10 @@ def post_process(nexus):
     summary.base_mission_sprayed = results.base.segments[-1].conditions.weights.spray[-1]
     summary.cruise_range = missions.base.segments.cruise_2.distance
 
+    print "zero fuel weight: ", zero_fuel_weight[0], "kg  i.e. (", payload, "+", operating_empty[0], ")"
+    print "MTOW selected: ",vehicle.mass_properties.takeoff, "kg, MTOW calculated: ",zero_fuel_weight[0]+summary.base_mission_fuelburn
+    print "Max throttle: ", summary.max_throttle
+    print "Cruise Range: ", summary.cruise_range
     summary.nothing           = 0.0
 
     hf = vehicle.fuselages.fuselage.heights.at_wing_root_quarter_chord

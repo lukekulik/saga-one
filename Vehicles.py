@@ -11,7 +11,9 @@ import SUAVE
 from SUAVE.Core import Units, Data
 
 from SUAVE.Methods.Propulsion.turbofan_sizing import turbofan_sizing
-from SUAVE.Methods.Power.Battery.Sizing import initialize_from_energy_and_power, initialize_from_mass
+from SUAVE.Methods.Geometry.Two_Dimensional.Cross_Section.Propulsion import compute_turbofan_geometry
+# from SUAVE.Methods.Propulsion.Two_Dimensional.Cross_Section.Propulsion import compute_turbofan_geometry
+
 
 import numpy as np
 
@@ -41,12 +43,13 @@ def base_setup():
     # ------------------------------------------------------------------
 
     # mass properties
-    vehicle.mass_properties.max_takeoff               = 160000 #79090#.   # kg
+    vehicle.mass_properties.max_takeoff               = 145000 #79090#.   # kg
     # vehicle.mass_properties.operating_empty           = 65000.   # kg
-    vehicle.mass_properties.takeoff                   = 140400 #50989. #51800.   # kg
+    vehicle.mass_properties.takeoff                   = 145000 #50989. #51800.   # kg
     # vehicle.mass_properties.max_zero_fuel             = 105000. #60899.3  # kg
     # vehicle.mass_properties.cargo                     = 0.0 * Units.kg
     vehicle.mass_properties.max_payload               = 40000. * Units.kg
+    vehicle.mass_properties.payload                   = 40000. * Units.kg
     # vehicle.mass_properties.max_fuel                  = 30000.
 
     vehicle.mass_properties.center_of_gravity         = [18. , 0, 0]
@@ -60,7 +63,7 @@ def base_setup():
     vehicle.reference_area         = 500 # selected in Optimize.py
     vehicle.passengers             = 0
     vehicle.systems.control        = "fully powered"
-    vehicle.systems.accessories    = "medium range"
+    vehicle.systems.accessories    = "long range"
 
 
     # ------------------------------------------------------------------
@@ -80,7 +83,7 @@ def base_setup():
 
     # wing.airfoil = airfoils["sc3"]
 
-    wing.span_efficiency         = 0.6
+    wing.span_efficiency         = 0.75
     wing.areas.reference         = 460.0
 
 
@@ -90,7 +93,7 @@ def base_setup():
 
     wing.thickness_to_chord      = 0.14
     wing.taper                   = 0.45
-    wing.spans.projected         =  np.sqrt(wing.aspect_ratio*wing.areas.reference)
+    wing.spans.projected         = np.sqrt(wing.aspect_ratio*wing.areas.reference)
 
     wing.chords.root             = 8.6
     wing.chords.tip              = 3.87
@@ -238,44 +241,44 @@ def base_setup():
     vehicle.append_component(fuselage)
 
 
-   # # ------------------------------------------------------------------
-   #  #  Fuselage (Left)
-   #  # ------------------------------------------------------------------
-   #
-   #  fuselage = SUAVE.Components.Fuselages.Fuselage()
-   #  fuselage.tag = 'fuselage2'
-   #  fuselage.origin = [0,-10,0] # yeyesyesyes
-   #  fuselage.number_coach_seats    = vehicle.passengers
-   #  fuselage.seats_abreast         = 0
-   #  # fuselage.seat_pitch            = 0.7455
-   #
-   #  fuselage.fineness.nose         = 2.0
-   #  fuselage.fineness.tail         = 3.0
-   #
-   #  fuselage.lengths.nose          = 1.0
-   #  fuselage.lengths.tail          = 1.0
-   #  fuselage.lengths.cabin         = 6
-   #  fuselage.lengths.total         = 8
-   #  fuselage.lengths.fore_space    = 0.
-   #  fuselage.lengths.aft_space     = 0.
-   #
-   #  fuselage.width                 = 1
-   #
-   #  fuselage.heights.maximum       = 1
-   #  fuselage.heights.at_quarter_length          = 1
-   #  fuselage.heights.at_three_quarters_length   = 1
-   #  fuselage.heights.at_wing_root_quarter_chord = 1
-   #
-   #  fuselage.areas.side_projected  = 8.
-   #  fuselage.areas.wetted          = 21.05
-   #  fuselage.areas.front_projected = 0.78
-   #
-   #  fuselage.effective_diameter    = 1
-   #
-   #  fuselage.differential_pressure = 0 * Units.pascal    # Maximum differential pressure
-   #
-   #  # add to vehicle
-   #  vehicle.append_component(fuselage)
+   # ------------------------------------------------------------------
+    #  Fuselage (Left)
+    # ------------------------------------------------------------------
+
+    fuselage = SUAVE.Components.Fuselages.Fuselage()
+    fuselage.tag = 'fuselage2'
+    fuselage.origin = [0,-10,0] # yeyesyesyes
+    fuselage.number_coach_seats    = vehicle.passengers
+    fuselage.seats_abreast         = 0
+    # fuselage.seat_pitch            = 0.7455
+
+    fuselage.fineness.nose         = 2.0
+    fuselage.fineness.tail         = 3.0
+
+    fuselage.lengths.nose          = 1.0
+    fuselage.lengths.tail          = 1.0
+    fuselage.lengths.cabin         = 6
+    fuselage.lengths.total         = 8
+    fuselage.lengths.fore_space    = 0.
+    fuselage.lengths.aft_space     = 0.
+
+    fuselage.width                 = 1
+
+    fuselage.heights.maximum       = 1
+    fuselage.heights.at_quarter_length          = 1
+    fuselage.heights.at_three_quarters_length   = 1
+    fuselage.heights.at_wing_root_quarter_chord = 1
+
+    fuselage.areas.side_projected  = 8.
+    fuselage.areas.wetted          = 21.05
+    fuselage.areas.front_projected = 0.78
+
+    fuselage.effective_diameter    = 1
+
+    fuselage.differential_pressure = 0 * Units.pascal    # Maximum differential pressure
+
+    # add to vehicle
+    vehicle.append_component(fuselage)
 
  # ------------------------------------------------------------------
     #  Turbofan Network
@@ -286,8 +289,8 @@ def base_setup():
     gt_engine                   = SUAVE.Components.Energy.Networks.Turbofan()
     gt_engine.tag               = 'turbofan'
 
-    gt_engine.number_of_engines = 4.0 #
-    gt_engine.bypass_ratio      = 3.2 #higher breaks the convergence?
+    gt_engine.number_of_engines = 3.0 #
+    gt_engine.bypass_ratio      = 6 #higher breaks the convergence?
     gt_engine.engine_length     = 5.2
     gt_engine.nacelle_diameter  = 3
 
@@ -415,11 +418,11 @@ def base_setup():
     thrust.tag ='compute_thrust'
 
     #total design thrust (includes all the engines)
-    thrust.total_design             = 111000.0* Units.N #Newtons
+    thrust.total_design             = 110000 * Units.N #Newtons 111
 
     #design sizing conditions
-    altitude      = 65000.0*Units.ft
-    mach_number   = 0.7
+    altitude      = 20.0*Units.km
+    mach_number   = 0.71
     isa_deviation = 0.
 
     # add thrust to the network
@@ -427,6 +430,13 @@ def base_setup():
 
     #size the turbofan
     turbofan_sizing(gt_engine,mach_number,altitude)
+
+    compute_turbofan_geometry(gt_engine,None)
+
+    print "Turbofan thrust:", gt_engine.sealevel_static_thrust, " x ", int(gt_engine.number_of_engines), "engines (tot: ", gt_engine.sealevel_static_thrust*gt_engine.number_of_engines," N)"
+
+    print "Estimated engine length: ",gt_engine.engine_length,", diameter: ", gt_engine.nacelle_diameter, ", wetted area: ", gt_engine.areas.wetted
+
 
     # add  gas turbine network gt_engine to the vehicle
     vehicle.append_component(gt_engine)
@@ -563,7 +573,7 @@ def configs_setup(vehicle):
     config.tag = 'high_lift_cruise'
 
     config.wings['main_wing'].flaps.angle = 10. * Units.deg
-    config.wings['main_wing'].slats.angle = 10. * Units.deg
+    # config.wings['main_wing'].slats.angle = 10. * Units.deg
 
     # config.V2_VS_ratio = 1.21
     config.maximum_lift_coefficient = 2.

@@ -31,10 +31,13 @@ output_folder = "output/"
 
 def main():
 
+    print "SUAVE initialized\n"
     problem = setup() # "problem" is a nexus
 
-    output = problem.objective()  #uncomment this line when using the default inputs
-    
+
+    # output = problem.objective()  #uncomment this line when using the default inputs
+    # variable_sweep(problem)  #uncomment this to view some contours of the problem
+
     '''
     #uncomment these lines when you want to start an optimization problem from a different initial guess
     inputs                                   = [1.28, 1.38]
@@ -42,11 +45,9 @@ def main():
     scaled_inputs                            = np.multiply(inputs,scaling)
     problem.optimization_problem.inputs[:,1] = scaled_inputs
     '''
-    # output = scipy_setup.SciPy_Solve(problem,solver='SLSQP')
+    output = scipy_setup.SciPy_Solve(problem,solver='SLSQP')
 
- 
-    
-    # variable_sweep(problem)  #uncomment this to view some contours of the problem
+
     print 'fuel burn: ', problem.summary.base_mission_fuelburn
     # print 'fuel margin=', problem.all_constraints()
 
@@ -57,8 +58,8 @@ def main():
 
     # print problem.results.base.segments.cruise.conditions.propulsion
 
-    cruise1_time =  problem.results.base.segments.cruise_2.conditions.frames.inertial.time[:,0] / Units.min #FIXME
-    cruise1_dur = (cruise1_time.max()-cruise1_time.min())*Units.min/Units['h']
+    # cruise1_time =  problem.results.base.segments.cruise_2.conditions.frames.inertial.time[:,0] / Units.min #FIXME
+    # cruise1_dur = (cruise1_time.max()-cruise1_time.min())*Units.min/Units['h']
     # print "cruise duration=",cruise1_dur , " hours"
     print "aerosol released: ", problem.summary.base_mission_sprayed[0]  , " kg"
     # print "cruise range: ",problem.summary.cruise_range/1000., " km"
@@ -87,7 +88,6 @@ def main():
     # print mission breakdown
     print_mission_breakdown(problem.results.base,filename=output_folder+'mission_breakdown.dat') #FIXME fuel weight adds aerosol = wrong!!!!!
 
-    # segment.sprayer_rate
 
     # print problem.results.base.segments.cruise.keys()
     # print problem.results.base.segments.cruise.conditions.keys()
@@ -121,10 +121,12 @@ def setup():
 
     #   [ tag                            , initial, (lb,ub)             , scaling , units ]
     problem.inputs = np.array([
-        #  [ 'wing_area'                    ,422    , (   350. ,   650.   ) ,   500. , Units.meter**2], # was 480 before
-          ['cruise_speed', 756, (600., 900.), 500, Units['km/h'] ],
-          ['return_cruise_alt', 19.2, (8., 20.), 10, Units.km ],
-        # ['AR',20,(10.2,20.2),10,Units.less]
+         [ 'wing_area', 800    , (   400. ,   800.   ) ,   500. , Units.meter**2], # was 480 before
+         ['MTOW', 160000., (160000.,160000.), 150000., Units.kg],
+         ['wing_sweep', 0, (0,0),5,Units.less],
+         ['cruise_speed', 756, (600., 900.), 500, Units['km/h'] ],
+         ['return_cruise_alt', 17.2, (8., 20.), 10, Units.km ],
+         ['AR',20,(20,20),10,Units.less], #wing area, vs MTOW fuel weight for different
 
         # # []
         # [ 'cruise_altitude'              ,  19.5    , (   19.5   ,    21.   ) ,   10.  , Units.km],
@@ -160,7 +162,7 @@ def setup():
     # [ tag, scaling, units ]
     problem.objective = np.array([
         # [ 'Nothing', 1, Units.kg ]
-        [ 'fuel_burn',  40000, Units.kg ]
+        [ 'fuel_burn',  36000, Units.kg ]
     ])
     
     
@@ -172,9 +174,11 @@ def setup():
     # [ tag, sense, edge, scaling, units ]
     problem.constraints = np.array([
                # [ 'Nothing', '=', 0. ,1E-1, Units.kg]
-        [ 'fuel_burn', '<', 40000, 1, Units.kg ]
+        # [ 'fuel_burn', '<', 40000, 1, Units.kg ]
         # constraint on mission time?
-        # [ 'design_range_fuel_margin' , '>', 0., 1E-1, Units.less], #fuel margin defined here as fuel
+        [ 'design_range_fuel_margin' , '>', 0., 1E-1, Units.less], #fuel margin defined here as fuel
+        ['max_throttle','<',1.1,1e-1,Units.less]
+        # throttle < 1.1
     ])
 
 
@@ -188,12 +192,18 @@ def setup():
         [ 'wing_area'                        ,   ['vehicle_configurations.*.wings.main_wing.areas.reference',
                                                   'vehicle_configurations.*.reference_area'                    ]],
         [ 'AR'                        ,   'vehicle_configurations.*.wings.main_wing.aspect_ratio'           ],
-        [ 'cruise_speed'                  , ["missions.base.segments.cruise_2.air_speed",
-                                             "missions.base.segments.cruise_highlift.air_speed"]],
+        [ 'cruise_speed'                  , [
+                                             "missions.base.segments.cruise_highlift.air_speed",
+                                             "missions.base.segments.cruise_3.air_speed",
+        "missions.base.segments.cruise_2.air_speed"]],
+        ['MTOW',['vehicle_configurations.*.mass_properties.takeoff',
+                 "vehicle_configurations.*.mass_properties.max_takeoff"]],
         [ 'cruise_altitude'                  , "missions.base.segments.climb_5.altitude_end"                    ],
         [ 'fuel_burn'                        ,    'summary.base_mission_fuelburn'                               ],
         [ 'design_range_fuel_margin'         ,    'summary.max_zero_fuel_margin'                                ],
         [ 'return_cruise_alt'         ,    'missions.base.segments.descent_1.altitude_end'                      ],
+        [ 'max_throttle'         ,    'summary.max_throttle'                      ],
+        ['wing_sweep', 'vehicle_configurations.*.wings.main_wing.sweep'],
         ['Nothing'          , 'summary.nothing' ],
         ['c1_airspeed' , 'missions.base.segments.climb_1.air_speed'],
         ['c1_rate' , 'missions.base.segments.climb_1.climb_rate'],
@@ -261,7 +271,7 @@ def variable_sweep(problem):
     
     
     plt.xlabel('wing area (m^2)')
-    plt.ylabel('cruise_altitude (km)')
+    plt.ylabel('cruise_speed (km)')
     
     '''
     #now plot optimization path (note that these data points were post-processed into a plottable format)

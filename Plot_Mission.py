@@ -31,6 +31,7 @@ def plot_mission(results,line_style='bo-'):
         time   = segment.conditions.frames.inertial.time[:,0] / Units.min
         CLift  = segment.conditions.aerodynamics.lift_coefficient[:,0]
         CDrag  = segment.conditions.aerodynamics.drag_coefficient[:,0]
+        # segment.conditions.freestream.velocity
         Drag   = -segment.conditions.frames.wind.drag_force_vector[:,0]
         Thrust = segment.conditions.frames.body.thrust_force_vector[:,0]
         Position = segment.conditions.frames.inertial.position_vector[:,0]
@@ -39,7 +40,7 @@ def plot_mission(results,line_style='bo-'):
 
 
         axes = fig.add_subplot(4,1,1)
-        axes.plot( time , Position , line_style )
+        axes.plot( time , CLift , line_style )
         axes.set_ylabel('Lift Coefficient',axis_font)
         axes.grid(True)
 
@@ -147,7 +148,7 @@ def plot_mission(results,line_style='bo-'):
 
         axes = fig.add_subplot(3,1,3)
         axes.plot( time , sfc , line_style )
-        axes.set_ylabel('Specific fuel consumption ()',axis_font)
+        axes.set_ylabel('Specific fuel consumption (N/Ns)',axis_font)
         axes.grid(True)
         
         axes.set_xlabel('Time (min)')
@@ -165,25 +166,30 @@ def plot_mission(results,line_style='bo-'):
         Thrust = segment.conditions.frames.body.thrust_force_vector[:,0]
         spray_rate=segment.conditions.weights.sprayer[:,0]
 
-        axes = fig.add_subplot(4,1,1)
+        axes = fig.add_subplot(5,1,1)
         axes.plot( time , eta , line_style )
         axes.set_ylabel('Throttle (%)',axis_font)
         axes.grid(True)
 
 
 
-        axes = fig.add_subplot(4,1,2)
+        axes = fig.add_subplot(5,1,2)
         axes.plot( time , mach , 'ro-' )
         axes.set_ylabel('Mach (-)',axis_font)
         axes.grid(True)
 
-        axes = fig.add_subplot(4,1,3)
+        axes = fig.add_subplot(5,1,3)
+        axes.plot( time , velocity , 'ro-' )
+        axes.set_ylabel('Velocity (m/s)',axis_font)
+        axes.grid(True)
+
+        axes = fig.add_subplot(5,1,4)
         axes.plot( time , mdot , line_style )
         axes.plot( time , spray_rate , 'go-' )
         axes.set_ylabel('Mass rate (kg/s)',axis_font)
         axes.grid(True)
 
-        axes = fig.add_subplot(4,1,4)
+        axes = fig.add_subplot(5,1,5)
         axes.plot( time , Drag   , line_style )
         axes.plot( time , Thrust , 'ro-' )
         axes.set_xlabel('Time (min)')
