@@ -325,16 +325,23 @@ def post_process(nexus):
         results.base.segments[i].conditions.weights.spray[:,0] += results.base.segments[i-1].conditions.weights.spray[-1]
 
 
-
+    summary.op_empty = operating_empty
     summary.max_zero_fuel_margin    = (design_landing_weight - zero_fuel_weight)/zero_fuel_weight
     summary.base_mission_fuelburn   = results.base.segments[-1].conditions.weights.fuel_burn[-1] #esults.base.segments[i].conditions.weights.fuel_burn0#results.base.segments.conditions.weights.fuel_burn                         #design_takeoff_weight - results.base.segments['descent_3'].conditions.weights.total_mass[-1] # - results.base.segments['cruise'].conditions.sprayer_rate
     summary.base_mission_sprayed = results.base.segments[-1].conditions.weights.spray[-1]
     summary.cruise_range = missions.base.segments.cruise_2.distance
+    summary.main_mission_time = (results.base.segments['descent_3'].conditions.frames.inertial.time[-1] - results.base.segments[0].conditions.frames.inertial.time[0])
+    summary.total_mission_time = (results.base.segments[-1].conditions.frames.inertial.time[-1] - results.base.segments[0].conditions.frames.inertial.time[0])
+    # summary.engine_weight =
+
+    # print results.base.segments.keys()
+    # print summary.engine_weight
 
     print "zero fuel weight: ", zero_fuel_weight[0], "kg  i.e. (", payload, "+", operating_empty[0], ")"
     print "MTOW selected: ",vehicle.mass_properties.takeoff, "kg, MTOW calculated: ",zero_fuel_weight[0]+summary.base_mission_fuelburn
     print "Max throttle: ", summary.max_throttle
     print "Cruise Range: ", summary.cruise_range
+    print "Mission time: ", summary.main_mission_time[0] * Units['s']/Units.h, "hours (main) +", (summary.total_mission_time-summary.main_mission_time)[0] * Units['s']/Units.h, "hours (diversion)"
     summary.nothing           = 0.0
 
     hf = vehicle.fuselages.fuselage.heights.at_wing_root_quarter_chord

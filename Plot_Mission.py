@@ -20,7 +20,7 @@ def plot_mission(results,line_style='bo-'):
     
     axis_font = {'fontname':'Arial', 'size':'14'}    
     folder = "/Users/lkulik/Dropbox/Shared/DSE Conceptual Design/graphs/"
-    file_format = ".jpg"
+    file_format = ".eps"
 
     # ------------------------------------------------------------------
     #   Aerodynamics 

@@ -12,6 +12,14 @@ def update_weights_sprayer(segment,state):
     # add some global counter of spray mass
 
     # Add in the sprayer mass rate
+    if hasattr(segment, 'distance'):
+        segment.sprayer_rate=segment.sprayer_rate = segment.aerosol_mass_initial/ ((segment.distance / segment.air_speed ))
+    elif hasattr(segment,'sprayrate_override'):
+        segment.sprayer_rate=segment.sprayrate_override
+    else:
+        segment.sprayer_rate=0.0
+
+
     sprayer   = segment.sprayer_rate * state.ones_row(1)
 
     # Integrate the masses

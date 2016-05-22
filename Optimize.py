@@ -45,7 +45,235 @@ def main():
     scaled_inputs                            = np.multiply(inputs,scaling)
     problem.optimization_problem.inputs[:,1] = scaled_inputs
     '''
-    output = scipy_setup.SciPy_Solve(problem,solver='SLSQP')
+    # output = scipy_setup.SciPy_Solve(problem,solver='SLSQP')
+
+    # SETS OF SWEEP PROBLEMS:
+
+    # SWEEP1: bypass, AR, fuel burn
+    # problem.optimization_problem.inputs = np.array([
+    #      # [ 'wing_area', 700    , (   400. ,   700.   ) ,   500. , Units.meter**2], # was 480 before
+    #      # ['MTOW', 160000., (160000.,160000.), 160000., Units.kg],
+    #      # ['wing_sweep', 0, (0,0),5,Units.less],
+    #      # ['cruise_speed', 681., (600., 900.), 500., Units['km/h'] ], #756
+    #      # ['return_cruise_alt', 19.2, (8., 20.), 10, Units.km ],
+    #      ['AR',20,(5,20),10,Units.less],
+    #     ['bypass',6,(2,8.2),6,Units.less]])
+    #     #wing area, vs MTOW fuel weight for different
+    #     # ['return_cruise_speed', 750., (750., 806.), 500., Units['km/h'] ]])
+    #
+    # problem.optimization_problem.objective=np.array([
+    #     # [ 'Nothing', 1, Units.kg ]
+    #     # ['max_throttle', .8 ,Units.less],
+    #     [ 'fuel_burn',  36000, Units.kg ]
+    # ])
+    #
+    # problem.optimization_problem.constraints=np.array([
+    #            # [ 'Nothing', '=', 0. ,1E-1, Units.kg]
+    #     # [ 'fuel_burn', '<', 40000, 1, Units.kg ]
+    #     # constraint on mission time?
+    #     # ['max_throttle','<',1.1,1e-1,Units.less],
+    #     [ 'design_range_fuel_margin' , '>', 0., 1E-1, Units.less]]) #fuel margin defined here as fuel
+    #
+    # variable_sweep(problem,"Fuel burn [kg]", "unknown","Aspect ratio","Bypass ratio","BAT")
+
+    # # SWEEP2: bypass, AR, engine mass
+    # problem.optimization_problem.inputs = np.array([
+    #      # [ 'wing_area', 700    , (   400. ,   700.   ) ,   500. , Units.meter**2], # was 480 before
+    #      # ['MTOW', 160000., (160000.,160000.), 160000., Units.kg],
+    #      # ['wing_sweep', 0, (0,0),5,Units.less],
+    #      # ['cruise_speed', 681., (600., 900.), 500., Units['km/h'] ], #756
+    #      # ['return_cruise_alt', 19.2, (8., 20.), 10, Units.km ],
+    #      ['AR',20,(5,20),10,Units.less],
+    #     ['bypass',6,(2,8.2),6,Units.less]])
+    #     #wing area, vs MTOW fuel weight for different
+    #     # ['return_cruise_speed', 750., (750., 806.), 500., Units['km/h'] ]])
+    #
+    # problem.optimization_problem.objective=np.array([
+    #     # [ 'Nothing', 1, Units.kg ]
+    #     # ['max_throttle', .8 ,Units.less],
+    #     [ 'oew',  66000, Units.kg ]
+    # ])
+    #
+    # problem.optimization_problem.constraints=np.array([
+    #            # [ 'Nothing', '=', 0. ,1E-1, Units.kg]
+    #     # [ 'fuel_burn', '<', 40000, 1, Units.kg ]
+    #     # constraint on mission time?
+    #     # ['max_throttle','<',1.1,1e-1,Units.less],
+    #     [ 'design_range_fuel_margin' , '>', 0., 1E-1, Units.less]]) #fuel margin defined here as fuel
+    #
+    # variable_sweep(problem,"OEW [kg]", "unknown","Aspect ratio","Bypass ratio","BAOEW")
+
+#     # SWEEP3: bypass, AR, engine mass
+#     problem.optimization_problem.inputs = np.array([
+#          [ 'wing_area', 700    , (   400. ,   800.   ) ,   500. , Units.meter**2], # was 480 before
+#          ['MTOW', 160000., (130000.,250000.), 160000., Units.kg],
+#          # ['wing_sweep', 0, (0,0),5,Units.less],
+#          # ['cruise_speed', 681., (600., 900.), 500., Units['km/h'] ], #756
+#          # ['return_cruise_alt', 19.2, (8., 20.), 10, Units.km ],
+#          # ['AR',20,(5,20),10,Units.less],
+#         # ['bypass',6,(2,8.2),6,Units.less]])
+#         #wing area, vs MTOW fuel weight for different
+#         # ['return_cruise_speed', 750., (750., 806.), 500., Units['km/h'] ]])
+# ])
+#     problem.optimization_problem.objective=np.array([
+#         # [ 'Nothing', 1, Units.kg ]
+#         # ['max_throttle', .8 ,Units.less],
+#         [ 'fuel_burn',  36000, Units.kg ]
+#     ])
+#
+#     problem.optimization_problem.constraints=np.array([
+#                # [ 'Nothing', '=', 0. ,1E-1, Units.kg]
+#         # [ 'fuel_burn', '<', 40000, 1, Units.kg ]
+#         # constraint on mission time?
+#         # ['max_throttle','<',1.1,1e-1,Units.less],
+#         [ 'design_range_fuel_margin' , '>', 0., 1E-1, Units.less]]) #fuel margin defined here as fuel
+#
+#     variable_sweep(problem,"Fuel burn [kg]", "unknown","Wing area","MTOW","MTOWS")
+
+#     # SWEEP4: bypass, AR, engine mass
+#     problem.optimization_problem.inputs = np.array([
+#          # [ 'wing_area', 700    , (   400. ,   800.   ) ,   500. , Units.meter**2], # was 480 before
+#          ['AR',20,(5,20),10,Units.less],
+#          ['MTOW', 160000., (130000.,250000.), 160000., Units.kg],
+#          # ['wing_sweep', 0, (0,0),5,Units.less],
+#          # ['cruise_speed', 681., (600., 900.), 500., Units['km/h'] ], #756
+#          # ['return_cruise_alt', 19.2, (8., 20.), 10, Units.km ],
+#
+#         # ['bypass',6,(2,8.2),6,Units.less]])
+#         #wing area, vs MTOW fuel weight for different
+#         # ['return_cruise_speed', 750., (750., 806.), 500., Units['km/h'] ]])
+# ])
+#     problem.optimization_problem.objective=np.array([
+#         # [ 'Nothing', 1, Units.kg ]
+#         # ['max_throttle', .8 ,Units.less],
+#         [ 'fuel_burn',  36000, Units.kg ]
+#     ])
+#
+#     problem.optimization_problem.constraints=np.array([
+#                # [ 'Nothing', '=', 0. ,1E-1, Units.kg]
+#         # [ 'fuel_burn', '<', 40000, 1, Units.kg ]
+#         # constraint on mission time?
+#         # ['max_throttle','<',1.1,1e-1,Units.less],
+#         [ 'design_range_fuel_margin' , '>', 0., 1E-1, Units.less]]) #fuel margin defined here as fuel
+#
+#     variable_sweep(problem,"Fuel burn [kg]", "unknown","Aspect ratio","MTOW","MTOWA")
+
+ # SWEEP5: bypass, AR, engine mass
+#     problem.optimization_problem.inputs = np.array([
+#          [ 'wing_area', 700    , (   400. ,   800.   ) ,   500. , Units.meter**2], # was 480 before
+#          # ['AR',20,(5,20),10,Units.less],
+#          # ['MTOW', 160000., (130000.,250000.), 160000., Units.kg],
+#          # ['wing_sweep', 0, (0,0),5,Units.less],
+#          ['cruise_speed', 681., (600., 900.), 500., Units['km/h'] ], #756
+#          # ['return_cruise_alt', 19.2, (8., 20.), 10, Units.km ],
+#
+#         # ['bypass',6,(2,8.2),6,Units.less]])
+#         #wing area, vs MTOW fuel weight for different
+#         # ['return_cruise_speed', 750., (750., 806.), 500., Units['km/h'] ]])
+# ])
+#     problem.optimization_problem.objective=np.array([
+#         # [ 'Nothing', 1, Units.kg ]
+#         # ['max_throttle', .8 ,Units.less],
+#         [ 'fuel_burn',  36000, Units.kg ]
+#     ])
+#
+#     problem.optimization_problem.constraints=np.array([
+#                # [ 'Nothing', '=', 0. ,1E-1, Units.kg]
+#         # [ 'fuel_burn', '<', 40000, 1, Units.kg ]
+#         # constraint on mission time?
+#         # ['max_throttle','<',1.1,1e-1,Units.less],
+#         [ 'design_range_fuel_margin' , '>', 0., 1E-1, Units.less]]) #fuel margin defined here as fuel
+
+
+#     # SWEEP6: bypass, AR, engine mass
+#     problem.optimization_problem.inputs = np.array([
+#          [ 'wing_area', 700    , (   400. ,   800.   ) ,   500. , Units.meter**2], # was 480 before
+#          # ['AR',20,(5,20),10,Units.less],
+#          # ['MTOW', 160000., (130000.,250000.), 160000., Units.kg],
+#          # ['wing_sweep', 0, (0,0),5,Units.less],
+#         ['oswald',0.75, (0.5,1),0.75, Units.less],
+#          # ['cruise_speed', 681., (600., 900.), 500., Units['km/h'] ], #756
+#          # ['return_cruise_alt', 19.2, (8., 20.), 10, Units.km ],
+#
+#         # ['bypass',6,(2,8.2),6,Units.less]])
+#         #wing area, vs MTOW fuel weight for different
+#         # ['return_cruise_speed', 750., (750., 806.), 500., Units['km/h'] ]])
+# ])
+#     problem.optimization_problem.objective=np.array([
+#         # [ 'Nothing', 1, Units.kg ]
+#         # ['max_throttle', .8 ,Units.less],
+#         [ 'fuel_burn',  36000, Units.kg ]
+#     ])
+#
+#     problem.optimization_problem.constraints=np.array([
+#                # [ 'Nothing', '=', 0. ,1E-1, Units.kg]
+#         # [ 'fuel_burn', '<', 40000, 1, Units.kg ]
+#         # constraint on mission time?
+#         # ['max_throttle','<',1.1,1e-1,Units.less],
+#         [ 'design_range_fuel_margin' , '>', 0., 1E-1, Units.less]]) #fuel margin defined here as fuel
+#
+#     variable_sweep(problem,"Fuel burn [kg]", "unknown","Wing area [$m^2$]","Oswald factor [-]","oswald-area")
+
+
+#     # SWEEP7: bypass, AR, engine mass
+#     problem.optimization_problem.inputs = np.array([
+#          [ 'wing_area', 700    , (   400. ,   800.   ) ,   500. , Units.meter**2], # was 480 before
+#          # ['AR',20,(5,20),10,Units.less],
+#          # ['MTOW', 160000., (130000.,250000.), 160000., Units.kg],
+#          # ['wing_sweep', 0, (0,0),5,Units.less],
+#         # ['oswald',0.75, (0.5,1),0.75, Units.less],
+#          ['cruise_speed', 681., (600., 900.), 500., Units['km/h'] ], #756
+#          # ['return_cruise_alt', 19.2, (8., 20.), 10, Units.km ],
+#
+#         # ['bypass',6,(2,8.2),6,Units.less]])
+#         #wing area, vs MTOW fuel weight for different
+#         # ['return_cruise_speed', 750., (750., 806.), 500., Units['km/h'] ]])
+# ])
+#     problem.optimization_problem.objective=np.array([
+#         # [ 'Nothing', 1, Units.kg ]
+#         # ['max_throttle', .8 ,Units.less],
+#         [ 'max_throttle',  0.9, Units.kg ]
+#     ])
+#
+#     problem.optimization_problem.constraints=np.array([
+#                # [ 'Nothing', '=', 0. ,1E-1, Units.kg]
+#         # [ 'fuel_burn', '<', 40000, 1, Units.kg ]
+#         # constraint on mission time?
+#         # ['max_throttle','<',1.1,1e-1,Units.less],
+#         [ 'design_range_fuel_margin' , '>', 0., 1E-1, Units.less]]) #fuel margin defined here as fuel
+#
+#     variable_sweep(problem,"Max. thrust required (95kN baseline) [%]", "unknown","Wing area [$m^2$]","Cruise speed [km/h]","throttle-speed-area")
+
+    # SWEEP8: cruise alt, thrust req
+    problem.optimization_problem.inputs = np.array([
+         # [ 'wing_area', 700    , (   400. ,   800.   ) ,   500. , Units.meter**2], # was 480 before
+         # ['AR',20,(5,20),10,Units.less],
+         # ['MTOW', 160000., (130000.,250000.), 160000., Units.kg],
+        ['cruise_altitude',20, (17,21),20,Units.km],
+         # ['wing_sweep', 0, (0,0),5,Units.less],
+        # ['oswald',0.75, (0.5,1),0.75, Units.less],
+         ['cruise_speed', 681., (600., 800.), 500., Units['km/h'] ], #756
+         # ['return_cruise_alt', 19.2, (8., 20.), 10, Units.km ],
+
+        # ['bypass',6,(2,8.2),6,Units.less]])
+        #wing area, vs MTOW fuel weight for different
+        # ['return_cruise_speed', 750., (750., 806.), 500., Units['km/h'] ]])
+])
+    problem.optimization_problem.objective=np.array([
+        # [ 'Nothing', 1, Units.kg ]
+        # ['max_throttle', .8 ,Units.less],
+        [ 'max_throttle',  0.9, Units.kg ]
+    ])
+
+    problem.optimization_problem.constraints=np.array([
+               # [ 'Nothing', '=', 0. ,1E-1, Units.kg]
+        # [ 'fuel_burn', '<', 40000, 1, Units.kg ]
+        # constraint on mission time?
+        # ['max_throttle','<',1.1,1e-1,Units.less],
+        [ 'fuel_burn' , '<', 40000., 1E-1, Units.less]]) #fuel margin defined here as fuel
+
+    variable_sweep(problem,"Max. thrust required (95kN baseline) [%]", "Fuel burn [kg]","Cruise altitude [km]","Cruise speed [km/h]","altitude-throttle")
+#
 
 
     print 'fuel burn: ', problem.summary.base_mission_fuelburn
@@ -73,7 +301,7 @@ def main():
     # # print parasite drag data into file
     # # define reference condition for parasite drag
     ref_condition = Data()
-    ref_condition.mach_number = 0.75 #FIXME
+    ref_condition.mach_number = 0.7 #FIXME
     ref_condition.reynolds_number = 7e6 # FIXME
     Analyses = Data()
     Analyses.configs = problem.analyses
@@ -121,13 +349,13 @@ def setup():
 
     #   [ tag                            , initial, (lb,ub)             , scaling , units ]
     problem.inputs = np.array([
-         [ 'wing_area', 800    , (   400. ,   800.   ) ,   500. , Units.meter**2], # was 480 before
-         ['MTOW', 160000., (160000.,160000.), 150000., Units.kg],
-         ['wing_sweep', 0, (0,0),5,Units.less],
-         ['cruise_speed', 756, (600., 900.), 500, Units['km/h'] ],
-         ['return_cruise_alt', 17.2, (8., 20.), 10, Units.km ],
-         ['AR',20,(20,20),10,Units.less], #wing area, vs MTOW fuel weight for different
-
+         [ 'wing_area', 700    , (   400. ,   600.   ) ,   500. , Units.meter**2], # was 480 before -> constrained by tip deflection not strength!
+         # ['MTOW', 160000., (160000.,160000.), 160000., Units.kg],
+         # ['wing_sweep', 0, (0,0),5,Units.less],
+         ['cruise_speed', 681., (600., 900.), 500., Units['km/h'] ], #756
+         ['return_cruise_alt', 19.2, (8., 20.), 10, Units.km ],
+         # ['AR',15,(10,15),10,Units.less], #wing area, vs MTOW fuel weight for different
+         ['return_cruise_speed', 750., (750., 806.), 500., Units['km/h'] ]
         # # []
         # [ 'cruise_altitude'              ,  19.5    , (   19.5   ,    21.   ) ,   10.  , Units.km],
         # [ 'c1_airspeed'              ,  90    , (   50   ,    250.   ) ,   100.  , Units['m/s']],
@@ -162,6 +390,7 @@ def setup():
     # [ tag, scaling, units ]
     problem.objective = np.array([
         # [ 'Nothing', 1, Units.kg ]
+        # ['max_throttle', .8 ,Units.less],
         [ 'fuel_burn',  36000, Units.kg ]
     ])
     
@@ -176,8 +405,10 @@ def setup():
                # [ 'Nothing', '=', 0. ,1E-1, Units.kg]
         # [ 'fuel_burn', '<', 40000, 1, Units.kg ]
         # constraint on mission time?
-        [ 'design_range_fuel_margin' , '>', 0., 1E-1, Units.less], #fuel margin defined here as fuel
-        ['max_throttle','<',1.1,1e-1,Units.less]
+        ['max_throttle','<',1.1,1e-1,Units.less],
+        ['main_mission_time','<',11.1,1e-1,Units.h],
+        # [ 'design_range_fuel_margin' , '>', 0., 1E-1, Units.less], #fuel margin defined here as fuel
+
         # throttle < 1.1
     ])
 
@@ -193,17 +424,22 @@ def setup():
                                                   'vehicle_configurations.*.reference_area'                    ]],
         [ 'AR'                        ,   'vehicle_configurations.*.wings.main_wing.aspect_ratio'           ],
         [ 'cruise_speed'                  , [
-                                             "missions.base.segments.cruise_highlift.air_speed",
-                                             "missions.base.segments.cruise_3.air_speed",
+                                             # "missions.base.segments.cruise_highlift.air_speed",
+
         "missions.base.segments.cruise_2.air_speed"]],
+        ['return_cruise_speed', "missions.base.segments.cruise_3.air_speed"],
         ['MTOW',['vehicle_configurations.*.mass_properties.takeoff',
                  "vehicle_configurations.*.mass_properties.max_takeoff"]],
+        ['oswald','vehicle_configurations.*.wings.main_wing.span_efficiency'],
         [ 'cruise_altitude'                  , "missions.base.segments.climb_5.altitude_end"                    ],
         [ 'fuel_burn'                        ,    'summary.base_mission_fuelburn'                               ],
         [ 'design_range_fuel_margin'         ,    'summary.max_zero_fuel_margin'                                ],
         [ 'return_cruise_alt'         ,    'missions.base.segments.descent_1.altitude_end'                      ],
         [ 'max_throttle'         ,    'summary.max_throttle'                      ],
+        ['bypass','vehicle_configurations.*.propulsors.turbofan.bypass_ratio'],
+        ['main_mission_time','summary.main_mission_time'],
         ['wing_sweep', 'vehicle_configurations.*.wings.main_wing.sweep'],
+        ['oew','summary.op_empty'],
         ['Nothing'          , 'summary.nothing' ],
         ['c1_airspeed' , 'missions.base.segments.climb_1.air_speed'],
         ['c1_rate' , 'missions.base.segments.climb_1.climb_rate'],
@@ -252,7 +488,7 @@ def setup():
     
     return nexus
     
-def variable_sweep(problem):    
+def variable_sweep(problem,color_label, bar_label,xlabel,ylabel,title):
     number_of_points=5
     outputs=carpet_plot(problem, number_of_points, 0, 0)  #run carpet plot, suppressing default plots
     inputs =outputs.inputs
@@ -261,17 +497,22 @@ def variable_sweep(problem):
     plt.figure(0)
     CS = plt.contourf(inputs[0,:],inputs[1,:], objective, 20, linewidths=2)
     cbar = plt.colorbar(CS)
+    cbar.ax.set_ylabel(color_label)
+    # cbar.ax.set_ylabel('fuel burn (kg)')
+
+    if bar_label!="unknown":
+        CS_const=plt.contour(inputs[0,:],inputs[1,:], constraints[0,:,:])
+        plt.clabel(CS_const, inline=1, fontsize=10)
+        cbar = plt.colorbar(CS_const)
+        # cbar.ax.set_ylabel('fuel margin')
+        cbar.ax.set_ylabel(bar_label)
     
-    cbar.ax.set_ylabel('fuel burn (kg)')
-    CS_const=plt.contour(inputs[0,:],inputs[1,:], constraints[0,:,:])
-    plt.clabel(CS_const, inline=1, fontsize=10)
-    cbar = plt.colorbar(CS_const)
-    cbar.ax.set_ylabel('fuel margin')
     
     
-    
-    plt.xlabel('wing area (m^2)')
-    plt.ylabel('cruise_speed (km)')
+    # plt.xlabel('wing area (m^2)')
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    # plt.ylabel('cruise_speed (km)')
     
     '''
     #now plot optimization path (note that these data points were post-processed into a plottable format)
@@ -289,7 +530,8 @@ def variable_sweep(problem):
     init_2  = plt.plot(wing_2[0], alt_2[0], 'ko', label= 'initial points')
     final_2 = plt.plot(wing_2[-1], alt_2[-1], 'kx', label= 'final points')
     '''
-    plt.legend(loc='upper left')  
+    plt.legend(loc='upper left')
+    plt.savefig(title+".eps")
     plt.show()    
     
       
