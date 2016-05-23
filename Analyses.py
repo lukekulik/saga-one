@@ -9,16 +9,17 @@
 
 import SUAVE
 from SUAVE.Core import Units
-# ----------------------------------------------------------------------        
+
+
+# ----------------------------------------------------------------------
 #   Setup Analyses
 # ----------------------------------------------------------------------  
 
 def setup(configs):
-    
     analyses = SUAVE.Analyses.Analysis.Container()
 
     # build a base analysis for each config
-    for tag,config in configs.items():
+    for tag, config in configs.items():
         analysis = base(config)
         analyses[tag] = analysis
 
@@ -59,12 +60,12 @@ def setup(configs):
 
     return analyses
 
-# ----------------------------------------------------------------------        
+
+# ----------------------------------------------------------------------
 #   Define Base Analysis
 # ----------------------------------------------------------------------  
 
 def base(vehicle):
-
     # ------------------------------------------------------------------
     #   Initialize the Analyses
     # ------------------------------------------------------------------     
@@ -98,8 +99,8 @@ def base(vehicle):
 
     # ------------------------------------------------------------------
     #  Energy
-    energy= SUAVE.Analyses.Energy.Energy()
-    energy.network = vehicle.propulsors #what is called throughout the mission (at every time step))
+    energy = SUAVE.Analyses.Energy.Energy()
+    energy.network = vehicle.propulsors  # what is called throughout the mission (at every time step))
     analyses.append(energy)
     #
     # # ------------------------------------------------------------------
@@ -117,7 +118,7 @@ def base(vehicle):
     #  Atmosphere Analysis
     atmosphere = SUAVE.Analyses.Atmospheric.US_Standard_1976()
     atmosphere.features.planet = planet.features
-    analyses.append(atmosphere)   
+    analyses.append(atmosphere)
 
     # done!
-    return analyses 
+    return analyses
