@@ -12,8 +12,6 @@ import SUAVE
 from SUAVE.Core import Units
 from sprayer import update_weights_sprayer
 
-import numpy as np
-
 
 # ----------------------------------------------------------------------
 #   Define the Mission
@@ -117,7 +115,7 @@ def base(analyses):
     # mission.append_segment(segment)
 
 
-
+    #CLIMB PHASES START HERE:
 
 
     # ------------------------------------------------------------------
@@ -276,150 +274,316 @@ def base(analyses):
      # ------------------------------------------------------------------
      #   Seventh Climb Segment: Constant Speed, Constant Rate
      # ------------------------------------------------------------------
-
-    segment = Segments.Climb.Constant_Speed_Constant_Rate(base_segment)
-    segment.tag = "climb_7"
-
-    # connect vehicle configuration
-    segment.analyses.extend( analyses.cruise )
-
-    # segment attributes
-    segment.atmosphere   = atmosphere
-    segment.planet       = planet
-
-    segment.altitude_end = 19.5 * Units.km
-    segment.air_speed    = 670.0  * Units['km/h']
-    segment.climb_rate   = 0.5   * Units['m/s']
-
-    segment.sprayer_rate = 0 * Units['kg/s']
-
-     # segment.process.iterate.conditions.weights = update_weights_sprayer
-    segment.aerosol_mass_initial = 0 * Units.kg # mass to be sprayed in this segment
-    segment.sprayer_rate = 0 * Units['kg/s']
-
-
-    # add to mission
-    mission.append_segment(segment)
-
-    # ------------------------------------------------------------------
-     #   Eighth Climb Segment: Constant Speed, Constant Rate
-     # ------------------------------------------------------------------
-
-    segment = Segments.Climb.Constant_Speed_Constant_Rate(base_segment)
-    segment.tag = "climb_8"
-
-     # connect vehicle configuration
-    segment.analyses.extend( analyses.cruise )
-
-     # segment attributes
-    segment.atmosphere   = atmosphere
-    segment.planet       = planet
-
-    segment.altitude_end = 20. * Units.km
-    segment.air_speed    = 670.0  * Units['km/h']
-    segment.climb_rate   = 0.25   * Units['m/s']
-
-    # segment.sprayer_rate = 0 * Units['kg/s']
-
-    # segment.process.iterate.conditions.weights = update_weights_sprayer
-    # segment.aerosol_mass_initial = 2000 * Units.kg # mass to be sprayed in this segment
-    segment.sprayrate_override = 1  * Units['kg/s'] #1 for mission (3500km)
-
-
-    # add to mission
-    mission.append_segment(segment)
-
-
-    # ------------------------------------------------------------------
-    #   First Cruise Segment: constant speed, constant altitude
-    # ------------------------------------------------------------------
-
-    segment = Segments.Cruise.Constant_Speed_Constant_Altitude(base_segment)
-    segment.tag = "cruise_highlift"
-
-    # connect vehicle configuration
-    segment.analyses.extend( analyses.landing ) #FIXME
-
-    # segment attributes
-    segment.atmosphere = atmosphere
-    segment.planet     = planet
-
-    segment.air_speed  = 691. * Units['km/h']
-    segment.distance   = 900. * Units.km
-
-    # segment.conditions.weights.vehicle_mass_rate = 2 * Units['kg/s']
-
-    # segment.process.iterate.conditions.weights = update_weights_sprayer
-    # aerosol_mass = 40000 * Units.kg #- payload mass
-    # segment.sprayer_rate = 2.4706 #aerosol_mass / (segment.distance / segment.air_speed ) #* Units['kg/s'] #1.2121 * Units['kg/s']
-    # segment.aerosol_mass_initial = 0 * Units.kg # mass to be sprayed in this segment/
-    # print segment.sprayer_rate
-    segment.aerosol_mass_initial = 10060 * Units.kg
-
-
-    # add to mission
-    mission.append_segment(segment)
-
-
-    # ------------------------------------------------------------------
-    #  Second Cruise Segment: constant speed, constant altitude
-    # ------------------------------------------------------------------
-
-    segment = Segments.Cruise.Constant_Speed_Constant_Altitude(base_segment)
-    segment.tag = "cruise_2"
-
-    # connect vehicle configuration
-    segment.analyses.extend(analyses.cruise)
-
-    # segment attributes
-    segment.atmosphere = atmosphere
-    segment.planet = planet
-
-    segment.air_speed = 691. * Units['km/h']
-    segment.distance = 2500 * Units.km
-
-    # segment.conditions.weights.vehicle_mass_rate = 2 * Units['kg/s']
-
-    # segment.process.iterate.conditions.weights = update_weights_sprayer
-    segment.aerosol_mass_initial = 27940 * Units.kg  # mass to be sprayed in this segment
-
-    # segment.sprayer_rate = aerosol_mass_initial / (segment.distance / segment.air_speed ) #* Units['kg/s'] #1.2121 * Units['kg/s']
-    # print segment.sprayer_rate # delegate rate to a method which will calculate live rate?
-    #  2.4706 * Units['kg/s']
-
-    # add to mission
-    mission.append_segment(segment)
     #
-
-
-    # # ------------------------------------------------------------------
-    # #   Climbing Cruise Segment (Alternative): constant speed, constant altitude
-    # # ------------------------------------------------------------------
-    #
-    # segment = Segments.Climb.Constant_Mach_Constant_Angle(base_segment)
-    # segment.tag = "cruise_2_climbing"
+    # segment = Segments.Climb.Constant_Speed_Constant_Rate(base_segment)
+    # segment.tag = "climb_7"
     #
     # # connect vehicle configuration
     # segment.analyses.extend( analyses.cruise )
     #
     # # segment attributes
-    # segment.atmosphere = atmosphere
-    # segment.planet     = planet
+    # segment.atmosphere   = atmosphere
+    # segment.planet       = planet
     #
-    # segment.altitude_end  = 20. * Units['km']
-    # segment.mach   = 0.71
-    # segment.climb_angle = 0.01685169985919 #np.arctan(1/3400) * Units.rad
+    # segment.altitude_end = 19.5 * Units.km
+    # segment.air_speed    = 670.0  * Units['km/h']
+    # segment.climb_rate   = 0.5   * Units['m/s']
     #
-    # # segment.conditions.weights.vehicle_mass_rate = 2 * Units['kg/s']
+    # segment.sprayer_rate = 0 * Units['kg/s']
+    #
+    #  # segment.process.iterate.conditions.weights = update_weights_sprayer
     # segment.aerosol_mass_initial = 0 * Units.kg # mass to be sprayed in this segment
+    # segment.sprayer_rate = 0 * Units['kg/s']
     #
-    # # segment.process.iterate.conditions.weights = update_weights_sprayer
-    # # aerosol_mass = 40000 * Units.kg
-    # segment.sprayer_rate = 2.4706 * Units['kg/s'] #aerosol_mass / (segment.distance / segment.air_speed ) #* Units['kg/s'] #1.2121 * Units['kg/s']
-    # # print segment.sprayer_rate
     #
     # # add to mission
     # mission.append_segment(segment)
+    #
+    # # ------------------------------------------------------------------
+    #  #   Eighth Climb Segment: Constant Speed, Constant Rate
+    #  # ------------------------------------------------------------------
+    #
+    # segment = Segments.Climb.Constant_Speed_Constant_Rate(base_segment)
+    # segment.tag = "climb_8"
+    #
+    #  # connect vehicle configuration
+    # segment.analyses.extend( analyses.cruise )
+    #
+    #  # segment attributes
+    # segment.atmosphere   = atmosphere
+    # segment.planet       = planet
+    #
+    # segment.altitude_end = 20. * Units.km
+    # segment.air_speed    = 670.0  * Units['km/h']
+    # segment.climb_rate   = 0.25   * Units['m/s']
+    #
+    # # segment.sprayer_rate = 0 * Units['kg/s']
+    #
+    # # segment.process.iterate.conditions.weights = update_weights_sprayer
+    # # segment.aerosol_mass_initial = 2000 * Units.kg # mass to be sprayed in this segment
+    # segment.sprayrate_override = 1  * Units['kg/s'] #1 for mission (3500km)
+    #
+    #
+    # # add to mission
+    # mission.append_segment(segment)
+
+
+    # # ------------------------------------------------------------------
+    #  #   Throttle Max Climb Segment: Constant Speed, Constant Rate
+    #  # ------------------------------------------------------------------
+    #
+    # # ------------------------------------------------------------------
+    # #   First Climb Segment: Constant Speed, Constant Rate
+    # # ------------------------------------------------------------------
+    #
+    # segment = Segments.Climb.Constant_Speed_Constant_Rate(base_segment)
+    # segment.tag = "climb_1"
+    #
+    # # connect vehicle configuration
+    # segment.analyses.extend(analyses.takeoff)
+    #
+    # # define segment attributes
+    # segment.atmosphere = atmosphere
+    # segment.planet = planet
+    # # segment.battery_energy = 10 #Charge the battery to start
+    #
+    #
+    # segment.altitude_start = 0.0 * Units.km
+    # segment.altitude_end = 3 * Units.km
+    # segment.air_speed = 118.0 * Units['m/s']
+    # segment.climb_rate = 40. * Units['m/s']
+    #
+    # # segment.process.iterate.conditions.weights = update_weights_sprayer
+    # segment.aerosol_mass_initial = 0 * Units.kg  # mass to be sprayed in this segment
+    # segment.sprayer_rate = 0 * Units['kg/s']
+    #
+    # # add to misison
+    # mission.append_segment(segment)
+    #
+    #
+    # segment = Segments.Climb.Constant_Throttle_Constant_Speed(base_segment)
+    # segment.tag = "climb_8"
+    #
+    #  # connect vehicle configuration
+    # segment.analyses.extend( analyses.cruise )
+    #
+    #  # segment attributes
+    # segment.atmosphere   = atmosphere
+    # segment.planet       = planet
+    #
+    # segment.altitude_end = 18.5 * Units.km
+    # segment.throttle = 1
+    # segment.air_speed    = 700.0  * Units['km/h']
+    # # segment.climb_rate   = 0.25   * Units['m/s']
+    #
+    # # segment.sprayer_rate = 0 * Units['kg/s']
+    #
+    # # segment.process.iterate.conditions.weights = update_weights_sprayer
+    # # segment.aerosol_mass_initial = 2000 * Units.kg # mass to be sprayed in this segment
+    # # segment.sprayrate_override = 1  * Units['kg/s'] #1 for mission (3500km)
+    #
+    #
+    # # add to mission
+    # mission.append_segment(segment)
+
+
+    # # ------------------------------------------------------------------
+    # #   First Cruise Segment: constant speed, constant altitude
+    # # ------------------------------------------------------------------
+    #
+    # segment = Segments.Cruise.Constant_Speed_Constant_Altitude(base_segment)
+    # segment.tag = "cruise_highlift"
+    #
+    # # connect vehicle configuration
+    # segment.analyses.extend( analyses.landing ) #FIXME
+    #
+    # # segment attributes
+    # segment.atmosphere = atmosphere
+    # segment.planet     = planet
+    #
+    # segment.air_speed  = 691. * Units['km/h']
+    # segment.distance   = 900. * Units.km
+    #
+    # # segment.conditions.weights.vehicle_mass_rate = 2 * Units['kg/s']
+    #
+    # # segment.process.iterate.conditions.weights = update_weights_sprayer
+    # # aerosol_mass = 40000 * Units.kg #- payload mass
+    # # segment.sprayer_rate = 2.4706 #aerosol_mass / (segment.distance / segment.air_speed ) #* Units['kg/s'] #1.2121 * Units['kg/s']
+    # # segment.aerosol_mass_initial = 0 * Units.kg # mass to be sprayed in this segment/
+    # # print segment.sprayer_rate
+    # segment.aerosol_mass_initial = 10060 * Units.kg
+    #
+    #
+    # # add to mission
+    # mission.append_segment(segment)
+
+
+
+    # CRUISE STARTS HERE!!
+
+    # # ------------------------------------------------------------------
+    # #  Second Cruise Segment: constant speed, constant altitude
+    # # ------------------------------------------------------------------
+    #
+    # segment = Segments.Cruise.Constant_Speed_Constant_Altitude(base_segment)
+    # segment.tag = "cruise_2"
+    #
+    # # connect vehicle configuration
+    # segment.analyses.extend(analyses.cruise)
+    #
+    # # segment attributes
+    # segment.atmosphere = atmosphere
+    # segment.planet = planet
+    #
+    # segment.air_speed = 730. * Units['km/h']
+    # segment.distance = 1100 * Units.km
+    #
+    # # segment.conditions.weights.vehicle_mass_rate = 2 * Units['kg/s']
+    #
+    # # segment.process.iterate.conditions.weights = update_weights_sprayer
+    # segment.aerosol_mass_initial = 13300 * Units.kg  # mass to be sprayed in this segment
+    #
+    # # segment.sprayer_rate = aerosol_mass_initial / (segment.distance / segment.air_speed ) #* Units['kg/s'] #1.2121 * Units['kg/s']
+    # # print segment.sprayer_rate # delegate rate to a method which will calculate live rate?
+    # #  2.4706 * Units['kg/s']
+    #
+    # # add to mission
+    # mission.append_segment(segment)
+    #
+    # segment = Segments.Climb.Constant_Speed_Constant_Rate(base_segment)
+    # segment.tag = "climb_2_1"
+    #
+    # # connect vehicle configuration
+    # segment.analyses.extend(analyses.takeoff)
+    #
+    # # define segment attributes
+    # segment.atmosphere = atmosphere
+    # segment.planet = planet
+    # # segment.battery_energy = 10 #Charge the battery to start
+    #
+    #
+    # segment.altitude_end = 19.5 * Units.km
+    # segment.air_speed = 691.0 * Units['km/h']
+    # segment.climb_rate = 1.5 * Units['m/s']
+    #
+    # # segment.process.iterate.conditions.weights = update_weights_sprayer
+    # segment.aerosol_mass_initial = 0 * Units.kg  # mass to be sprayed in this segment
+    # segment.sprayer_rate = 0 * Units['kg/s']
+    #
+    # # add to misison
+    # mission.append_segment(segment)
+    #
+    # # ------------------------------------------------------------------
+    # #  Second Cruise Segment: constant speed, constant altitude
+    # # ------------------------------------------------------------------
+    #
+    # segment = Segments.Cruise.Constant_Speed_Constant_Altitude(base_segment)
+    # segment.tag = "cruise_2_2"
+    #
+    # # connect vehicle configuration
+    # segment.analyses.extend(analyses.cruise)
+    #
+    # # segment attributes
+    # segment.atmosphere = atmosphere
+    # segment.planet = planet
+    #
+    # segment.air_speed = 730. * Units['km/h']
+    # segment.distance = 1100 * Units.km
+    #
+    # # segment.conditions.weights.vehicle_mass_rate = 2 * Units['kg/s']
+    #
+    # # segment.process.iterate.conditions.weights = update_weights_sprayer
+    # segment.aerosol_mass_initial = 13300 * Units.kg  # mass to be sprayed in this segment
+    #
+    # # segment.sprayer_rate = aerosol_mass_initial / (segment.distance / segment.air_speed ) #* Units['kg/s'] #1.2121 * Units['kg/s']
+    # # print segment.sprayer_rate # delegate rate to a method which will calculate live rate?
+    # #  2.4706 * Units['kg/s']
+    #
+    # # add to mission
+    # mission.append_segment(segment)
+    #
+    # segment = Segments.Climb.Constant_Speed_Constant_Rate(base_segment)
+    # segment.tag = "climb_2_2"
+    #
+    # # connect vehicle configuration
+    # segment.analyses.extend(analyses.takeoff)
+    #
+    # # define segment attributes
+    # segment.atmosphere = atmosphere
+    # segment.planet = planet
+    # # segment.battery_energy = 10 #Charge the battery to start
+    #
+    #
+    # segment.altitude_end = 20.5 * Units.km
+    # segment.air_speed = 691.0 * Units['km/h']
+    # segment.climb_rate = 1.5 * Units['m/s']
+    #
+    # # segment.process.iterate.conditions.weights = update_weights_sprayer
+    # segment.aerosol_mass_initial = 0 * Units.kg  # mass to be sprayed in this segment
+    # segment.sprayer_rate = 0 * Units['kg/s']
+    #
+    # # add to misison
+    # mission.append_segment(segment)
+    #
+    # # ------------------------------------------------------------------
+    # #  Second Cruise Segment: constant speed, constant altitude
+    # # ------------------------------------------------------------------
+    #
+    # segment = Segments.Cruise.Constant_Speed_Constant_Altitude(base_segment)
+    # segment.tag = "cruise_2_3"
+    #
+    # # connect vehicle configuration
+    # segment.analyses.extend(analyses.cruise)
+    #
+    # # segment attributes
+    # segment.atmosphere = atmosphere
+    # segment.planet = planet
+    #
+    # segment.air_speed = 730. * Units['km/h']
+    # segment.distance = 1200 * Units.km
+    #
+    # # segment.conditions.weights.vehicle_mass_rate = 2 * Units['kg/s']
+    #
+    # # segment.process.iterate.conditions.weights = update_weights_sprayer
+    # segment.aerosol_mass_initial = 13300 * Units.kg  # mass to be sprayed in this segment
+    #
+    # # segment.sprayer_rate = aerosol_mass_initial / (segment.distance / segment.air_speed ) #* Units['kg/s'] #1.2121 * Units['kg/s']
+    # # print segment.sprayer_rate # delegate rate to a method which will calculate live rate?
+    # #  2.4706 * Units['kg/s']
+    #
+    # # add to mission
+    # mission.append_segment(segment)
+    #
+
+
+    # ------------------------------------------------------------------
+    #   Climbing Cruise Segment (Alternative): constant speed, constant altitude
+    # ------------------------------------------------------------------
+
+    segment = Segments.Climb.Constant_Mach_Constant_Angle(base_segment)
+    segment.tag = "cruise_2"#_climbing"
+
+    # connect vehicle configuration
+    segment.analyses.extend( analyses.cruise )
+
+    # segment attributes
+    segment.atmosphere = atmosphere
+    segment.planet     = planet
+
+    segment.altitude_end  = 20.5 * Units['km']
+    segment.mach   = 0.71
+    segment.climb_angle =  (20.5-18.5)/(3400) * Units.rad/Units.deg  #np.arctan(1/3400) * Units.rad
+
+    # segment.conditions.weights.vehicle_mass_rate = 2 * Units['kg/s']
+    segment.aerosol_mass_initial = 0 * Units.kg # mass to be sprayed in this segment
+
+    # segment.process.iterate.conditions.weights = update_weights_sprayer
+    # aerosol_mass = 40000 * Units.kg
+    segment.sprayer_rate = 2.4706 * Units['kg/s'] #aerosol_mass / (segment.distance / segment.air_speed ) #* Units['kg/s'] #1.2121 * Units['kg/s']
+    # print segment.sprayer_rate
+
+    # add to mission
+    mission.append_segment(segment)
 
     # Linear_Speed_Constant_Rate
 
@@ -471,7 +635,7 @@ def base(analyses):
     segment.planet = planet
 
     segment.air_speed = 750. * Units['km/h']
-    segment.distance = 3300. * Units.km
+    segment.distance = 1100. * Units.km
     segment.aerosol_mass_initial = 0 * Units.kg  # mass to be sprayed in this segment
 
     # segment.process.iterate.conditions.weights = update_weights_sprayer

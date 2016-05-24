@@ -413,16 +413,18 @@ def base_setup():
 
     # design sizing conditions
     altitude = 20.0 * Units.km
-    mach_number = 0.7
+    mach_number = 0.65
     isa_deviation = 0.
 
     # add thrust to the network
     gt_engine.thrust = thrust
+    # print thrust
 
     # size the turbofan
     turbofan_sizing(gt_engine, mach_number, altitude)
 
     compute_turbofan_geometry(gt_engine, None)
+    # print thrust
 
     print "Turbofan thrust:", gt_engine.sealevel_static_thrust, " x ", int(
         gt_engine.number_of_engines), "engines (tot: ", gt_engine.sealevel_static_thrust * gt_engine.number_of_engines, " N)"
@@ -499,7 +501,7 @@ def configs_setup(vehicle):
     config = SUAVE.Components.Configs.Config(base_config)
     config.tag = 'cruise'
 
-    config.maximum_lift_coefficient = 1.6
+    config.maximum_lift_coefficient = 1.4
 
     configs.append(config)
 

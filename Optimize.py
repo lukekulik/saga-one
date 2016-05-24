@@ -17,6 +17,7 @@ import Plot_Mission
 import matplotlib.pyplot as plt
 from SUAVE.Optimization import Nexus, carpet_plot
 import SUAVE.Optimization.Package_Setups.scipy_setup as scipy_setup
+
 from SUAVE.Input_Output.Results import print_parasite_drag, \
     print_compress_drag, \
     print_engine_data, \
@@ -36,7 +37,6 @@ output_folder = "output/"
 #  fuel burn:  [ 41769.08023241]
 
 #
-
 
 
 def main():
@@ -357,14 +357,13 @@ def setup():
     problem.inputs = np.array([
         ['wing_area', 700, (400., 600.), 500., Units.meter ** 2],
         # was 480 before -> constrained by tip deflection not strength!
-        ['MTOW', 156000., (160000.,160000.), 160000., Units.kg],
+        ['MTOW', 200000., (160000.,160000.), 160000., Units.kg],
         # ['wing_sweep', 0, (0,0),5,Units.less],
-        ['cruise_speed', 691., (600., 900.), 500., Units['km/h']],  # 756
+        ['cruise_speed', 700., (600., 900.), 500., Units['km/h']],  # 756
         ['return_cruise_alt', 19.2, (8., 20.), 10, Units.km],
-        ['AR',20,(10,15),10,Units.less], #wing area, vs MTOW fuel weight for different
-        #    ['cruise_altitude',19,(19,19),19,Units.km],
-        ['return_cruise_speed', 750., (750., 806.), 500., Units['km/h']]
-        # # []
+        ['AR',15,(10,15),10,Units.less], # wing area, vs MTOW fuel weight for different
+        # ['cruise_altitude',19,(19,19),19,Units.km],
+        ['return_cruise_speed', 750., (600., 760.), 500., Units['km/h']],
         # [ 'cruise_altitude'              ,  19.5    , (   19.5   ,    21.   ) ,   10.  , Units.km],
         # [ 'c1_airspeed'              ,  90    , (   50   ,    250.   ) ,   100.  , Units['m/s']],
         # [ 'c1_rate'              ,  15    , (   1   ,    25.   ) ,   10.  , Units['m/s']],

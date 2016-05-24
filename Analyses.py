@@ -8,7 +8,6 @@
 # ----------------------------------------------------------------------    
 
 import SUAVE
-from SUAVE.Core import Units
 
 
 # ----------------------------------------------------------------------
@@ -25,38 +24,11 @@ def setup(configs):
 
     # adjust analyses for configs
 
-    # aerosol-spreading analysis
-    # print "test"
-    # print analyses.cruise.weights.settings
-
     # takeoff_analysis
     analyses.takeoff.aerodynamics.settings.drag_coefficient_increment = 0.0000
 
     # landing analysis
     aerodynamics = analyses.landing.aerodynamics
-
-    # -----------------------------------
-    #   Battery Setup
-    # -----------------------------------
-
-    # required mission energy, chosen via guess and check
-    #
-    # # initialize the battery
-    # battery = configs.base.energy_network['battery']
-    # battery.specific_energy= 1000*Units.Wh/Units.kg
-    # battery.specific_power = 1*Units.kW/Units.kg
-    # Ereq=1000
-    # Preq=1000
-    # SUAVE.Methods.Power.Battery.Sizing.initialize_from_energy_and_power(battery,Ereq,Preq)
-    # battery.current_energy= [battery.max_energy]
-    # configs.base.store_diff()
-    #
-    # # Update all configs with new base data
-    # for config in configs:
-    #     config.pull_base()
-
-    # mission.segments['cruise'].battery_energy=configs.base.energy_network.battery.max_energy
-
 
     return analyses
 
@@ -103,11 +75,6 @@ def base(vehicle):
     energy.network = vehicle.propulsors  # what is called throughout the mission (at every time step))
     analyses.append(energy)
     #
-    # # ------------------------------------------------------------------
-    # #  Energy - batteries
-    # energy2= SUAVE.Analyses.Energy.Energy()
-    # energy2.network = vehicle.energy_network #what is called throughout the mission (at every time step))
-    # analyses.append(energy2)
 
     # ------------------------------------------------------------------
     #  Planet Analysis

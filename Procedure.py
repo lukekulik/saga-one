@@ -124,7 +124,10 @@ def simple_sizing(nexus):
 
     # find conditions
     air_speed = nexus.missions.base.segments['cruise_2'].air_speed
-    altitude = nexus.missions.base.segments['climb_5'].altitude_end
+
+    altitude = 18.5 * Units.km #nexus.missions.base.segments['climb_8'].altitude_end #FIXME
+
+
     atmosphere = SUAVE.Analyses.Atmospheric.US_Standard_1976()
 
     freestream = atmosphere.compute_values(altitude)
@@ -306,10 +309,7 @@ def post_process(nexus):
     max_takeoff_weight = nexus.vehicle_configurations.takeoff.mass_properties.max_takeoff
     zero_fuel_weight = payload + operating_empty
 
-    #
-    # print "Test"
-    # print
-    # print results.base.segments[0].conditions.weights.fuel_burn[:,0]
+
 
     for i in range(1, len(results.base.segments)):
         # print i

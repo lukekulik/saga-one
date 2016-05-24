@@ -36,6 +36,9 @@ def plot_mission(results, line_style='bo-'):
         Thrust = segment.conditions.frames.body.thrust_force_vector[:, 0]
         Position = segment.conditions.frames.inertial.position_vector[:, 0]
         aoa = segment.conditions.aerodynamics.angle_of_attack[:, 0] / Units.deg
+        # vel segment.conditions.frames.wind.velocity_vector.keys()
+        # print segment.conditions.frames.wind.lift_vector.keys()
+
         l_d = CLift / CDrag
 
         axes = fig.add_subplot(4, 1, 1)
