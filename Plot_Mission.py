@@ -8,9 +8,21 @@
 # ----------------------------------------------------------------------    
 
 import SUAVE
-from SUAVE.Core import Units
-
+from SUAVE.Core import Units, Data
+import numpy as np
 import pylab as plt
+
+def pretty_print(d, indent=0): # recursive printer
+   for key in d.keys():
+      print '\t' * indent + str(key)
+      v=d[key]
+      if isinstance(v, Data):
+         pretty_print(v, indent+1)
+      elif isinstance(v, (np.ndarray, np.generic) ):
+         continue
+      else:
+         print '\t' * (indent + 1) + str(v)
+
 
 
 # ----------------------------------------------------------------------
@@ -29,20 +41,41 @@ def plot_mission(results, line_style='bo-'):
     for segment in results.base.segments.values():
         time = segment.conditions.frames.inertial.time[:, 0] / Units.min
         CLift = segment.conditions.aerodynamics.lift_coefficient[:, 0]
+
+        cl_inviscid = segment.conditions.aerodynamics.lift_breakdown.inviscid_wings_lift[:, 0]
+        cl_compressible = segment.conditions.aerodynamics.lift_breakdown.compressible_wings[:, 0]
+
         CDrag = segment.conditions.aerodynamics.drag_coefficient[:, 0]
         # segment.conditions.freestream.velocity
         eta = segment.conditions.propulsion.throttle[:, 0]
         Drag = -segment.conditions.frames.wind.drag_force_vector[:, 0]
+
+        # print segment.conditions.aerodynamics.lift_breakdown.keys() # ['inviscid_wings_lift', 'compressible_wings']
+        # print segment.conditions.lift_curve_slope
+        # print segment.conditions.frames.wind.lift_force_vector[:,0] #keys() # ['inertial', 'body', 'wind', 'planet']
+
+
         Thrust = segment.conditions.frames.body.thrust_force_vector[:, 0]
-        Position = segment.conditions.frames.inertial.position_vector[:, 0]
+        Position = segment.conditions.frames.inertial.position_vector[:, 0] # ['position_vector', 'velocity_vector', 'acceleration_vector', 'gravity_force_vector', 'total_force_vector', 'time']
+
+
+
+        # print segment.conditions.frames.inertial.velocity_vector.keys()
+        # print segment.conditions.frames.inertial.gravity_force_vector.keys()
+
         aoa = segment.conditions.aerodynamics.angle_of_attack[:, 0] / Units.deg
         # vel segment.conditions.frames.wind.velocity_vector.keys()
         # print segment.conditions.frames.wind.lift_vector.keys()
 
         l_d = CLift / CDrag
 
+
+
         axes = fig.add_subplot(4, 1, 1)
         axes.plot(time, CLift, line_style)
+        # axes.plot(time,cl_inviscid,'ro-')
+        # axes.plot(time, cl_compressible, 'ro-')
+
         axes.set_ylabel('Lift Coefficient', axis_font)
         axes.grid(True)
 
@@ -61,6 +94,8 @@ def plot_mission(results, line_style='bo-'):
         axes.set_xlabel('Time (min)', axis_font)
         axes.set_ylabel('AOA (deg)', axis_font)
         axes.grid(True)
+
+
 
     plt.savefig(folder + "fig1" + file_format)
 
@@ -194,9 +229,95 @@ def plot_mission(results, line_style='bo-'):
 
     plt.savefig(folder + "fig4" + file_format)
 
+    fig = plt.figure("Velocities and accelerations", figsize=(8, 10))
+    for segment in results.base.segments.values():
+        time = segment.conditions.frames.inertial.time[:, 0] / Units.min
+
+        acc_x = segment.conditions.frames.inertial.acceleration_vector[:,0]
+        acc_y = segment.conditions.frames.inertial.acceleration_vector[:, 1]
+        acc_z = segment.conditions.frames.inertial.acceleration_vector[:, 2]
+
+        # segment.conditions.frames.inertial
+
+        vel_x = segment.conditions.frames.inertial.velocity_vector[:,0]
+        vel_y = segment.conditions.frames.inertial.velocity_vector[:, 1] # airspeed is very different (earth is moving)
+        vel_z = segment.conditions.frames.inertial.velocity_vector[:, 2]
+
+        f_x = segment.conditions.frames.inertial.gravity_force_vector[:, 0]
+        f_y = segment.conditions.frames.inertial.gravity_force_vector[:, 1]
+        f_z = segment.conditions.frames.inertial.gravity_force_vector[:, 2]
+
+        temp =  segment.conditions.freestream.temperature[:,0]
+
+        net_acceleration = (f_x**2+f_y**2+f_z**2)**(1./3.)
+
+        # print segment
+
+
+        # axes = fig.add_subplot(5, 1, 1)
+        # axes.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
+        # axes.plot(time, Thrust, line_style)
+        # axes.set_ylabel('Thrust [N]', axis_font)
+        # axes.grid(True)
+
+        axes = fig.add_subplot(4, 1, 1)
+        axes.plot(time, acc_x, line_style)
+        # axes.plot(time, acc_y, line_style)
+        # axes.plot(time, acc_z, line_style)
+        # axes.plot(time,cl_inviscid,'ro-')
+        # axes.plot(time, cl_compressible, 'ro-')
+
+        axes.set_ylabel('Accelerations', axis_font)
+        axes.grid(True)
+
+        axes = fig.add_subplot(4, 1, 2)
+        # axes.plot(time, acc_x, line_style)
+        # axes.plot(time, acc_y, line_style)
+        axes.plot(time, -vel_z, line_style)
+        # axes.plot(time,cl_inviscid,'ro-')
+        # axes.plot(time, cl_compressible, 'ro-')
+
+        axes.set_ylabel('Climb rate ($-v_z$)', axis_font)
+        axes.grid(True)
+
+        axes = fig.add_subplot(4, 1, 3)
+        axes.plot(time, net_acceleration , line_style)
+        # axes.plot(time, acc_y, line_style)
+        # axes.plot(time, -vel_z, line_style)
+        # axes.plot(time,cl_inviscid,'ro-')
+        # axes.plot(time, cl_compressible, 'ro-')
+
+        axes.set_ylabel('(net?) Force vector', axis_font)
+        axes.grid(True)
+
+        axes = fig.add_subplot(4, 1, 4)
+        axes.plot(time, temp, line_style)
+        # axes.plot(time, acc_y, line_style)
+        # axes.plot(time, -vel_z, line_style)
+        # axes.plot(time,cl_inviscid,'ro-')
+        # axes.plot(time, cl_compressible, 'ro-')
+
+        axes.set_ylabel('Temperature (K)', axis_font)
+        axes.grid(True)
+
+        # print segment.conditions.freestream.keys()
+
+        # positions?
+
+        axes.set_xlabel('Time (min)')
+
+    plt.savefig(folder + "fig5" + file_format)
+
     # aerosol disperion rate plot
 
     # plt.show()
+
+    # pretty_print(segment) # print all the values in the dictionary
+    # print segment.conditions.weights.weight_breakdown
+    # print segment.conditions.energies.total_efficiency
+
+    # print segment.conditions.freestream.gravity
+    # print segment.conditions.freestream.reynolds_number
 
 
     return

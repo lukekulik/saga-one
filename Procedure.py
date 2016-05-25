@@ -21,6 +21,18 @@ from SUAVE.Methods.Aerodynamics.Fidelity_Zero.Lift.compute_max_lift_coeff import
 from SUAVE.Methods.Flight_Dynamics.Dynamic_Stability.Full_Linearized_Equations.longitudinal import longitudinal
 
 
+def pretty_print(d, indent=0): # recursive printer
+   for key in d.keys():
+      print '\t' * indent + str(key)
+      v=d[key]
+      if isinstance(v, Data):
+         pretty_print(v, indent+1)
+      elif isinstance(v, (np.ndarray, np.generic) ):
+         continue
+      else:
+         print '\t' * (indent + 1) + str(v)
+
+
 # ----------------------------------------------------------------------        
 #   Setup
 # ----------------------------------------------------------------------   
@@ -126,7 +138,6 @@ def simple_sizing(nexus):
     air_speed = nexus.missions.base.segments['cruise_2'].air_speed
 
     altitude = 18.5 * Units.km #nexus.missions.base.segments['climb_8'].altitude_end #FIXME
-
 
     atmosphere = SUAVE.Analyses.Atmospheric.US_Standard_1976()
 
@@ -248,6 +259,7 @@ def weight(nexus):
     weights = nexus.analyses.short_field_takeoff.weights.evaluate()
 
     empty_weight = vehicle.mass_properties.operating_empty
+
     passenger_weight = 0
 
     for config in nexus.vehicle_configurations:
@@ -278,6 +290,8 @@ def post_process(nexus):
     results = nexus.results
     summary = nexus.summary
     missions = nexus.missions
+
+    pretty_print(results)
 
     # Static stability calculations
     CMA = -10.
