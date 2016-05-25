@@ -3,7 +3,6 @@
 # Created:  Mar 2016, M. Vegh
 # Modified: 
 
-
 # ----------------------------------------------------------------------        
 #   Imports
 # ----------------------------------------------------------------------    
@@ -12,6 +11,7 @@ import SUAVE
 from SUAVE.Core import Units
 from sprayer import update_weights_sprayer
 
+#have alternative mission files
 
 # ----------------------------------------------------------------------
 #   Define the Mission

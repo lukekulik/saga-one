@@ -19,7 +19,11 @@ from SUAVE.Methods.Center_of_Gravity.compute_component_centers_of_gravity import
 from SUAVE.Methods.Center_of_Gravity.compute_aircraft_center_of_gravity import compute_aircraft_center_of_gravity
 from SUAVE.Methods.Aerodynamics.Fidelity_Zero.Lift.compute_max_lift_coeff import compute_max_lift_coeff
 from SUAVE.Methods.Flight_Dynamics.Dynamic_Stability.Full_Linearized_Equations.longitudinal import longitudinal
-
+from SUAVE.Input_Output.Results import print_parasite_drag, \
+    print_compress_drag, \
+    print_engine_data, \
+    print_mission_breakdown, \
+    print_weight_breakdown
 
 def pretty_print(d, indent=0): # recursive printer
    for key in d.keys():
@@ -32,8 +36,10 @@ def pretty_print(d, indent=0): # recursive printer
       else:
          print '\t' * (indent + 1) + str(v)
 
+output_folder = "output/"
 
-# ----------------------------------------------------------------------        
+
+# ----------------------------------------------------------------------
 #   Setup
 # ----------------------------------------------------------------------   
 
@@ -101,6 +107,8 @@ def find_target_range(nexus, mission):
 
     cruise_range = mission.design_range - (
         x_climb_1 + x_climb_2 + x_climb_3 + x_climb_4 + x_climb_5 + x_descent_1 + x_descent_2 + x_descent_3)
+    # some sort of a sum here?
+
 
     # segments['cruise_2'].distance=cruise_range # FIXME need to add other cruises
 
@@ -356,6 +364,26 @@ def post_process(nexus):
         (summary.total_mission_time - summary.main_mission_time)[0] * Units['s'] / Units.h, "hours (diversion)"
     summary.nothing = 0.0
 
+    print 'Fuel burn: ', summary.base_mission_fuelburn
+    # print 'fuel margin=', problem.all_constraints()
+
+    gt_engine = nexus.vehicle_configurations.base.propulsors.turbofan
+
+
+    # print thrust
+    # FIXME move that to printing/results section
+    print "Turbofan thrust:", gt_engine.sealevel_static_thrust, " x ", int(
+        gt_engine.number_of_engines), "engines (tot: ", gt_engine.sealevel_static_thrust * gt_engine.number_of_engines, " N)"
+
+    print "Estimated engine length: ", gt_engine.engine_length, ", diameter: ", gt_engine.nacelle_diameter, ", wetted area: ", gt_engine.areas.wetted
+
+    #FXI
+
+    print "Aerosol released: ", summary.base_mission_sprayed[0], " kg"
+
+    # print "cruise range: ",problem.summary.cruise_range/1000., " km"
+
+
     hf = vehicle.fuselages.fuselage.heights.at_wing_root_quarter_chord
     wf = vehicle.fuselages.fuselage.width
     Lf = vehicle.fuselages.fuselage.lengths.total
@@ -375,6 +403,8 @@ def post_process(nexus):
     scaled_inputs = unscaled_inputs / input_scaling
     problem_inputs = []
 
+
+
     for value in unscaled_inputs:
         problem_inputs.append(value)
     file_out = open('results.txt', 'ab')
@@ -387,5 +417,30 @@ def post_process(nexus):
 
     file_out.write('\n')
     file_out.close()
+
+    print_weight_breakdown(nexus.vehicle_configurations.base, filename=output_folder + 'weight_breakdown.dat')
+    #
+    # # print engine data into file
+    print_engine_data(nexus.vehicle_configurations.base, filename=output_folder + 'engine_data.dat')
+    #
+    # # print parasite drag data into file
+    # # define reference condition for parasite drag
+    ref_condition = Data()
+    ref_condition.mach_number = 0.7  # FIXME
+    ref_condition.reynolds_number = 7e6  # FIXME
+    Analyses = Data()
+    Analyses.configs = nexus.analyses
+
+    print_parasite_drag(ref_condition, nexus.vehicle_configurations.cruise, Analyses,
+                        filename=output_folder + 'parasite_drag.dat')
+    #
+    # print compressibility drag data into file
+
+    # print Analyses
+    print_compress_drag(nexus.vehicle_configurations.cruise, Analyses, filename=output_folder + 'compress_drag.dat')
+
+    # print mission breakdown
+    print_mission_breakdown(nexus.results.base,
+                            filename=output_folder + 'mission_breakdown.dat')  # FIXME fuel weight adds aerosol = wrong!!!!!
 
     return nexus

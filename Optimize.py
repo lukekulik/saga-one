@@ -11,26 +11,18 @@ from SUAVE.Core import Units, Data
 import numpy as np
 import Vehicles
 import Analyses
-import Missions
+import MainMission
 import Procedure
 import Plot_Mission
 import matplotlib.pyplot as plt
 from SUAVE.Optimization import Nexus, carpet_plot
 import SUAVE.Optimization.Package_Setups.scipy_setup as scipy_setup
 
-from SUAVE.Input_Output.Results import print_parasite_drag, \
-    print_compress_drag, \
-    print_engine_data, \
-    print_mission_breakdown, \
-    print_weight_breakdown
-
-
 
 # ----------------------------------------------------------------------        
 #   Run the whole thing
 # ----------------------------------------------------------------------
 
-output_folder = "output/"
 
 # give proper output to backwork it
 # newest config:
@@ -39,75 +31,14 @@ output_folder = "output/"
 #  fuel burn:  [ 41769.08023241]
 
 def main():
-    print "SUAVE initialized\n"
+    print "SUAVE initialized...\n"
     problem = setup()  # "problem" is a nexus
 
     output = problem.objective()  # uncomment this line when using the default inputs
     # variable_sweep(problem)  #uncomment this to view some contours of the problem
+    # output = scipy_setup.SciPy_Solve(problem,solver='SLSQP') # uncomment this to optimize the values
 
-    '''
-    #uncomment these lines when you want to start an optimization problem from a different initial guess
-    inputs                                   = [1.28, 1.38]
-    scaling                                  = problem.optimization_problem.inputs[:,3] #have to rescale inputs to start problem from here
-    scaled_inputs                            = np.multiply(inputs,scaling)
-    problem.optimization_problem.inputs[:,1] = scaled_inputs
-    '''
-    # output = scipy_setup.SciPy_Solve(problem,solver='SLSQP')
-
-    print 'fuel burn: ', problem.summary.base_mission_fuelburn
-    # print 'fuel margin=', problem.all_constraints()
-
-
-
-    Plot_Mission.plot_mission(problem.results)
-    # print problem.results.base.segments.cruise.conditions.keys()
-
-    # print problem.results.base.segments.cruise.conditions.propulsion
-
-    # cruise1_time =  problem.results.base.segments.cruise_2.conditions.frames.inertial.time[:,0] / Units.min #FIXME
-    # cruise1_dur = (cruise1_time.max()-cruise1_time.min())*Units.min/Units['h']
-    # print "cruise duration=",cruise1_dur , " hours"
-    print "aerosol released: ", problem.summary.base_mission_sprayed[0], " kg"
-    # print "cruise range: ",problem.summary.cruise_range/1000., " km"
-
-    pretty_print(problem.summary)
-
-    print_weight_breakdown(problem.vehicle_configurations.base, filename=output_folder + 'weight_breakdown.dat')
-    #
-    # # print engine data into file
-    print_engine_data(problem.vehicle_configurations.base, filename=output_folder + 'engine_data.dat')
-    #
-    # # print parasite drag data into file
-    # # define reference condition for parasite drag
-    ref_condition = Data()
-    ref_condition.mach_number = 0.7  # FIXME
-    ref_condition.reynolds_number = 7e6  # FIXME
-    Analyses = Data()
-    Analyses.configs = problem.analyses
-
-    print_parasite_drag(ref_condition, problem.vehicle_configurations.cruise, Analyses,
-                        filename=output_folder + 'parasite_drag.dat')
-    #
-    # print compressibility drag data into file
-
-    # print Analyses
-    print_compress_drag(problem.vehicle_configurations.cruise, Analyses, filename=output_folder + 'compress_drag.dat')
-
-    # print mission breakdown
-    print_mission_breakdown(problem.results.base,
-                            filename=output_folder + 'mission_breakdown.dat')  # FIXME fuel weight adds aerosol = wrong!!!!!
-
-    # print problem.results.base.segments.cruise.keys()
-    # print problem.results.base.segments.cruise.conditions.keys()
-
-    # print problem.results.base.segments.cruise.conditions.stability.dynamic.cn_r #'cn_r', 'cl_p', 'cl_beta', 'cm_q', 'cm_alpha_dot', 'cz_alpha']
-    # print problem.results.base.segments.cruise.conditions.stability.static.cm_alpha
-    # print problem.results.base.segments.cruise.conditions.stability.static.cn_beta
-
-
-
-
-    # print problem.results
+    Plot_Mission.plot_mission(problem.results, show=False)
 
     return
 
@@ -124,7 +55,13 @@ def setup():
     # -------------------------------------------------------------------
     # Inputs
     # -------------------------------------------------------------------
-    #   [ tag                            , initial, (lb,ub)             , scaling , units ]
+
+    # twin = "OFF"
+    # thrust_total = 115000 * Units.N  # Newtons 111
+    # num_engine = 4  # move to main -> how to guarantee these parameters when not optimized for??? - selected at the top and entered in inputs from there?
+    # bypass = 6
+
+    #   [ tag, initial, (lb,ub) , scaling , units ]
     problem.inputs = np.array([
         ['wing_area', 700, (400., 600.), 500., Units.meter ** 2],
         # was 480 before -> constrained by tip deflection not strength!
@@ -135,6 +72,8 @@ def setup():
         ['AR',15,(10,15),10,Units.less], # wing area, vs MTOW fuel weight for different
         # ['cruise_altitude',19,(19,19),19,Units.km],
         ['return_cruise_speed', 750., (600., 760.), 500., Units['km/h']],
+
+
         # [ 'cruise_altitude'              ,  19.5    , (   19.5   ,    21.   ) ,   10.  , Units.km],
         # [ 'c1_airspeed'              ,  90    , (   50   ,    250.   ) ,   100.  , Units['m/s']],
         # [ 'c1_rate'              ,  15    , (   1   ,    25.   ) ,   10.  , Units['m/s']],
@@ -244,7 +183,7 @@ def setup():
     # -------------------------------------------------------------------
     #  Missions
     # -------------------------------------------------------------------
-    nexus.missions = Missions.setup(nexus.analyses)
+    nexus.missions = MainMission.setup(nexus.analyses)
 
     # -------------------------------------------------------------------
     #  Procedure

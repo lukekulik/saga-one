@@ -29,7 +29,7 @@ def pretty_print(d, indent=0): # recursive printer
 #   Plot Mission
 # ----------------------------------------------------------------------
 
-def plot_mission(results, line_style='bo-'):
+def plot_mission(results, show=True, line_style='bo-'):
     axis_font = {'fontname': 'Arial', 'size': '14'}
     folder = "/Users/lkulik/Dropbox/Shared/DSE Conceptual Design/graphs/"
     file_format = ".eps"
@@ -310,7 +310,8 @@ def plot_mission(results, line_style='bo-'):
 
     # aerosol disperion rate plot
 
-    # plt.show()
+    if show:
+        plt.show()
 
     # pretty_print(segment) # print all the values in the dictionary
     # print segment.conditions.weights.weight_breakdown
