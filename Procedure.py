@@ -309,6 +309,7 @@ def post_process(nexus):
 
     # throttle in design mission
     max_throttle = 0
+    min_throttle = 0
     for segment in results.base.segments.values():
         max_segment_throttle = np.max(segment.conditions.propulsion.throttle[:, 0])
         min_segment_throttle = np.min(segment.conditions.propulsion.throttle[:, 0])
