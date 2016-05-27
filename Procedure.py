@@ -18,6 +18,8 @@ from SUAVE.Methods.Geometry.Two_Dimensional.Cross_Section.Propulsion.compute_tur
 from SUAVE.Methods.Center_of_Gravity.compute_component_centers_of_gravity import compute_component_centers_of_gravity
 from SUAVE.Methods.Center_of_Gravity.compute_aircraft_center_of_gravity import compute_aircraft_center_of_gravity
 from SUAVE.Methods.Aerodynamics.Fidelity_Zero.Lift.compute_max_lift_coeff import compute_max_lift_coeff
+from SUAVE.Methods.Performance import estimate_take_off_field_length
+from SUAVE.Methods.Performance import estimate_landing_field_length
 from SUAVE.Methods.Flight_Dynamics.Dynamic_Stability.Full_Linearized_Equations.longitudinal import longitudinal
 from SUAVE.Input_Output.Results import print_parasite_drag, \
     print_compress_drag, \
@@ -115,6 +117,27 @@ def find_target_range(nexus, mission):
 
 
     return nexus
+
+
+def evaluate_field_length(configs, analyses, mission, results):
+    # unpack
+    airport = mission.airport
+
+    takeoff_config = configs.takeoff
+    landing_config = configs.landing
+
+    # evaluate
+
+    TOFL = estimate_take_off_field_length(takeoff_config, analyses.configs, airport)
+    LFL = estimate_landing_field_length(landing_config, analyses.configs, airport)
+
+    # pack
+    field_length = SUAVE.Core.Data()
+    field_length.takeoff = TOFL[0]
+    field_length.landing = LFL[0]
+
+    results.field_length = field_length
+    return results
 
 
 # ----------------------------------------------------------------------
@@ -307,6 +330,13 @@ def post_process(nexus):
 
     summary.static_stability = CMA
 
+    results = evaluate_field_length(configs, analyses, mission, results)
+
+    summary.field_length_takeoff = results.field_length.takeoff
+    summary.field_length_landing = results.field_length.landing
+
+    #
+
     # throttle in design mission
     max_throttle = 0
     min_throttle = 0
@@ -368,7 +398,7 @@ def post_process(nexus):
                                                                                            0] + summary.base_mission_fuelburn
     print "Max/Min throttle: ", summary.max_throttle, ", ", summary.min_throttle
     print "Mission Range: ", summary.mission_range, " km"
-    print "Total Range: ", summary.total_range, " km"
+    print "Total Range: ", summary.total_range, " km", "(+",summary.total_range-summary.mission_range,")"
     print "Mission time: ", summary.main_mission_time[0] * Units['s'] / Units.h, "hours (main) +", \
         (summary.total_mission_time - summary.main_mission_time)[0] * Units['s'] / Units.h, "hours (diversion)"
     summary.nothing = 0.0

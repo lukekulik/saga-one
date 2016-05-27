@@ -115,7 +115,7 @@ def setup():
     problem.objective = np.array([
         # [ 'Nothing', 1, Units.kg ]
         # ['max_throttle', .8 ,Units.less],
-        ['fuel_burn', 45000., Units.kg]
+        ['fuel_burn', 35000., Units.kg]
     ])
 
     # -------------------------------------------------------------------

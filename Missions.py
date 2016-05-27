@@ -283,7 +283,7 @@ def base(analyses):
     # segment.process.iterate.conditions.weights = update_weights_sprayer
     #segment.sprayer_rate = 0 * Units['kg/s']
 
-    segment.aerosol_mass_initial = 2000. * Units.kg  # mass to be sprayed in this segment
+    segment.aerosol_mass_initial = 7000. * Units.kg  # mass to be sprayed in this segment
 
     # add to misison
     mission.append_segment(segment)
@@ -370,7 +370,7 @@ def base(analyses):
     # segment.conditions.weights.vehicle_mass_rate = 2 * Units['kg/s']
 
     # segment.process.iterate.conditions.weights = update_weights_sprayer
-    segment.aerosol_mass_initial = 13300 * Units.kg  # mass to be sprayed in this segment
+    segment.aerosol_mass_initial = 10300 * Units.kg  # mass to be sprayed in this segment
 
     # segment.sprayer_rate = aerosol_mass_initial / (segment.distance / segment.air_speed ) #* Units['kg/s'] #1.2121 * Units['kg/s']
     # print segment.sprayer_rate # delegate rate to a method which will calculate live rate?
