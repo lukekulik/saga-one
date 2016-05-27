@@ -11,7 +11,7 @@ from SUAVE.Core import Units, Data
 import numpy as np
 import Vehicles
 import Analyses
-import Missions
+import Mission_backwards2
 import Procedure
 import Plot_Mission
 import matplotlib.pyplot as plt
@@ -61,14 +61,25 @@ def setup():
     # num_engine = 4  # move to main -> how to guarantee these parameters when not optimized for??? - selected at the top and entered in inputs from there?
     # bypass = 6
 
-    #   [ tag, initial, (lb,ub) , scaling , units ]
     problem.inputs = np.array([
-        ['wing_area', 700, (400., 600.), 500., Units.meter ** 2],  # was 480 before -> constrained by tip deflection not strength!
-        ['MTOW', 200000., (160000.,160000.), 160000., Units.kg],
-        ['cruise_speed', 700., (600., 900.), 500., Units['km/h']],  # 756
-        ['return_cruise_alt', 19.2, (8., 20.), 10, Units.km],
-        ['AR',15,(10,15),10,Units.less], # wing area, vs MTOW fuel weight for different
-        ['return_cruise_speed', 750., (600., 760.), 500., Units['km/h']],
+        #Variable inputs
+        ['wing_area', 700, (400., 600.), 500., Units.meter ** 2],
+        ['MTOW', 180000., (160000., 160000.), 160000., Units.kg],
+        ['alt_outgoing_cruise', 18., (8., 20.), 15., Units.km],     # MAKE ALIAS
+        ['design_thrust', 105e3, (85e3, 110e3), 100e3, Units.N],       # MAKE ALIAS
+
+        #Set inputs
+        ['AR', 15, (15, 15), 15, Units.less],
+
+        ])
+    #   [ tag, initial, (lb,ub) , scaling , units ]
+    # problem.inputs = np.array([
+        # ['wing_area', 700, (400., 600.), 500., Units.meter ** 2],  # was 480 before -> constrained by tip deflection not strength!
+        # ['MTOW', 180000., (160000.,160000.), 160000., Units.kg],
+        #['cruise_speed', 700., (600., 900.), 500., Units['km/h']],  # 756
+        #['return_cruise_alt', 19.2, (8., 20.), 10, Units.km],
+        # ['AR',15,(10,15),10,Units.less], # wing area, vs MTOW fuel weight for different
+        #['return_cruise_speed', 750., (600., 760.), 500., Units['km/h']],
 
         # ['cruise_altitude',19,(19,19),19,Units.km],
         # ['wing_sweep', 0, (0,0),5,Units.less],
@@ -93,7 +104,7 @@ def setup():
         #     segment.air_speed      = 118.0 * Units['m/s']
         #     segment.climb_rate     = 15. * Units['m/s']
 
-    ])
+    #])
 
     # -------------------------------------------------------------------
     # Objective
@@ -104,7 +115,7 @@ def setup():
     problem.objective = np.array([
         # [ 'Nothing', 1, Units.kg ]
         # ['max_throttle', .8 ,Units.less],
-        ['fuel_burn', 36000, Units.kg]
+        ['fuel_burn', 45000., Units.kg]
     ])
 
     # -------------------------------------------------------------------
@@ -117,9 +128,13 @@ def setup():
         # [ 'Nothing', '=', 0. ,1E-1, Units.kg]
         # [ 'fuel_burn', '<', 40000, 1, Units.kg ]
         # constraint on mission time?
-        ['max_throttle', '<', 1.1, 1e-1, Units.less],
+        ['min_throttle', '<', 0., 1e-2, Units.less], #DEFINE ALIAS?
+        ['max_throttle', '<', 1., 1e-2, Units.less],
         ['main_mission_time', '<', 11.1, 1e-1, Units.h],
-        # [ 'design_range_fuel_margin' , '>', 0., 1E-1, Units.less], #fuel margin defined here as fuel
+        ['mission_range', '>', 7000., 50., Units.km ], #DEFINE ALIAS
+        ['aerosol_released', '=', 40000., 50., Units.kg ],
+        ['design_range_fuel_margin' , '>', 0., 1E-1, Units.less], #fuel margin defined here as fuel
+        # Take off?
 
         # throttle < 1.1
     ])
@@ -182,7 +197,7 @@ def setup():
     # -------------------------------------------------------------------
     #  Missions
     # -------------------------------------------------------------------
-    nexus.missions = Missions.setup(nexus.analyses)
+    nexus.missions = Mission_backwards2.setup(nexus.analyses)
 
     # -------------------------------------------------------------------
     #  Procedure

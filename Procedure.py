@@ -348,7 +348,7 @@ def post_process(nexus):
     summary.base_mission_sprayed = results.base.segments[-1].conditions.weights.spray[-1]
 
     summary.cruise_range = 0#missions.base.segments.cruise_2.distance # assume we're flying straight
-    summary.mission_range = results.base.segments['descent_final'].conditions.frames.inertial.position_vector[:, 0][-1]/1000.
+    summary.mission_range = results.base.segments['cruise_final'].conditions.frames.inertial.position_vector[:, 0][-1]/1000. # Assuming mission ends at cruise altitude
 
     summary.total_range = results.base.segments[-1].conditions.frames.inertial.position_vector[:, 0][-1]/1000.
 

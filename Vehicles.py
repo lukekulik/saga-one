@@ -29,13 +29,13 @@ def base_setup():
     # important design parameters exported out for clarity:
 
     twin = "OFF"
-    thrust_total = 115e3 * Units.N  # Newtons 111
+    thrust_total = 105e3 * Units.N  # Newtons 111
     num_engine = 4 # move to main -> how to guarantee these parameters when not optimized for??? - selected at the top and entered in inputs from there?
     bypass = 7.5
 
     # design sizing conditions
-    altitude = 20.0 * Units.km
-    mach_number = 0.65
+    altitude = 19. * Units.km
+    mach_number = 0.68
 
     # ------------------------------------------------------------------
     #   Initialize the Vehicle
