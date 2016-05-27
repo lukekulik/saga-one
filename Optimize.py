@@ -63,16 +63,15 @@ def setup():
 
     #   [ tag, initial, (lb,ub) , scaling , units ]
     problem.inputs = np.array([
-        ['wing_area', 700, (400., 600.), 500., Units.meter ** 2],
-        # was 480 before -> constrained by tip deflection not strength!
+        ['wing_area', 700, (400., 600.), 500., Units.meter ** 2],  # was 480 before -> constrained by tip deflection not strength!
         ['MTOW', 200000., (160000.,160000.), 160000., Units.kg],
-        # ['wing_sweep', 0, (0,0),5,Units.less],
         ['cruise_speed', 700., (600., 900.), 500., Units['km/h']],  # 756
         ['return_cruise_alt', 19.2, (8., 20.), 10, Units.km],
         ['AR',15,(10,15),10,Units.less], # wing area, vs MTOW fuel weight for different
-        # ['cruise_altitude',19,(19,19),19,Units.km],
         ['return_cruise_speed', 750., (600., 760.), 500., Units['km/h']],
 
+        # ['cruise_altitude',19,(19,19),19,Units.km],
+        # ['wing_sweep', 0, (0,0),5,Units.less],
 
         # [ 'cruise_altitude'              ,  19.5    , (   19.5   ,    21.   ) ,   10.  , Units.km],
         # [ 'c1_airspeed'              ,  90    , (   50   ,    250.   ) ,   100.  , Units['m/s']],
