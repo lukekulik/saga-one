@@ -114,8 +114,6 @@ def find_target_range(nexus, mission):
     # print segments.cruise.distance
     # print cruise_range
 
-
-
     return nexus
 
 
@@ -128,8 +126,8 @@ def evaluate_field_length(configs, analyses, mission, results):
 
     # evaluate
 
-    TOFL = estimate_take_off_field_length(takeoff_config, analyses.configs, airport)
-    LFL = estimate_landing_field_length(landing_config, analyses.configs, airport)
+    TOFL = estimate_take_off_field_length(takeoff_config, analyses, airport)
+    LFL = np.array([0.])# estimate_landing_field_length(landing_config, analyses, airport) #FIXME
 
     # pack
     field_length = SUAVE.Core.Data()
@@ -315,6 +313,7 @@ def finalize(nexus):
 def post_process(nexus):
     # Unpack data
     vehicle = nexus.vehicle_configurations.base
+    configs = nexus.vehicle_configurations
     results = nexus.results
     summary = nexus.summary
     missions = nexus.missions
@@ -327,16 +326,16 @@ def post_process(nexus):
         max_CMA = np.max(segment.conditions.stability.static.cm_alpha[:, 0])
         if max_CMA > CMA:
             CMA = max_CMA
-
-    summary.static_stability = CMA
-
-    results = evaluate_field_length(configs, analyses, mission, results)
-
-    summary.field_length_takeoff = results.field_length.takeoff
-    summary.field_length_landing = results.field_length.landing
-
     #
-
+    # summary.static_stability = CMA
+    #
+    results = evaluate_field_length(configs, nexus.analyses, missions.base, results)
+    #
+    # summary.field_length_takeoff = results.field_length.takeoff
+    # summary.field_length_landing = results.field_length.landing
+    #
+    # #
+    # pretty_print(nexus)
     # throttle in design mission
     max_throttle = 0
     min_throttle = 0

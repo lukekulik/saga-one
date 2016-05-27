@@ -10,7 +10,7 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
     gt_engine.number_of_engines = num_engine
     gt_engine.bypass_ratio = bypass
     # gt_engine.engine_length = 5.2
-    # gt_engine.nacelle_diameter = 3
+    gt_engine.nacelle_diameter = 3.
 
     # set the working fluid for the network
     working_fluid = SUAVE.Attributes.Gases.Air
@@ -36,7 +36,7 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
     low_pressure_compressor = SUAVE.Components.Energy.Converters.Compressor()
     low_pressure_compressor.tag = 'lpc'
     low_pressure_compressor.polytropic_efficiency = 0.89
-    low_pressure_compressor.pressure_ratio = 5.0
+    low_pressure_compressor.pressure_ratio = 1.45
     # add low pressure compressor to the network
     gt_engine.low_pressure_compressor = low_pressure_compressor
 
@@ -44,7 +44,7 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
     high_pressure_compressor = SUAVE.Components.Energy.Converters.Compressor()
     high_pressure_compressor.tag = 'hpc'
     high_pressure_compressor.polytropic_efficiency = 0.89  # FIXME
-    high_pressure_compressor.pressure_ratio = 5.0
+    high_pressure_compressor.pressure_ratio = 12.0
     # add the high pressure compressor to the network
     gt_engine.high_pressure_compressor = high_pressure_compressor
 
@@ -69,7 +69,7 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
     combustor.tag = 'Comb'
     combustor.efficiency = 0.99
     combustor.alphac = 1.0
-    combustor.turbine_inlet_temperature = 1500
+    combustor.turbine_inlet_temperature = 1450
     combustor.pressure_ratio = 0.95
     combustor.fuel_data = SUAVE.Attributes.Propellants.Jet_A()
     # add the combustor to the network
@@ -95,17 +95,22 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
     fan = SUAVE.Components.Energy.Converters.Fan()
     fan.tag = 'fan'
     fan.polytropic_efficiency = 0.87
-    fan.pressure_ratio = 1.5
+    fan.pressure_ratio = 1.42
     # add the fan to the network
     gt_engine.fan = fan
 
+    # Define OPR
+    OPR = fan.pressure_ratio*high_pressure_compressor.pressure_ratio*low_pressure_compressor.pressure_ratio
+
     # Component 10 : thrust (to compute the thrust)
     thrust = SUAVE.Components.Energy.Processes.Thrust()
+
     thrust.tag = 'compute_thrust'
     # total design thrust (includes all the engines)
     thrust.total_design = thrust_total
     # add thrust to the network
     gt_engine.thrust = thrust
+    gt_engine.OPR = OPR
     # print thrust
     # size the turbofan
 
