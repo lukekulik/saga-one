@@ -11,7 +11,7 @@ from SUAVE.Core import Units, Data
 import numpy as np
 import Vehicles
 import Analyses
-import MainMission
+import Missions
 import Procedure
 import Plot_Mission
 import matplotlib.pyplot as plt
@@ -138,7 +138,7 @@ def setup():
             # "missions.base.segments.cruise_highlift.air_speed",
 
             "missions.base.segments.cruise_2.air_speed"]],
-        ['return_cruise_speed', "missions.base.segments.cruise_3.air_speed"],
+        ['return_cruise_speed', "missions.base.segments.cruise_final.air_speed"],
         ['MTOW', ['vehicle_configurations.*.mass_properties.takeoff',
                   "vehicle_configurations.*.mass_properties.max_takeoff"]],
         ['oswald', 'vehicle_configurations.*.wings.main_wing.span_efficiency'],
@@ -182,7 +182,7 @@ def setup():
     # -------------------------------------------------------------------
     #  Missions
     # -------------------------------------------------------------------
-    nexus.missions = MainMission.setup(nexus.analyses)
+    nexus.missions = Missions.setup(nexus.analyses)
 
     # -------------------------------------------------------------------
     #  Procedure
