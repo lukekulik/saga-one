@@ -64,14 +64,16 @@ def setup():
     problem.inputs = np.array([
         #Variable inputs
         ['wing_area', 700, (400., 600.), 500., Units.meter ** 2],
-        ['MTOW', 180000., (160000., 160000.), 160000., Units.kg],
-        ['alt_outgoing_cruise', 18., (8., 20.), 15., Units.km],     # MAKE ALIAS
-        ['design_thrust', 105e3, (85e3, 110e3), 100e3, Units.N],       # MAKE ALIAS
+        ['MTOW', 180000., (140000., 200000.), 160000., Units.kg],
+        ['alt_outgoing_cruise', 18., (8., 20.), 15., Units.km],
+        # ['design_thrust', 105e3, (85e3, 110e3), 100e3, Units.N],       # MAKE ALIAS
 
-        #Set inputs
+        #"Set" inputs
         ['AR', 15, (15, 15), 15, Units.less],
+        # speeds???
+    ])
 
-        ])
+
     #   [ tag, initial, (lb,ub) , scaling , units ]
     # problem.inputs = np.array([
         # ['wing_area', 700, (400., 600.), 500., Units.meter ** 2],  # was 480 before -> constrained by tip deflection not strength!
@@ -125,18 +127,15 @@ def setup():
     # stuctural weight below some threshold
     # [ tag, sense, edge, scaling, units ]
     problem.constraints = np.array([
-        # [ 'Nothing', '=', 0. ,1E-1, Units.kg]
-        # [ 'fuel_burn', '<', 40000, 1, Units.kg ]
-        # constraint on mission time?
-        ['min_throttle', '<', 0., 1e-2, Units.less], #DEFINE ALIAS?
-        ['max_throttle', '<', 1., 1e-2, Units.less],
-        ['main_mission_time', '<', 11.1, 1e-1, Units.h],
-        ['mission_range', '>', 7000., 50., Units.km ], #DEFINE ALIAS
-        ['aerosol_released', '=', 40000., 50., Units.kg ],
-        ['design_range_fuel_margin' , '>', 0., 1E-1, Units.less], #fuel margin defined here as fuel
-        # Take off?
 
-        # throttle < 1.1
+        ['min_throttle', '<', 0., 1e-2, Units.less],
+        ['max_throttle', '<', 1., 1e-2, Units.less],
+        ['main_mission_time', '<', 11.1, 1, Units.h],
+        ['mission_range', '>', 7000., 100., Units.km],
+        # ['aerosol_released', '=', 40000., 50., Units.kg ],
+        ['design_range_fuel_margin' , '>', 0., 1E-1, Units.less],
+        # FIXME field length constraints
+
     ])
 
     # -------------------------------------------------------------------
@@ -148,23 +147,50 @@ def setup():
     problem.aliases = [
         ['wing_area', ['vehicle_configurations.*.wings.main_wing.areas.reference',
                        'vehicle_configurations.*.reference_area']],
+
+        ['MTOW', ['vehicle_configurations.*.mass_properties.takeoff',
+                  "vehicle_configurations.*.mass_properties.max_takeoff"]],
+
+        ['alt_outgoing_cruise', 'missions.base.segments.climb_4_final_outgoing.altitude_end'],
+
+        ['design_thrust', 'vehicle_configurations.*.thrust_total'], #FIXME
+
         ['AR', 'vehicle_configurations.*.wings.main_wing.aspect_ratio'],
+
+
+        ['fuel_burn', 'summary.base_mission_fuelburn'],
+
+
+        ['min_throttle', 'summary.min_throttle'],
+
+        ['max_throttle', 'summary.max_throttle'],
+
+        ['main_mission_time', 'summary.main_mission_time'],
+
+        ['mission_range', 'summary.mission_range'],
+
+        # ['aerosol_released', '=', 40000., 50., Units.kg], #FIXME
+
+        ['design_range_fuel_margin', 'summary.max_zero_fuel_margin'],
+
+
+
+
+
+
         ['cruise_speed', [
-            # "missions.base.segments.cruise_highlift.air_speed",
+            "missions.base.segments.cruise_highlift.air_speed",
 
             "missions.base.segments.cruise_2.air_speed"]],
         ['return_cruise_speed', "missions.base.segments.cruise_final.air_speed"],
-        ['MTOW', ['vehicle_configurations.*.mass_properties.takeoff',
-                  "vehicle_configurations.*.mass_properties.max_takeoff"]],
+
         ['oswald', 'vehicle_configurations.*.wings.main_wing.span_efficiency'],
         ['cruise_altitude', "missions.base.segments.climb_8.altitude_end"],
 
-        ['fuel_burn', 'summary.base_mission_fuelburn'],
-        ['design_range_fuel_margin', 'summary.max_zero_fuel_margin'],
+
         ['return_cruise_alt', 'missions.base.segments.descent_1.altitude_end'],
-        ['max_throttle', 'summary.max_throttle'],
+
         ['bypass', 'vehicle_configurations.*.propulsors.turbofan.bypass_ratio'],
-        ['main_mission_time', 'summary.main_mission_time'],
         ['wing_sweep', 'vehicle_configurations.*.wings.main_wing.sweep'],
         ['oew', 'summary.op_empty'],
         ['Nothing', 'summary.nothing'],

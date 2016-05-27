@@ -143,7 +143,7 @@ def base(analyses):
     # ------------------------------------------------------------------
 
     segment = Segments.Climb.Constant_Throttle_Constant_Speed(base_segment)
-    segment.tag = "climb_4"
+    segment.tag = "climb_4_final_outgoing"
 
     # Initial conditions
     ones_row = segment.state.ones_row

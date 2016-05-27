@@ -26,16 +26,7 @@ def setup():
 
 def base_setup():
 
-    # important design parameters exported out for clarity:
 
-    twin = "OFF"
-    thrust_total = 105e3 * Units.N  # Newtons 111
-    num_engine = 4 # move to main -> how to guarantee these parameters when not optimized for??? - selected at the top and entered in inputs from there?
-    bypass = 7.5
-
-    # design sizing conditions
-    altitude = 19. * Units.km
-    mach_number = 0.68
 
     # ------------------------------------------------------------------
     #   Initialize the Vehicle
@@ -43,6 +34,19 @@ def base_setup():
 
     vehicle = SUAVE.Vehicle()
     vehicle.tag = 'SAGA_One'
+
+    # important design parameters exported out for clarity:
+
+    twin = "OFF"
+    vehicle.thrust_total = 105e3 * Units.N  # defined in Optimize.py
+    num_engine = 4 # move to main -> how to guarantee these parameters when not optimized for??? - selected at the top and entered in inputs from there?
+    bypass = 7.5
+
+    # design sizing conditions
+    altitude = 19. * Units.km
+    mach_number = 0.68
+
+
 
     # ------------------------------------------------------------------
     #   Vehicle-level Properties
@@ -93,9 +97,9 @@ def base_setup():
     # wing.airfoil = airfoils["sc3"]
 
     wing.span_efficiency = 0.75
-    wing.areas.reference = 460.0
+    wing.areas.reference = 0  # selected in Optimize.py
 
-    wing.aspect_ratio = 15
+    wing.aspect_ratio = 0  # selected in Optimize.py
 
     wing.sweep = 0.0 * Units.deg
 
@@ -103,8 +107,8 @@ def base_setup():
     wing.taper = 0.55
     wing.spans.projected = np.sqrt(wing.aspect_ratio * wing.areas.reference)
 
-    wing.chords.root = 8.6
-    wing.chords.tip = 3.87
+    wing.chords.root = 2*wing.spans.projected/(wing.aspect_ratio*(1+wing.taper))
+    wing.chords.tip = wing.chords.root*wing.taper
     # wing.chords.mean_aerodynamic = 3.680
 
     wing.areas.wetted = 2.0 * wing.areas.reference
@@ -291,7 +295,10 @@ def base_setup():
     # ------------------------------------------------------------------
 
 
-    gt_engine = engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
+    gt_engine = engine_caluclations(altitude, bypass, mach_number, num_engine, vehicle.thrust_total)
+
+    # print"vehicles: gt_engine"
+    # print gt_engine
 
     # add gas turbine network gt_engine to the vehicle
     vehicle.append_component(gt_engine)
