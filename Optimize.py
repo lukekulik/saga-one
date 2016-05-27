@@ -38,7 +38,7 @@ def main():
     # variable_sweep(problem)  #uncomment this to view some contours of the problem
     # output = scipy_setup.SciPy_Solve(problem,solver='SLSQP') # uncomment this to optimize the values
 
-    Plot_Mission.plot_mission(problem.results, show=False)
+    Plot_Mission.plot_mission(problem.results, show=True)
 
     return
 

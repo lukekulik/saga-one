@@ -12,18 +12,6 @@ from SUAVE.Core import Units, Data
 import numpy as np
 import pylab as plt
 
-def pretty_print(d, indent=0): # recursive printer
-   for key in d.keys():
-      print '\t' * indent + str(key)
-      v=d[key]
-      if isinstance(v, Data):
-         pretty_print(v, indent+1)
-      elif isinstance(v, (np.ndarray, np.generic) ):
-         continue
-      else:
-         print '\t' * (indent + 1) + str(v)
-
-
 
 # ----------------------------------------------------------------------
 #   Plot Mission
@@ -31,7 +19,7 @@ def pretty_print(d, indent=0): # recursive printer
 
 def plot_mission(results, show=True, line_style='bo-'):
     axis_font = {'fontname': 'Arial', 'size': '14'}
-    folder = "/Users/lkulik/Dropbox/Shared/DSE Conceptual Design/graphs/"
+    folder = "output/graphs/"
     file_format = ".eps"
 
     # ------------------------------------------------------------------

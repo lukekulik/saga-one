@@ -797,7 +797,6 @@ def base(analyses):
     ###         Reserve mission completed
     # ------------------------------------------------------------------
 
-
     return mission
 
 

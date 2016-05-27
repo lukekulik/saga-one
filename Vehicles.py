@@ -33,6 +33,10 @@ def base_setup():
     num_engine = 4 # move to main -> how to guarantee these parameters when not optimized for??? - selected at the top and entered in inputs from there?
     bypass = 7.5
 
+    # design sizing conditions
+    altitude = 20.0 * Units.km
+    mach_number = 0.65
+
     # ------------------------------------------------------------------
     #   Initialize the Vehicle
     # ------------------------------------------------------------------
@@ -45,36 +49,39 @@ def base_setup():
     # ------------------------------------------------------------------
 
     # mass properties
-    vehicle.mass_properties.max_takeoff = 170000  # 79090#.   # kg
+    vehicle.mass_properties.max_takeoff = 0  # selected in Optimize.py
+    vehicle.mass_properties.takeoff = 0  # selected in Optimize.py
+    vehicle.mass_properties.max_payload = 40000. * Units.kg  # selected in Optimize.py
+    vehicle.mass_properties.payload = 40000. * Units.kg  # selected in Optimize.py
+
     # vehicle.mass_properties.operating_empty           = 65000.   # kg
-    vehicle.mass_properties.takeoff = 170000  # 50989. #51800.   # kg
+
     # vehicle.mass_properties.max_zero_fuel             = 105000. #60899.3  # kg
     # vehicle.mass_properties.cargo                     = 0.0 * Units.kg
-    vehicle.mass_properties.max_payload = 40000. * Units.kg
-    vehicle.mass_properties.payload = 40000. * Units.kg
+
     # vehicle.mass_properties.max_fuel                  = 30000.
 
-    vehicle.mass_properties.center_of_gravity = [18., 0, 0]
-    vehicle.mass_properties.moments_of_inertia.tensor = [[10 ** 5, 0, 0], [0, 10 ** 6, 0, ],
-                                                         [0, 0, 10 ** 7]]  # Not Correct
+    # vehicle.mass_properties.center_of_gravity = [18., 0, 0]
+    # vehicle.mass_properties.moments_of_inertia.tensor = [[10 ** 5, 0, 0], [0, 10 ** 6, 0, ],
+    #                                                      [0, 0, 10 ** 7]]  # Not Correct
 
     # envelope properties
-    vehicle.envelope.ultimate_load = 2.5
-    vehicle.envelope.limit_load = 1.5
+    vehicle.envelope.ultimate_load = 3.75
+    vehicle.envelope.limit_load = 2.5
 
     # basic parameters
-    vehicle.reference_area = 500  # selected in Optimize.py
+    vehicle.reference_area = 0  # selected in Optimize.py
     vehicle.passengers = 0
     vehicle.systems.control = "fully powered"
     vehicle.systems.accessories = "long range"
 
-    # ------------------------------------------------------------------
-    #  Airfoil
-    # ------------------------------------------------------------------
-
-    airfoil = SUAVE.Components.Wings.Airfoils.Airfoil()
-    airfoils = SUAVE.Components.Wings.Airfoils.load_airfoils(
-        "/Users/lkulik/Dropbox/Shared/DSE Conceptual Design/suave_saga/")
+    # # ------------------------------------------------------------------
+    # #  Airfoil
+    # # ------------------------------------------------------------------
+    #
+    # airfoil = SUAVE.Components.Wings.Airfoils.Airfoil()
+    # airfoils = SUAVE.Components.Wings.Airfoils.load_airfoils(
+    #     "/Users/lkulik/Dropbox/Shared/DSE Conceptual Design/suave_saga/")
 
     # ------------------------------------------------------------------
     #   Main Wing
@@ -283,15 +290,10 @@ def base_setup():
     #  Turbofan Network
     # ------------------------------------------------------------------
 
-    # design sizing conditions
-    altitude = 20.0 * Units.km
-    mach_number = 0.65
-    isa_deviation = 0.
 
     gt_engine = engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
 
-
-    # add  gas turbine network gt_engine to the vehicle
+    # add gas turbine network gt_engine to the vehicle
     vehicle.append_component(gt_engine)
 
     # now add weights objects
@@ -416,7 +418,7 @@ def configs_setup(vehicle):
     config = SUAVE.Components.Configs.Config(base_config)
     config.tag = 'high_lift_cruise'
 
-    config.wings['main_wing'].flaps.angle = 40. * Units.deg
+    config.wings['main_wing'].flaps.angle = 10. * Units.deg
     # config.wings['main_wing'].slats.angle = 10. * Units.deg
 
     # config.V2_VS_ratio = 1.21

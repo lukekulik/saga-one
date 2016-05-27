@@ -299,7 +299,7 @@ def post_process(nexus):
     summary = nexus.summary
     missions = nexus.missions
 
-    pretty_print(results)
+    # pretty_print(results)
 
     # Static stability calculations
     CMA = -10.
@@ -374,6 +374,7 @@ def post_process(nexus):
     # FIXME move that to printing/results section
     print "Turbofan thrust:", gt_engine.sealevel_static_thrust, " x ", int(
         gt_engine.number_of_engines), "engines (tot: ", gt_engine.sealevel_static_thrust * gt_engine.number_of_engines, " N)"
+    print "Thrust required: ", gt_engine.design_thrust
 
     print "Estimated engine length: ", gt_engine.engine_length, ", diameter: ", gt_engine.nacelle_diameter, ", wetted area: ", gt_engine.areas.wetted
 
