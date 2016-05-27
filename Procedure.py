@@ -348,9 +348,9 @@ def post_process(nexus):
     summary.base_mission_sprayed = results.base.segments[-1].conditions.weights.spray[-1]
 
     summary.cruise_range = 0#missions.base.segments.cruise_2.distance # assume we're flying straight
-    summary.mission_range = results.base.segments['descent_final'].conditions.frames.inertial.position_vector[:, 0][-1]
+    summary.mission_range = results.base.segments['descent_final'].conditions.frames.inertial.position_vector[:, 0][-1]/1000.
 
-    summary.total_range = results.base.segments[-1].conditions.frames.inertial.position_vector[:, 0][-1]
+    summary.total_range = results.base.segments[-1].conditions.frames.inertial.position_vector[:, 0][-1]/1000.
 
 
 
@@ -366,9 +366,9 @@ def post_process(nexus):
     print "zero fuel weight: ", zero_fuel_weight[0], "kg  i.e. (", payload, "+", operating_empty[0], ")"
     print "MTOW selected: ", vehicle.mass_properties.takeoff, "kg, MTOW calculated: ", zero_fuel_weight[
                                                                                            0] + summary.base_mission_fuelburn
-    print "Max throttle: ", summary.max_throttle
-    print "Mission Range: ", summary.mission_range
-    print "Total Range: ", summary.total_range
+    print "Max/Min throttle: ", summary.max_throttle, ", ", summary.min_throttle
+    print "Mission Range: ", summary.mission_range, " km"
+    print "Total Range: ", summary.total_range, " km"
     print "Mission time: ", summary.main_mission_time[0] * Units['s'] / Units.h, "hours (main) +", \
         (summary.total_mission_time - summary.main_mission_time)[0] * Units['s'] / Units.h, "hours (diversion)"
     summary.nothing = 0.0
