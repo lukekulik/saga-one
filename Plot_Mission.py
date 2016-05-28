@@ -52,6 +52,8 @@ def plot_mission(results, show=True, line_style='bo-'):
         # print segment.conditions.frames.inertial.gravity_force_vector.keys()
 
         aoa = segment.conditions.aerodynamics.angle_of_attack[:, 0] / Units.deg
+        body_angle = segment.unknowns.body_angle[:,0] / Units.deg
+
         # vel segment.conditions.frames.wind.velocity_vector.keys()
         # print segment.conditions.frames.wind.lift_vector.keys()
 
@@ -79,8 +81,9 @@ def plot_mission(results, show=True, line_style='bo-'):
 
         axes = fig.add_subplot(4, 1, 4)
         axes.plot(time, aoa, line_style)
+        axes.plot(time, body_angle, 'ro-')
         axes.set_xlabel('Time (min)', axis_font)
-        axes.set_ylabel('AOA (deg)', axis_font)
+        axes.set_ylabel('AOA + body angle (deg)', axis_font)
         axes.grid(True)
 
 
@@ -246,12 +249,15 @@ def plot_mission(results, show=True, line_style='bo-'):
 
         temp =  segment.conditions.freestream.temperature[:,0]
 
-        engine_power =  segment.conditions.energies.propulsion_power[:,0]
+        # engine_power =  segment.conditions.energies.propulsion_power[:,0]
 
         net_acceleration = (f_x**2+f_y**2+f_z**2)**(1./3.)
 
         Lift = -segment.conditions.frames.wind.lift_force_vector[:, 2]
 
+        power = segment.conditions.output_power
+
+        # power = segment.conditions.weights.out[:, 0]
         # print segment
 
 
@@ -303,7 +309,7 @@ def plot_mission(results, show=True, line_style='bo-'):
         axes.grid(True)
 
         axes = fig.add_subplot(5, 1, 5)
-        axes.plot(time, engine_power, line_style)
+        axes.plot(time, power, line_style)
         # axes.plot(time, acc_y, line_style)
         # axes.plot(time, -vel_z, line_style)
         # axes.plot(time,cl_inviscid,'ro-')

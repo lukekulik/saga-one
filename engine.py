@@ -1,11 +1,12 @@
 import SUAVE
+from Turbofan_thr import Turbofan
 from SUAVE.Methods.Propulsion.turbofan_sizing import turbofan_sizing
 from SUAVE.Methods.Geometry.Two_Dimensional.Cross_Section.Propulsion import compute_turbofan_geometry
 
 def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total):
     # initialize the gas turbine network
 
-    gt_engine = SUAVE.Components.Energy.Networks.Turbofan()
+    gt_engine = Turbofan()
     gt_engine.tag = 'turbofan'
     gt_engine.number_of_engines = num_engine
     gt_engine.bypass_ratio = bypass
@@ -115,6 +116,7 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
     # size the turbofan
 
     turbofan_sizing(gt_engine, mach_number, altitude)
+
     compute_turbofan_geometry(gt_engine, None)
 
     return gt_engine

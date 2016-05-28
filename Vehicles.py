@@ -10,7 +10,7 @@
 import SUAVE
 from SUAVE.Core import Units, Data
 import numpy as np
-from Engine import engine_caluclations
+from engine import engine_caluclations
 
 
 # ----------------------------------------------------------------------
