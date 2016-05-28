@@ -182,6 +182,9 @@ def plot_mission(results, show=True, line_style='bo-'):
         Drag = -segment.conditions.frames.wind.drag_force_vector[:, 0]
         Thrust = segment.conditions.frames.body.thrust_force_vector[:, 0]
         spray_rate = segment.conditions.weights.sprayer[:, 0]
+        spray_rate_meter = segment.conditions.weights.sprayer[:, 0]/velocity
+
+
 
         # axes = fig.add_subplot(5, 1, 1)
         # axes.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
@@ -189,28 +192,34 @@ def plot_mission(results, show=True, line_style='bo-'):
         # axes.set_ylabel('Thrust [N]', axis_font)
         # axes.grid(True)
 
-        axes = fig.add_subplot(4, 1, 1)
+        axes = fig.add_subplot(5, 1, 1)
         axes.plot(time, mach, line_style)
         axes.set_ylabel('Mach (-)', axis_font)
         axes.grid(True)
 
-        axes = fig.add_subplot(4, 1, 2)
+        axes = fig.add_subplot(5, 1, 2)
         axes.plot(time, velocity, line_style)
         axes.set_ylabel('Velocity (m/s)', axis_font)
         axes.grid(True)
 
-        axes = fig.add_subplot(4, 1, 3)
+        axes = fig.add_subplot(5, 1, 3)
+        axes.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
+        axes.plot(time, Drag, line_style)
+        axes.plot(time, Thrust, 'ro-')
+        # axes.plot(time, Lift, 'ro-')
+        axes.set_xlabel('Time (min)')
+        axes.set_ylabel('Drag and Thrust (N)')
+        axes.grid(True)
+
+        axes = fig.add_subplot(5, 1, 4)
         axes.plot(time, mdot, line_style)
         axes.plot(time, spray_rate, 'go-')
         axes.set_ylabel('Mass rate (kg/s)', axis_font)
         axes.grid(True)
 
-        axes = fig.add_subplot(4, 1, 4)
-        axes.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
-        axes.plot(time, Drag, line_style)
-        axes.plot(time, Thrust, 'ro-')
-        axes.set_xlabel('Time (min)')
-        axes.set_ylabel('Drag and Thrust (N)')
+        axes = fig.add_subplot(5, 1, 5)
+        axes.plot(time, spray_rate_meter, 'go-')
+        axes.set_ylabel('Mass rate (kg/m)', axis_font)
         axes.grid(True)
 
         axes.set_xlabel('Time (min)')
@@ -237,7 +246,11 @@ def plot_mission(results, show=True, line_style='bo-'):
 
         temp =  segment.conditions.freestream.temperature[:,0]
 
+        engine_power =  segment.conditions.energies.propulsion_power[:,0]
+
         net_acceleration = (f_x**2+f_y**2+f_z**2)**(1./3.)
+
+        Lift = -segment.conditions.frames.wind.lift_force_vector[:, 2]
 
         # print segment
 
@@ -248,7 +261,7 @@ def plot_mission(results, show=True, line_style='bo-'):
         # axes.set_ylabel('Thrust [N]', axis_font)
         # axes.grid(True)
 
-        axes = fig.add_subplot(4, 1, 1)
+        axes = fig.add_subplot(5, 1, 1)
         axes.plot(time, acc_x, line_style)
         # axes.plot(time, acc_y, line_style)
         # axes.plot(time, acc_z, line_style)
@@ -258,7 +271,7 @@ def plot_mission(results, show=True, line_style='bo-'):
         axes.set_ylabel('Accelerations', axis_font)
         axes.grid(True)
 
-        axes = fig.add_subplot(4, 1, 2)
+        axes = fig.add_subplot(5, 1, 2)
         # axes.plot(time, acc_x, line_style)
         # axes.plot(time, acc_y, line_style)
         axes.plot(time, -vel_z, line_style)
@@ -268,17 +281,18 @@ def plot_mission(results, show=True, line_style='bo-'):
         axes.set_ylabel('Climb rate ($-v_z$)', axis_font)
         axes.grid(True)
 
-        axes = fig.add_subplot(4, 1, 3)
-        axes.plot(time, net_acceleration , line_style)
+        axes = fig.add_subplot(5, 1, 3)
+        axes.plot(time, Lift, line_style)
+        axes.plot(time, net_acceleration , 'ro-')
         # axes.plot(time, acc_y, line_style)
         # axes.plot(time, -vel_z, line_style)
         # axes.plot(time,cl_inviscid,'ro-')
         # axes.plot(time, cl_compressible, 'ro-')
 
-        axes.set_ylabel('(net?) Force vector', axis_font)
+        axes.set_ylabel('(net?) Force vector / Lift [N]', axis_font)
         axes.grid(True)
 
-        axes = fig.add_subplot(4, 1, 4)
+        axes = fig.add_subplot(5, 1, 4)
         axes.plot(time, temp, line_style)
         # axes.plot(time, acc_y, line_style)
         # axes.plot(time, -vel_z, line_style)
@@ -287,6 +301,18 @@ def plot_mission(results, show=True, line_style='bo-'):
 
         axes.set_ylabel('Temperature (K)', axis_font)
         axes.grid(True)
+
+        axes = fig.add_subplot(5, 1, 5)
+        axes.plot(time, engine_power, line_style)
+        # axes.plot(time, acc_y, line_style)
+        # axes.plot(time, -vel_z, line_style)
+        # axes.plot(time,cl_inviscid,'ro-')
+        # axes.plot(time, cl_compressible, 'ro-')
+
+        axes.set_ylabel('Engine Power (W)', axis_font)
+        axes.grid(True)
+
+
 
         # print segment.conditions.freestream.keys()
 

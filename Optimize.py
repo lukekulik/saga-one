@@ -38,7 +38,7 @@ def main():
     # variable_sweep(problem)  #uncomment this to view some contours of the problem
     # output = scipy_setup.SciPy_Solve(problem,solver='SLSQP') # uncomment this to optimize the values
 
-    Plot_Mission.plot_mission(problem.results, show=True)
+    Plot_Mission.plot_mission(problem.results, show=False)
 
     return
 
@@ -62,13 +62,13 @@ def setup():
     # bypass = 6
 
     problem.inputs = np.array([
-        #Variable inputs
+        # Variable inputs
         ['wing_area', 700, (400., 600.), 500., Units.meter ** 2],
         ['MTOW', 180000., (140000., 200000.), 160000., Units.kg],
         ['alt_outgoing_cruise', 18., (8., 20.), 15., Units.km],
-        # ['design_thrust', 105e3, (85e3, 110e3), 100e3, Units.N],       # MAKE ALIAS
+        # ['design_thrust', 105e3, (85e3, 110e3), 100e3, Units.N],       # MAKE ALIAS + SET TO 0 in vehicle
 
-        #"Set" inputs
+        # "Set" inputs
         ['AR', 15, (15, 15), 15, Units.less],
         # speeds???
     ])

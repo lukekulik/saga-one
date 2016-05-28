@@ -356,12 +356,30 @@ def post_process(nexus):
     # Fuel margin and base fuel calculations
 
     operating_empty = vehicle.mass_properties.operating_empty
-    payload = vehicle.mass_properties.payload  # FIXME fuel margin makes little sense when ejecting fuel
+    payload = vehicle.mass_properties.payload  # FIXME fuel margin makes little sense when ejecting aerosol
     design_landing_weight = results.base.segments[-1].conditions.weights.total_mass[-1]
     design_takeoff_weight = vehicle.mass_properties.takeoff
     max_takeoff_weight = nexus.vehicle_configurations.takeoff.mass_properties.max_takeoff
     zero_fuel_weight = payload + operating_empty
 
+    # stability data structure:
+
+    # stability
+    #     static
+    #         cm_alpha
+    #         cn_beta
+    #
+    #
+    #     dynamic
+    #         cn_r
+    #         cl_p
+    #         0
+    #         cl_beta
+    #         0
+    #         cm_q
+    #         cm_alpha_dot
+    #         cz_alpha
+    #
 
 
     for i in range(1, len(results.base.segments)): # make fuel burn and sprayer continuous
@@ -372,7 +390,7 @@ def post_process(nexus):
             results.base.segments[i - 1].conditions.weights.spray[-1]
 
     summary.op_empty = operating_empty
-    summary.max_zero_fuel_margin = (design_landing_weight - zero_fuel_weight) / zero_fuel_weight
+    summary.max_zero_fuel_margin = (design_landing_weight - operating_empty) / operating_empty # used to be (design_landing_weight - zero_fuel_weight) / zero_fuel_weight changed because of aerosol ejection
     summary.base_mission_fuelburn = results.base.segments[-1].conditions.weights.fuel_burn[-1]  # esults.base.segments[i].conditions.weights.fuel_burn0#results.base.segments.conditions.weights.fuel_burn                         #design_takeoff_weight - results.base.segments['descent_3'].conditions.weights.total_mass[-1] # - results.base.segments['cruise'].conditions.sprayer_rate
     summary.base_mission_sprayed = results.base.segments[-1].conditions.weights.spray[-1]
 
