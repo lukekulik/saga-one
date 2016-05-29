@@ -126,8 +126,10 @@ def evaluate_field_length(configs, analyses, mission, results):
 
     # evaluate
 
+    airport.atmosphere = analyses.base.atmosphere
+
     TOFL = estimate_take_off_field_length(takeoff_config, analyses, airport)
-    LFL = np.array([0.])# estimate_landing_field_length(landing_config, analyses, airport) #FIXME
+    LFL = estimate_landing_field_length(landing_config, analyses, airport) #FIXME
 
     # pack
     field_length = SUAVE.Core.Data()
@@ -435,7 +437,7 @@ def post_process(nexus):
                                                                                            0] + summary.base_mission_fuelburn
     print "Max/Min throttle: ", summary.max_throttle, ", ", summary.min_throttle
     print "Take-off field length: ", summary.field_length_takeoff[0], "m"
-    print "Landing field length: ", summary.field_length_landing, "m"
+    print "Landing field length: ", summary.field_length_landing[0], "m"
     print "Mission Range: ", summary.mission_range, " km"
     print "Total Range: ", summary.total_range, " km", "(+",summary.total_range-summary.mission_range,")"
     print "Mission time: ", summary.main_mission_time[0] * Units['s'] / Units.h, "hours (main) +", \
