@@ -134,7 +134,8 @@ def setup():
         ['mission_range', '>', 7000., 100., Units.km],
         # ['aerosol_released', '=', 40000., 50., Units.kg ],
         ['design_range_fuel_margin' , '>', 0., 1E-1, Units.less],
-        # FIXME field length constraints
+        ['take_off_field_length', '<', 2500., 1e-1, Units.m],
+        ['landing_field_length', '<', 2500., 1e-1, Units.m],
 
     ])
 
@@ -172,6 +173,10 @@ def setup():
         # ['aerosol_released', '=', 40000., 50., Units.kg], #FIXME
 
         ['design_range_fuel_margin', 'summary.max_zero_fuel_margin'],
+
+        ['take_off_field_length', 'summary.field_length_takeoff'],
+
+        ['landing_field_length', 'summary.field_length_landing'],
 
 
 

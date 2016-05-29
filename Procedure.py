@@ -324,15 +324,52 @@ def post_process(nexus):
     CMA = -10.
     for segment in results.base.segments.values():
         max_CMA = np.max(segment.conditions.stability.static.cm_alpha[:, 0])
+        # lamda with a min/max?
         if max_CMA > CMA:
             CMA = max_CMA
+
+    # Dynamics stability calculations
+    dyn_stab = np.zeros(6)
+    # j=0
+    # for element in results.base.segments.conditions.stability.dynamic.values():
+    #
+    #     max_CMA = np.max(segment.conditions.stability.static.cm_alpha[:, 0])
+    #     # lamda with a min/max?
+    #     if max_CMA > CMA:
+    #         CMA = max_CMA
+
+
+    # for derivative in
+
+    # stability data structure:
+
+
+    # stability
+    #     static
+    #         cm_alpha
+    #         cn_beta
+    #
+    #
+    #     dynamic
+    #         cn_r
+    #         cl_p
+    #         0
+    #         cl_beta
+    #         0
+    #         cm_q
+    #         cm_alpha_dot
+    #         cz_alpha
+
+
     #
     # summary.static_stability = CMA
     #
     results = evaluate_field_length(configs, nexus.analyses, missions.base, results)
     #
-    # summary.field_length_takeoff = results.field_length.takeoff
-    # summary.field_length_landing = results.field_length.landing
+    summary.field_length_takeoff = results.field_length.takeoff
+    print summary.field_length_takeoff
+    summary.field_length_landing = results.field_length.landing
+    print summary.field_length_landing
     #
     # #
     # pretty_print(nexus)
@@ -355,31 +392,14 @@ def post_process(nexus):
 
     # Fuel margin and base fuel calculations
 
+    vehicle.mass_properties.operating_empty += 10000 # FIXME hardcoded wing mass correction
+
     operating_empty = vehicle.mass_properties.operating_empty
     payload = vehicle.mass_properties.payload  # FIXME fuel margin makes little sense when ejecting aerosol
     design_landing_weight = results.base.segments[-1].conditions.weights.total_mass[-1]
     design_takeoff_weight = vehicle.mass_properties.takeoff
     max_takeoff_weight = nexus.vehicle_configurations.takeoff.mass_properties.max_takeoff
     zero_fuel_weight = payload + operating_empty
-
-    # stability data structure:
-
-    # stability
-    #     static
-    #         cm_alpha
-    #         cn_beta
-    #
-    #
-    #     dynamic
-    #         cn_r
-    #         cl_p
-    #         0
-    #         cl_beta
-    #         0
-    #         cm_q
-    #         cm_alpha_dot
-    #         cz_alpha
-    #
 
 
     for i in range(1, len(results.base.segments)): # make fuel burn and sprayer continuous
@@ -414,12 +434,13 @@ def post_process(nexus):
     print "MTOW selected: ", vehicle.mass_properties.takeoff, "kg, MTOW calculated: ", zero_fuel_weight[
                                                                                            0] + summary.base_mission_fuelburn
     print "Max/Min throttle: ", summary.max_throttle, ", ", summary.min_throttle
+    print "Take-off field length: ", summary.field_length_takeoff[0], "m"
+    print "Landing field length: ", summary.field_length_landing, "m"
     print "Mission Range: ", summary.mission_range, " km"
     print "Total Range: ", summary.total_range, " km", "(+",summary.total_range-summary.mission_range,")"
     print "Mission time: ", summary.main_mission_time[0] * Units['s'] / Units.h, "hours (main) +", \
         (summary.total_mission_time - summary.main_mission_time)[0] * Units['s'] / Units.h, "hours (diversion)"
     summary.nothing = 0.0
-
     print 'Fuel burn: ', summary.base_mission_fuelburn
     # print 'fuel margin=', problem.all_constraints()
 
@@ -430,7 +451,7 @@ def post_process(nexus):
     # FIXME move that to printing/results section
     print "Turbofan thrust:", gt_engine.sealevel_static_thrust, " x ", int(
         gt_engine.number_of_engines), "engines (tot: ", gt_engine.sealevel_static_thrust * gt_engine.number_of_engines, " N)"
-    print "Thrust required: ", gt_engine.design_thrust
+    print "Thrust required: ", gt_engine.design_thrust, "N"
 
     print "Estimated engine length: ", gt_engine.engine_length, ", diameter: ", gt_engine.nacelle_diameter, ", wetted area: ", gt_engine.areas.wetted
 
@@ -461,10 +482,10 @@ def post_process(nexus):
     problem_inputs = []
 
 
-
     for value in unscaled_inputs:
         problem_inputs.append(value)
-    file_out = open('results.txt', 'ab')
+
+    file_out = open(output_folder+'results.txt', 'ab')
 
     file_out.write('fuel weight = ')
     file_out.write(str(summary.base_mission_fuelburn))
