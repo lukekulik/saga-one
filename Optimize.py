@@ -34,9 +34,9 @@ def main():
     print "SUAVE initialized...\n"
     problem = setup()  # "problem" is a nexus
 
-    output = problem.objective()  # uncomment this line when using the default inputs
+    # output = problem.objective()  # uncomment this line when using the default inputs
     # variable_sweep(problem)  #uncomment this to view some contours of the problem
-    # output = scipy_setup.SciPy_Solve(problem,solver='SLSQP') # uncomment this to optimize the values
+    output = scipy_setup.SciPy_Solve(problem,solver='SLSQP') # uncomment this to optimize the values
 
     Plot_Mission.plot_mission(problem.results, show=False)
 
@@ -66,7 +66,7 @@ def setup():
         ['wing_area', 700, (400., 600.), 500., Units.meter ** 2],
         ['MTOW', 200000., (140000., 200000.), 160000., Units.kg],
         ['alt_outgoing_cruise', 15., (8., 20.), 15., Units.km],
-        ['design_thrust', 105e3, (85e3, 110e3), 100e3, Units.N],       # MAKE ALIAS + SET TO 0 in vehicle
+        ['design_thrust', 105e3, (85e3, 110e3), 100e3, Units.N],
 
         # "Set" inputs
         ['AR', 15, (15, 15), 15, Units.less],
@@ -117,7 +117,7 @@ def setup():
     problem.objective = np.array([
         # [ 'Nothing', 1, Units.kg ]
         # ['max_throttle', .8 ,Units.less],
-        ['fuel_burn', 35000., Units.kg]
+        ['fuel_burn', 55000., Units.kg]
     ])
 
     # -------------------------------------------------------------------
@@ -128,7 +128,7 @@ def setup():
     # [ tag, sense, edge, scaling, units ]
     problem.constraints = np.array([
 
-        ['min_throttle', '<', 0., 1e-2, Units.less],
+        ['min_throttle', '>', 0., 1e-2, Units.less],
         ['max_throttle', '<', 1., 1e-2, Units.less],
         ['main_mission_time', '<', 11.1, 1, Units.h],
         ['mission_range', '>', 7000., 100., Units.km],
