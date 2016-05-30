@@ -404,6 +404,8 @@ def post_process(nexus):
     max_takeoff_weight = nexus.vehicle_configurations.takeoff.mass_properties.max_takeoff
     zero_fuel_weight = payload + operating_empty
 
+    pretty_print(nexus.vehicle_configurations)
+
 
     for i in range(1, len(results.base.segments)): # make fuel burn and sprayer continuous
         # print i

@@ -108,7 +108,7 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
 
     thrust.tag = 'compute_thrust'
     # total design thrust (includes all the engines)
-    thrust.total_design = thrust_total
+    thrust.total_design = thrust_total # should be just a pointer not a number
     # add thrust to the network
     gt_engine.thrust = thrust
     gt_engine.OPR = OPR

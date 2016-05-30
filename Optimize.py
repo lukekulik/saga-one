@@ -38,7 +38,7 @@ def main():
     # variable_sweep(problem)  #uncomment this to view some contours of the problem
     # output = scipy_setup.SciPy_Solve(problem,solver='SLSQP') # uncomment this to optimize the values
 
-    Plot_Mission.plot_mission(problem.results, show=True)
+    Plot_Mission.plot_mission(problem.results, show=False)
 
     return
 
@@ -66,7 +66,7 @@ def setup():
         ['wing_area', 700, (400., 600.), 500., Units.meter ** 2],
         ['MTOW', 200000., (140000., 200000.), 160000., Units.kg],
         ['alt_outgoing_cruise', 15., (8., 20.), 15., Units.km],
-        # ['design_thrust', 105e3, (85e3, 110e3), 100e3, Units.N],       # MAKE ALIAS + SET TO 0 in vehicle
+        ['design_thrust', 105e3, (85e3, 110e3), 100e3, Units.N],       # MAKE ALIAS + SET TO 0 in vehicle
 
         # "Set" inputs
         ['AR', 15, (15, 15), 15, Units.less],
@@ -155,7 +155,10 @@ def setup():
 
         ['alt_outgoing_cruise', 'missions.base.segments.climb_4_final_outgoing.altitude_end'],
 
-        ['design_thrust', 'vehicle_configurations.*.thrust_total'], #FIXME
+        ['design_thrust', 'vehicle_configurations.*.propulsors.turbofan.thrust.total_design'], #FIXME
+
+        # thrust_total
+        # 1000.0
 
         ['AR', 'vehicle_configurations.*.wings.main_wing.aspect_ratio'],
 

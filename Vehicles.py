@@ -38,7 +38,7 @@ def base_setup():
     # important design parameters exported out for clarity:
 
     twin = "OFF"
-    vehicle.thrust_total = 105e3 * Units.N  # defined in Optimize.py
+    vehicle.thrust_total = 0e3 * Units.N  # defined in Optimize.py
     num_engine = 4 # move to main -> how to guarantee these parameters when not optimized for??? - selected at the top and entered in inputs from there?
     bypass = 7.5
 
