@@ -38,7 +38,7 @@ def main():
     # variable_sweep(problem)  #uncomment this to view some contours of the problem
     # output = scipy_setup.SciPy_Solve(problem,solver='SLSQP') # uncomment this to optimize the values
 
-    Plot_Mission.plot_mission(problem.results, show=False)
+    Plot_Mission.plot_mission(problem.results, show=True)
 
     return
 
@@ -64,8 +64,8 @@ def setup():
     problem.inputs = np.array([
         # Variable inputs
         ['wing_area', 700, (400., 600.), 500., Units.meter ** 2],
-        ['MTOW', 180000., (140000., 200000.), 160000., Units.kg],
-        ['alt_outgoing_cruise', 18., (8., 20.), 15., Units.km],
+        ['MTOW', 200000., (140000., 200000.), 160000., Units.kg],
+        ['alt_outgoing_cruise', 15., (8., 20.), 15., Units.km],
         # ['design_thrust', 105e3, (85e3, 110e3), 100e3, Units.N],       # MAKE ALIAS + SET TO 0 in vehicle
 
         # "Set" inputs
@@ -136,6 +136,7 @@ def setup():
         ['design_range_fuel_margin' , '>', 0., 1E-1, Units.less],
         ['take_off_field_length', '<', 2500., 1e-1, Units.m],
         ['landing_field_length', '<', 2500., 1e-1, Units.m],
+        # ['']
 
     ])
 
@@ -183,10 +184,11 @@ def setup():
 
 
 
-        ['cruise_speed', [
-            "missions.base.segments.cruise_highlift.air_speed",
-
-            "missions.base.segments.cruise_2.air_speed"]],
+        ['cruise_speed', 'missions.base.segments.cruise_empty.air_speed'],
+         # [
+         #    "missions.base.segments.cruise_highlift.air_speed",
+         #
+         #    "missions.base.segments.cruise_2.air_speed"]],
         ['return_cruise_speed', "missions.base.segments.cruise_final.air_speed"],
 
         ['oswald', 'vehicle_configurations.*.wings.main_wing.span_efficiency'],

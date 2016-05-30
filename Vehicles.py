@@ -69,7 +69,7 @@ def base_setup():
     # vehicle.mass_properties.moments_of_inertia.tensor = [[10 ** 5, 0, 0], [0, 10 ** 6, 0, ],
     #                                                      [0, 0, 10 ** 7]]  # Not Correct
 
-    # envelope properties
+# envelope properties
     vehicle.envelope.ultimate_load = 3.75
     vehicle.envelope.limit_load = 2.5
 

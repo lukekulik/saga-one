@@ -11,7 +11,7 @@ def update_weights_sprayer(segment, state):
     g = conditions.freestream.gravity
     v_x = conditions.frames.inertial.velocity_vector[:,0]
     v_x_mean = np.mean(v_x)
-    x = conditions.frames.inertial.position_vector[:,0]
+    # x = conditions.frames.inertial.position_vector[:,0]
     distance = np.dot(I,v_x)[-1]
     # add some global counter of spray mass
 

@@ -77,16 +77,17 @@ def setup():
 
 def find_target_range(nexus, mission):
     segments = mission.segments
-    cruise_altitude = mission.segments['climb_5'].altitude_end
+    # cruise_altitude = mission.segments['climb_5'].altitude_end
+
     climb_1 = segments['climb_1']
     climb_2 = segments['climb_2']
     climb_3 = segments['climb_3']
-    climb_4 = segments['climb_4']
+    climb_4 = segments['climb_4_final_outgoing']
     climb_5 = segments['climb_5']
 
     descent_1 = segments['descent_1']
     descent_2 = segments['descent_2']
-    descent_3 = segments['descent_3']
+    #descent_3 = segments['descent_3']
 
     x_climb_1 = climb_1.altitude_end / np.tan(np.arcsin(climb_1.climb_rate / climb_1.air_speed))
     x_climb_2 = (climb_2.altitude_end - climb_1.altitude_end) / np.tan(
@@ -101,11 +102,11 @@ def find_target_range(nexus, mission):
         np.arcsin(descent_1.descent_rate / descent_1.air_speed))
     x_descent_2 = (descent_1.altitude_end - descent_2.altitude_end) / np.tan(
         np.arcsin(descent_2.descent_rate / descent_2.air_speed))
-    x_descent_3 = (descent_2.altitude_end - descent_3.altitude_end) / np.tan(
-        np.arcsin(descent_3.descent_rate / descent_3.air_speed))
+    #x_descent_3 = (descent_2.altitude_end - descent_3.altitude_end) / np.tan(
+    #    np.arcsin(descent_3.descent_rate / descent_3.air_speed))
 
     cruise_range = mission.design_range - (
-        x_climb_1 + x_climb_2 + x_climb_3 + x_climb_4 + x_climb_5 + x_descent_1 + x_descent_2 + x_descent_3)
+        x_climb_1 + x_climb_2 + x_climb_3 + x_climb_4 + x_climb_5 + x_descent_1 + x_descent_2) # + x_descent_3)
     # some sort of a sum here?
 
 
@@ -146,7 +147,7 @@ def evaluate_field_length(configs, analyses, mission, results):
 def design_mission(nexus):
     mission = nexus.missions.base
     mission.design_range = 7000. * Units['km']
-    # find_target_range(nexus,mission)
+    #find_target_range(nexus,mission)
 
     results = nexus.results
     results.base = mission.evaluate()
@@ -369,9 +370,9 @@ def post_process(nexus):
     results = evaluate_field_length(configs, nexus.analyses, missions.base, results)
     #
     summary.field_length_takeoff = results.field_length.takeoff
-    print summary.field_length_takeoff
+    # print summary.field_length_takeoff
     summary.field_length_landing = results.field_length.landing
-    print summary.field_length_landing
+    # print summary.field_length_landing
     #
     # #
     # pretty_print(nexus)
@@ -394,10 +395,10 @@ def post_process(nexus):
 
     # Fuel margin and base fuel calculations
 
-    vehicle.mass_properties.operating_empty += 10000 # FIXME hardcoded wing mass correction
+    vehicle.mass_properties.operating_empty += 6000 # FIXME hardcoded wing mass correction
 
     operating_empty = vehicle.mass_properties.operating_empty
-    payload = vehicle.mass_properties.payload  # FIXME fuel margin makes little sense when ejecting aerosol
+    payload = vehicle.mass_properties.payload  # TODO fuel margin makes little sense when ejecting aerosol
     design_landing_weight = results.base.segments[-1].conditions.weights.total_mass[-1]
     design_takeoff_weight = vehicle.mass_properties.takeoff
     max_takeoff_weight = nexus.vehicle_configurations.takeoff.mass_properties.max_takeoff
@@ -417,7 +418,9 @@ def post_process(nexus):
     summary.base_mission_sprayed = results.base.segments[-1].conditions.weights.spray[-1]
 
     summary.cruise_range = 0#missions.base.segments.cruise_2.distance # assume we're flying straight
+    summary.empty_range = results.base.segments['cruise_empty'].conditions.frames.inertial.position_vector[:, 0][-1]/1000.
     summary.mission_range = results.base.segments['cruise_final'].conditions.frames.inertial.position_vector[:, 0][-1]/1000. # Assuming mission ends at cruise altitude
+    summary.spray_range = summary.mission_range - summary.empty_range
 
     summary.total_range = results.base.segments[-1].conditions.frames.inertial.position_vector[:, 0][-1]/1000.
 
@@ -435,10 +438,13 @@ def post_process(nexus):
     print "zero fuel weight: ", zero_fuel_weight[0], "kg  i.e. (", payload, "+", operating_empty[0], ")"
     print "MTOW selected: ", vehicle.mass_properties.takeoff, "kg, MTOW calculated: ", zero_fuel_weight[
                                                                                            0] + summary.base_mission_fuelburn
+    # FIXME Fuel burn doesn't change when the operating empty weight changes!
     print "Max/Min throttle: ", summary.max_throttle, ", ", summary.min_throttle
     print "Take-off field length: ", summary.field_length_takeoff[0], "m"
     print "Landing field length: ", summary.field_length_landing[0], "m"
-    print "Mission Range: ", summary.mission_range, " km"
+    print "Mission Range (must be at least 7000km): ", summary.mission_range, " km"
+    print "Non-spraying range (must be at least 3500km): ", summary.empty_range, " km"
+    print "Spraying Range (must be at least 3500km): ", summary.spray_range, " km"
     print "Total Range: ", summary.total_range, " km", "(+",summary.total_range-summary.mission_range,")"
     print "Mission time: ", summary.main_mission_time[0] * Units['s'] / Units.h, "hours (main) +", \
         (summary.total_mission_time - summary.main_mission_time)[0] * Units['s'] / Units.h, "hours (diversion)"
