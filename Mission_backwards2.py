@@ -201,7 +201,7 @@ def base(analyses):
     #CRUISE WITH THE AEROSOL ON BOARD
 
     segment = Segments.Cruise.Constant_Speed_Constant_Altitude(base_segment)
-    segment.tag = "cruise_empty"
+    segment.tag = "cruise_outgoing"
 
     # connect vehicle configuration
     segment.analyses.extend(analyses.cruise)

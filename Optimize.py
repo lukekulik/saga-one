@@ -35,10 +35,10 @@ def main():
     print "SUAVE initialized...\n"
     problem = setup()  # "problem" is a nexus
 
-    # output = problem.objective()  # uncomment this line when using the default inputs
+    output = problem.objective()  # uncomment this line when using the default inputs
     # variable_sweep(problem)  #uncomment this to view some contours of the problem
     # output = scipy_setup.SciPy_Solve(problem,solver='SLSQP') # uncomment this to optimize the values
-    output = pyopt_setup.Pyopt_Solve(problem,solver='SNOPT') #,FD='single', nonderivative_line_search=False)
+    # output = pyopt_setup.Pyopt_Solve(problem,solver='SNOPT') #,FD='single', nonderivative_line_search=False)
 
     Plot_Mission.plot_mission(problem.results, show=False)
 
@@ -65,10 +65,12 @@ def setup():
 
     problem.inputs = np.array([
         # Variable inputs
-        ['wing_area', 700, (400., 600.), 500., Units.meter ** 2],
-        ['MTOW', 200000., (140000., 200000.), 160000., Units.kg],
-        ['alt_outgoing_cruise', 15., (8., 20.), 15., Units.km],
-        ['design_thrust', 105e3, (85e3, 110e3), 100e3, Units.N],
+        ['wing_area', 600, (400., 700.), 500., Units.meter ** 2],
+        ['MTOW', 190e3, (180000., 180000.), 180000., Units.kg],
+        ['alt_outgoing_cruise', 11.8, (8., 20.), 15., Units.km],
+        ['design_thrust', 110e3, (85e3, 115e3), 100e3, Units.N],
+        ['outgoing_cruise_speed', 200, (150, 220), 200, Units['m/s']],
+        ['spray_cruise_speed', 210, (150, 220), 200, Units['m/s']],
 
         # "Set" inputs
         ['AR', 15, (15, 15), 15, Units.less],
@@ -119,7 +121,7 @@ def setup():
     problem.objective = np.array([
         # [ 'Nothing', 1, Units.kg ]
         # ['max_throttle', .8 ,Units.less],
-        ['fuel_burn', 55000., Units.kg]
+        ['fuel_burn', 50000., Units.kg]
     ])
 
     # -------------------------------------------------------------------
@@ -130,7 +132,7 @@ def setup():
     # [ tag, sense, edge, scaling, units ]
     problem.constraints = np.array([
 
-        ['min_throttle', '>', 0., 1e-2, Units.less],
+        # ['min_throttle', '>', 0., 1e-2, Units.less],
         ['max_throttle', '<', 1., 1e-2, Units.less],
         ['main_mission_time', '<', 11.1, 1, Units.h],
         ['mission_range', '>', 7000., 100., Units.km],
@@ -138,7 +140,9 @@ def setup():
         ['design_range_fuel_margin' , '>', 0., 1E-1, Units.less],
         ['take_off_field_length', '<', 2500., 1e-1, Units.m],
         ['landing_field_length', '<', 2500., 1e-1, Units.m],
-        # ['']
+        ['MTOW_delta', '<','4' , 1, Units.kg],
+        ['MTOW_delta', '>', '-4', 1, Units.kg], # tricky to predict the effects of those constraints
+        #
 
     ])
 
@@ -157,7 +161,13 @@ def setup():
 
         ['alt_outgoing_cruise', 'missions.base.segments.climb_4_final_outgoing.altitude_end'],
 
-        ['design_thrust', 'vehicle_configurations.*.propulsors.turbofan.thrust.total_design'], #FIXME
+        ['design_thrust', 'vehicle_configurations.*.propulsors.turbofan.thrust.total_design'],
+
+        ['spray_cruise_speed', ['missions.base.segments.cruise_1.air_speed',
+                                'missions.base.segments.cruise_2.air_speed',
+                                'missions.base.segments.cruise_final.air_speed']],
+
+        ['outgoing_cruise_speed', 'missions.base.segments.cruise_outgoing.air_speed']
 
         # thrust_total
         # 1000.0
@@ -183,6 +193,8 @@ def setup():
         ['take_off_field_length', 'summary.field_length_takeoff'],
 
         ['landing_field_length', 'summary.field_length_landing'],
+
+        ['MTOW_delta', 'summary.MTOW_delta'],
 
 
 

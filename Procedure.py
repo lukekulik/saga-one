@@ -336,10 +336,11 @@ def post_process(nexus):
     # j=0
     # for element in results.base.segments.conditions.stability.dynamic.values():
     #
-    #     max_CMA = np.max(segment.conditions.stability.static.cm_alpha[:, 0])
-    #     # lamda with a min/max?
-    #     if max_CMA > CMA:
-    #         CMA = max_CMA
+    #     max = np.max(element[:, 0])
+    #     min = np.min(element[:, 0])
+    #     avg = np.mean(element[:, 0])
+    #
+
 
 
     # for derivative in
@@ -404,7 +405,7 @@ def post_process(nexus):
     max_takeoff_weight = nexus.vehicle_configurations.takeoff.mass_properties.max_takeoff
     zero_fuel_weight = payload + operating_empty
 
-    #pretty_print(nexus.vehicle_configurations)
+    # pretty_print(nexus.vehicle_configurations)
 
 
     for i in range(1, len(results.base.segments)): # make fuel burn and sprayer continuous
@@ -432,6 +433,9 @@ def post_process(nexus):
                                  results.base.segments[0].conditions.frames.inertial.time[0])
     summary.total_mission_time = (results.base.segments[-1].conditions.frames.inertial.time[-1] -
                                   results.base.segments[0].conditions.frames.inertial.time[0])
+
+    summary.MTOW_delta = zero_fuel_weight[0] + summary.base_mission_fuelburn - vehicle.mass_properties.takeoff
+
     # summary.engine_weight =
 
     # print results.base.segments.keys()
@@ -467,7 +471,7 @@ def post_process(nexus):
 
     #FXI
 
-    print "Aerosol released: ", summary.base_mission_sprayed[0], " kg"
+    print "Aerosol released: ", summary.base_mission_sprayed[0], " kg\n\n"
 
     # print "cruise range: ",problem.summary.cruise_range/1000., " km"
 

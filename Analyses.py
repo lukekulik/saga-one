@@ -69,6 +69,11 @@ def base(vehicle):
     stability.geometry = vehicle
     analyses.append(stability)
 
+    #  Noise Analysis
+    noise = SUAVE.Analyses.Noise.Fidelity_One()
+    noise.geometry = vehicle
+    analyses.append(noise)
+
     # ------------------------------------------------------------------
     #  Energy
     energy = SUAVE.Analyses.Energy.Energy()
