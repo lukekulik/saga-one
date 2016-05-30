@@ -210,9 +210,7 @@ def base(analyses):
     segment.atmosphere = atmosphere
     segment.planet = planet
 
-    segment.air_speed = 200 * Units.m / Units.s
-    #segment.altitude_start = 15. * Units.km
-    #segment.angle_of_attack = 2. * Units.deg
+    segment.air_speed = 210 * Units.m / Units.s
     segment.distance = 3367. * Units.km
     segment.aerosol_mass_initial = 0 * Units.kg  # mass to be sprayed in this segment
 
