@@ -17,6 +17,7 @@ import Plot_Mission
 import matplotlib.pyplot as plt
 from SUAVE.Optimization import Nexus, carpet_plot
 import SUAVE.Optimization.Package_Setups.scipy_setup as scipy_setup
+import SUAVE.Optimization.Package_Setups.pyopt_setup as pyopt_setup
 
 
 # ----------------------------------------------------------------------        
@@ -36,7 +37,8 @@ def main():
 
     # output = problem.objective()  # uncomment this line when using the default inputs
     # variable_sweep(problem)  #uncomment this to view some contours of the problem
-    output = scipy_setup.SciPy_Solve(problem,solver='SLSQP') # uncomment this to optimize the values
+    # output = scipy_setup.SciPy_Solve(problem,solver='SLSQP') # uncomment this to optimize the values
+    output = pyopt_setup.Pyopt_Solve(problem,solver='SNOPT') #,FD='single', nonderivative_line_search=False)
 
     Plot_Mission.plot_mission(problem.results, show=False)
 
