@@ -57,15 +57,16 @@ def base(analyses):
     atmosphere = SUAVE.Attributes.Atmospheres.Earth.US_Standard_1976()
     planet = SUAVE.Attributes.Planets.Earth()
 
-    climb_throttle = 0.85 #Constant throttle for all climb segments
+    climb_throttle = 0.89 #Constant throttle for all climb segments
+    climb_air_speed = 190. * Units['m/s']
 
 
     #CLIMB PHASES START HERE:
 
-    # # ------------------------------------------------------------------
-    # #  Take off phase
-    # # ------------------------------------------------------------------
-    #
+    # ------------------------------------------------------------------
+    #  Take off phase
+    # ------------------------------------------------------------------
+
     # segment = Segments.Ground.Takeoff(base_segment)
     # segment.tag = "take_off"
     #
@@ -156,7 +157,7 @@ def base(analyses):
     segment.planet = planet
 
     segment.altitude_end = 11. * Units.km
-    segment.air_speed = 180.0 * Units['m/s']
+    segment.air_speed = (climb_air_speed - 10.) * Units['m/s']
     segment.climb_rate = 15. * Units['m/s']
 
     # segment.process.iterate.conditions.weights = update_weights_sprayer
@@ -187,7 +188,7 @@ def base(analyses):
 
     segment.altitude_start = 11. * Units.km
     segment.altitude_end = 15. * Units.km
-    segment.air_speed = 200.0 * Units['m/s']
+    segment.air_speed = climb_air_speed * Units['m/s']
     segment.throttle = climb_throttle
 
     # segment.process.iterate.conditions.weights = update_weights_sprayer
@@ -209,7 +210,7 @@ def base(analyses):
     segment.atmosphere = atmosphere
     segment.planet = planet
 
-    segment.air_speed = 220 * Units.m / Units.s
+    segment.air_speed = 210 * Units.m / Units.s
     segment.distance = 3367. * Units.km
     segment.aerosol_mass_initial = 0 * Units.kg  # mass to be sprayed in this segment
 
@@ -240,7 +241,7 @@ def base(analyses):
 
     segment.altitude_start = 15. * Units.km
     segment.altitude_end = 17 * Units.km
-    segment.air_speed = 200.0 * Units['m/s']
+    segment.air_speed = climb_air_speed * Units['m/s']
     segment.throttle = climb_throttle
     # segment.process.iterate.conditions.weights = update_weights_sprayer
     segment.aerosol_mass_initial = 0 * Units.kg  # mass to be sprayed in this segment
@@ -272,7 +273,7 @@ def base(analyses):
 
     segment.altitude_start = 17 * Units.km
     segment.altitude_end = 18.5 * Units.km
-    segment.air_speed = 200.0 * Units['m/s']
+    segment.air_speed = climb_air_speed * Units['m/s']
     segment.throttle = climb_throttle
 
     # segment.process.iterate.conditions.weights = update_weights_sprayer
@@ -299,7 +300,7 @@ def base(analyses):
     segment.planet = planet
 
     segment.air_speed = 210. * Units['m/s']
-    segment.distance = 1200 * Units.km
+    segment.distance = 900 * Units.km
 
     # segment.conditions.weights.vehicle_mass_rate = 2 * Units['kg/s']
 
@@ -337,13 +338,13 @@ def base(analyses):
 
     segment.altitude_start = 18.5 * Units.km
     segment.altitude_end = 19.5 * Units.km
-    segment.air_speed = 190.0 * Units['m/s']
+    segment.air_speed = climb_air_speed * Units['m/s']
     segment.throttle = climb_throttle
 
     # segment.process.iterate.conditions.weights = update_weights_sprayer
     # segment.sprayer_rate = 0 * Units['kg/s']
 
-    segment.aerosol_mass_initial = 5000. * Units.kg  # mass to be sprayed in this segment
+    segment.aerosol_mass_initial = 1000. * Units.kg  # mass to be sprayed in this segment
 
     # add to misison
     mission.append_segment(segment)
@@ -363,12 +364,12 @@ def base(analyses):
     segment.planet = planet
 
     segment.air_speed = 210. * Units['m/s']
-    segment.distance = 1000 * Units.km
+    segment.distance = 900 * Units.km
 
     # segment.conditions.weights.vehicle_mass_rate = 2 * Units['kg/s']
 
     # segment.process.iterate.conditions.weights = update_weights_sprayer
-    segment.aerosol_mass_initial = 8500 * Units.kg  # mass to be sprayed in this segment
+    segment.aerosol_mass_initial = 12500 * Units.kg  # mass to be sprayed in this segment
 
     # segment.sprayer_rate = aerosol_mass_initial / (segment.distance / segment.air_speed ) #* Units['kg/s'] #1.2121 * Units['kg/s']
     # print segment.sprayer_rate # delegate rate to a method which will calculate live rate?
@@ -400,12 +401,12 @@ def base(analyses):
 
     segment.altitude_start = 19.5 * Units.km
     segment.altitude_end = 20.5 * Units.km
-    segment.air_speed = 190.0 * Units['m/s']
+    segment.air_speed = climb_air_speed * Units['m/s']
     segment.throttle = climb_throttle
 
     # segment.process.iterate.conditions.weights = update_weights_sprayer
     # segment.sprayer_rate = 0 * Units['kg/s']
-    segment.aerosol_mass_initial = 7600. * Units.kg  # mass to be sprayed in this segment
+    segment.aerosol_mass_initial = 3600. * Units.kg  # mass to be sprayed in this segment
 
     # add to misison
     mission.append_segment(segment)
@@ -425,7 +426,7 @@ def base(analyses):
     segment.planet = planet
 
     segment.air_speed = 210. * Units['m/s']
-    segment.distance = 1200 * Units.km
+    segment.distance = 900 * Units.km
 
     # segment.conditions.weights.vehicle_mass_rate = 2 * Units['kg/s']
 
@@ -454,7 +455,7 @@ def base(analyses):
     segment.planet = planet
 
     segment.altitude_end = 19.2 * Units.km
-    segment.air_speed = 720. * Units['km/h']
+    segment.air_speed = 200. * Units['m/s']
     segment.descent_rate = 500. * Units['ft/min']
     segment.aerosol_mass_initial = 0 * Units.kg  # mass to be sprayed in this segment
     # segment.process.iterate.conditions.weights = update_weights_sprayer
@@ -505,8 +506,8 @@ def base(analyses):
     segment.planet = planet
 
     segment.altitude_end = 0.0 * Units.km
-    segment.air_speed = 250.0 * Units.knots
-    segment.descent_rate = 1500. * Units['ft/min']
+    segment.air_speed = 125. * Units['m/s']
+    segment.descent_rate = 7.0 * Units['m/s']
 
     segment.aerosol_mass_initial = 0 * Units.kg  # mass to be sprayed in this segment
 
