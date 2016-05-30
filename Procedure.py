@@ -395,7 +395,7 @@ def post_process(nexus):
 
     # Fuel margin and base fuel calculations
 
-    vehicle.mass_properties.operating_empty += 6000 # FIXME hardcoded wing mass correction
+    vehicle.mass_properties.operating_empty += 8000 # FIXME hardcoded wing mass correction
 
     operating_empty = vehicle.mass_properties.operating_empty
     payload = vehicle.mass_properties.payload  # TODO fuel margin makes little sense when ejecting aerosol
