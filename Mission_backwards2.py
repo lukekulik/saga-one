@@ -62,32 +62,32 @@ def base(analyses):
 
     #CLIMB PHASES START HERE:
 
-    # ------------------------------------------------------------------
-    #  Take off phase
-    # ------------------------------------------------------------------
-
-    segment = Segments.Ground.Takeoff(base_segment)
-    segment.tag = "take_off"
-
-    # connect vehicle configuration
-    segment.analyses.extend(analyses.takeoff)
-
-    # define segment attributes
-    segment.atmosphere     = atmosphere
-    segment.planet         = planet
-
-    segment.velocity_start = 0.0
-    segment.velocity_end = 118. * Units['m/s']
-    segment.friction_coefficient = 0.04
-    segment.throttle = 1.0
-    segment.ground_incline = 0.
-
-    # segment.process.iterate.conditions.weights = update_weights_sprayer
-    segment.sprayer_rate = 0 * Units['kg/s']
-    segment.aerosol_mass_initial = 0. * Units.kg
-
-    # add to misison
-    mission.append_segment(segment)
+    # # ------------------------------------------------------------------
+    # #  Take off phase
+    # # ------------------------------------------------------------------
+    #
+    # segment = Segments.Ground.Takeoff(base_segment)
+    # segment.tag = "take_off"
+    #
+    # # connect vehicle configuration
+    # segment.analyses.extend(analyses.takeoff)
+    #
+    # # define segment attributes
+    # segment.atmosphere     = atmosphere
+    # segment.planet         = planet
+    #
+    # segment.velocity_start = 0.0
+    # segment.velocity_end = 118. * Units['m/s']
+    # segment.friction_coefficient = 0.04
+    # segment.throttle = 1.0
+    # segment.ground_incline = 0.
+    #
+    # # segment.process.iterate.conditions.weights = update_weights_sprayer
+    # segment.sprayer_rate = 0 * Units['kg/s']
+    # segment.aerosol_mass_initial = 0. * Units.kg
+    #
+    # # add to misison
+    # mission.append_segment(segment)
 
 
     # ------------------------------------------------------------------
