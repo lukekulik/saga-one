@@ -167,7 +167,7 @@ def setup():
                                 'missions.base.segments.cruise_2.air_speed',
                                 'missions.base.segments.cruise_final.air_speed']],
 
-        ['outgoing_cruise_speed', 'missions.base.segments.cruise_outgoing.air_speed']
+        ['outgoing_cruise_speed', 'missions.base.segments.cruise_outgoing.air_speed'],
 
         # thrust_total
         # 1000.0
