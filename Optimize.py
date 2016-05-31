@@ -32,7 +32,7 @@ import SUAVE.Optimization.Package_Setups.pyopt_setup as pyopt_setup
 #  fuel burn:  [ 41769.08023241]
 
 #AVL Analysis on or off
-AVL_analysis = False
+AVL_analysis = True
 
 def main():
     print "SUAVE initialized...\n"

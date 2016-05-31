@@ -287,7 +287,7 @@ def weight(nexus):
     weights = nexus.analyses.landing.weights.evaluate()
     # print weights
     weights = nexus.analyses.takeoff.weights.evaluate()
-    weights = nexus.analyses.short_field_takeoff.weights.evaluate()
+#    weights = nexus.analyses.short_field_takeoff.weights.evaluate()
 
     empty_weight = vehicle.mass_properties.operating_empty
 
@@ -510,6 +510,7 @@ def post_process(nexus):
     #     vehicle.wing.main_wing.spans.projected,
     #     vehicle.fuselage.effective_diameter,
     #     vehicle.fuselage.lengths.total,
+    #     vehicle.wing.main_wing.chords.mean_aerodynamic
     #     0
     #
     #     segment.conditions.aerodynamics.lift_coefficient[:, 0],

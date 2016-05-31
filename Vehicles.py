@@ -12,7 +12,6 @@ from SUAVE.Core import Units, Data
 import numpy as np
 from engine import engine_caluclations
 
-
 # ----------------------------------------------------------------------
 #   Define the Vehicle
 # ----------------------------------------------------------------------
@@ -109,7 +108,7 @@ def base_setup():
 
     wing.chords.root = 2*wing.spans.projected/(wing.aspect_ratio*(1+wing.taper))
     wing.chords.tip = wing.chords.root*wing.taper
-    # wing.chords.mean_aerodynamic = 3.680
+    wing.chords.mean_aerodynamic = 2.* wing.chords.root/3.*(1+wing.taper+wing.taper**2)/(1+wing.taper)
 
     wing.areas.wetted = 2.0 * wing.areas.reference
     wing.areas.exposed = 0.8 * wing.areas.wetted
@@ -373,6 +372,7 @@ def configs_setup(vehicle):
 
     configs.append(config)
 
+
     # ------------------------------------------------------------------
     #   Takeoff Configuration
     # ------------------------------------------------------------------
@@ -403,37 +403,37 @@ def configs_setup(vehicle):
 
     configs.append(config)
 
-    # ------------------------------------------------------------------
-    #   Short Field Takeoff Configuration
-    # ------------------------------------------------------------------ 
-
-    config = SUAVE.Components.Configs.Config(base_config)
-    config.tag = 'short_field_takeoff'
-
-    config.wings['main_wing'].flaps.angle = 20. * Units.deg
-    config.wings['main_wing'].slats.angle = 25. * Units.deg
-
-    config.V2_VS_ratio = 1.21
-    config.maximum_lift_coefficient = 2.
-
-    configs.append(config)
-
-    # ------------------------------------------------------------------
-    #   High-lift initial payload Configuration
-    # ------------------------------------------------------------------
-
-    config = SUAVE.Components.Configs.Config(base_config)
-    config.tag = 'high_lift_cruise'
-
-    config.wings['main_wing'].flaps.angle = 10. * Units.deg
-    # config.wings['main_wing'].slats.angle = 10. * Units.deg
-
+    # # ------------------------------------------------------------------
+    # #   Short Field Takeoff Configuration
+    # # ------------------------------------------------------------------
+    #
+    # config = SUAVE.Components.Configs.Config(base_config)
+    # config.tag = 'short_field_takeoff'
+    #
+    # config.wings['main_wing'].flaps.angle = 20. * Units.deg
+    # config.wings['main_wing'].slats.angle = 25. * Units.deg
+    #
     # config.V2_VS_ratio = 1.21
-    config.maximum_lift_coefficient = 2.
-
-    # payload?
-
-    configs.append(config)
+    # config.maximum_lift_coefficient = 2.
+    #
+    # configs.append(config)
+    #
+    # # ------------------------------------------------------------------
+    # #   High-lift initial payload Configuration
+    # # ------------------------------------------------------------------
+    #
+    # config = SUAVE.Components.Configs.Config(base_config)
+    # config.tag = 'high_lift_cruise'
+    #
+    # config.wings['main_wing'].flaps.angle = 10. * Units.deg
+    # # config.wings['main_wing'].slats.angle = 10. * Units.deg
+    #
+    # # config.V2_VS_ratio = 1.21
+    # config.maximum_lift_coefficient = 2.
+    #
+    # # payload?
+    #
+    # configs.append(config)
 
     # done!
     return configs

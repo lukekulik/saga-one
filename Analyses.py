@@ -8,6 +8,9 @@
 # ----------------------------------------------------------------------    
 
 import SUAVE
+import numpy as np
+from SUAVE.Core import Units
+
 from Optimize import AVL_analysis
 
 
@@ -68,11 +71,15 @@ def base(vehicle):
     #  AVL-based analysis
     else:
         aerodynamics_avl = SUAVE.Analyses.Aerodynamics.Surrogates.AVL()
+        aerodynamics_avl.training.angle_of_attack = np.array([-5.,0.,15.]) * Units.deg
         #aerodynamics_avl = SUAVE.Analyses.Aerodynamics.AVL()
         #aerodynamics_avl.features = vehicle
         aerodynamics_avl.geometry = vehicle
 
+        #aerodynamics_avl.lift.total
         analyses.append(aerodynamics_avl)
+        # aerodynamics_avl.finalized = False
+        # print aerodynamics_avl
 
     # ------------------------------------------------------------------
     #  Stability Analysis
