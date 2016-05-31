@@ -100,6 +100,14 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
     # add the fan to the network
     gt_engine.fan = fan
 
+    # Component 10 : Payload power draw
+
+    payload = SUAVE.Components.Energy.Peripherals.Payload()
+    payload.tag = 'payload'
+    payload.power_draw = 2e6
+    gt_engine.payload = payload
+
+
     # Define OPR
     OPR = fan.pressure_ratio*high_pressure_compressor.pressure_ratio*low_pressure_compressor.pressure_ratio
 

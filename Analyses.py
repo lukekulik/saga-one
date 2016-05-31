@@ -10,7 +10,7 @@
 import SUAVE
 import numpy as np
 from SUAVE.Core import Units
-
+from empty_saga import empty
 from Optimize import AVL_analysis
 
 
@@ -56,6 +56,7 @@ def base(vehicle):
     # ------------------------------------------------------------------
     #  Weights
     weights = SUAVE.Analyses.Weights.Weights()
+    weights.settings.empty_weight_method = empty
     weights.vehicle = vehicle
     analyses.append(weights)
 
