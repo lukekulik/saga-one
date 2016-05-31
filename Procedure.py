@@ -396,7 +396,7 @@ def post_process(nexus):
 
     # Fuel margin and base fuel calculations
 
-    vehicle.mass_properties.operating_empty += 8000 # FIXME hardcoded wing mass correction
+    vehicle.mass_properties.operating_empty += 8000 # FIXME hardcoded wing mass correction # area scaling?
 
     operating_empty = vehicle.mass_properties.operating_empty
     payload = vehicle.mass_properties.payload  # TODO fuel margin makes little sense when ejecting aerosol
@@ -421,7 +421,7 @@ def post_process(nexus):
     summary.base_mission_sprayed = results.base.segments[-1].conditions.weights.spray[-1]
 
     summary.cruise_range = 0#missions.base.segments.cruise_2.distance # assume we're flying straight
-    summary.empty_range = results.base.segments['cruise_empty'].conditions.frames.inertial.position_vector[:, 0][-1]/1000.
+    summary.empty_range = results.base.segments['cruise_outgoing'].conditions.frames.inertial.position_vector[:, 0][-1]/1000.
     summary.mission_range = results.base.segments['cruise_final'].conditions.frames.inertial.position_vector[:, 0][-1]/1000. # Assuming mission ends at cruise altitude
     summary.spray_range = summary.mission_range - summary.empty_range
 
@@ -497,6 +497,46 @@ def post_process(nexus):
     scaled_inputs = unscaled_inputs / input_scaling
     problem_inputs = []
 
+    output_array = np.zeros(44)
+
+    # output_array = np.array[
+    #     vehicle.wings.main_wing.aspect_ratio,
+    #     vehicle.wings.main_wing.areas.reference,
+    #     vehicle.wings.main_wing.sweep,
+    #     vehicle.wing.main_wing.taper,
+    #     vehicle.wing.main_wing.chords.root,
+    #     vehicle.wing.main_wing.spans.projected,
+    #     vehicle.fuselage.effective_diameter,
+    #     vehicle.fuselage.lengths.total,
+    #     0
+    #
+    #     segment.conditions.aerodynamics.lift_coefficient[:, 0],
+    #
+    #
+    #     gt_engine.number_of_engines,
+    #
+    # zero_fuel_weight[0] + summary.base_mission_fuelburn,
+    # OEW
+    # design_landing_weight,
+    #
+    # dry engine weight(per
+    # engine)
+    # wet engine weight (design_landing_weight)
+    #
+    #
+    # vehicle.wings.horizontal_stabilizer.sweep,
+    # vehicle.wing.horizontal_stabilizer.spans.projected,
+    # vehicle.wing.horizontal_stabilizer.chords.root,
+    #
+    #
+    # vehicle.wings.vertical_stabilizer.sweep,
+    # vehicle.wing.vertical_stabilizer.taper,
+    # vehicle.wing.vertical_stabilizer.chords.root,
+    #
+    # gt_engine.nacelle_diameter
+    # ]
+
+    np.save(output_folder+"output_array.npy",output_array)
 
     for value in unscaled_inputs:
         problem_inputs.append(value)
