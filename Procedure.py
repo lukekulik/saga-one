@@ -398,7 +398,7 @@ def post_process(nexus):
 
     # Fuel margin and base fuel calculations
 
-    vehicle.mass_properties.operating_empty += 8000 # FIXME hardcoded wing mass correction # area scaling?
+    vehicle.mass_properties.operating_empty += 000 # FIXME hardcoded wing mass correction # area scaling?
 
     operating_empty = vehicle.mass_properties.operating_empty
     payload = vehicle.mass_properties.payload  # TODO fuel margin makes little sense when ejecting aerosol
@@ -418,6 +418,7 @@ def post_process(nexus):
             results.base.segments[i - 1].conditions.weights.spray[-1]
 
     summary.op_empty = operating_empty
+    print "design langin", design_landing_weight
     summary.max_zero_fuel_margin = (design_landing_weight - operating_empty) / operating_empty # used to be (design_landing_weight - zero_fuel_weight) / zero_fuel_weight changed because of aerosol ejection
     summary.base_mission_fuelburn = results.base.segments[-1].conditions.weights.fuel_burn[-1]  # esults.base.segments[i].conditions.weights.fuel_burn0#results.base.segments.conditions.weights.fuel_burn                         #design_takeoff_weight - results.base.segments['descent_3'].conditions.weights.total_mass[-1] # - results.base.segments['cruise'].conditions.sprayer_rate
     summary.base_mission_sprayed = results.base.segments[-1].conditions.weights.spray[-1]
@@ -456,8 +457,7 @@ def post_process(nexus):
     print "Mission time: ", summary.main_mission_time[0] * Units['s'] / Units.h, "hours (main) +", \
         (summary.total_mission_time - summary.main_mission_time)[0] * Units['s'] / Units.h, "hours (diversion)"
     summary.nothing = 0.0
-    print 'Fuel burn: ', summary.base_mission_fuelburn
-    # print 'fuel margin=', problem.all_constraints()
+    print 'Fuel burn: ', summary.base_mission_fuelburn, " Fuel margin: ", summary.max_zero_fuel_margin
 
     gt_engine = nexus.vehicle_configurations.base.propulsors.turbofan
 
@@ -474,6 +474,8 @@ def post_process(nexus):
     #FXI
 
     print "Aerosol released: ", summary.base_mission_sprayed[0], " kg\n\n"
+
+
 
     # print vehicle.wings.main_wing.chords.root, vehicle.wings.main_wing.spans.projected, vehicle.wings.main_wing.areas.reference
 

@@ -103,7 +103,7 @@ def base_setup():
     wing.sweep = 0.0 * Units.deg
 
     wing.thickness_to_chord = 0.12
-    wing.taper = 0.55
+    wing.taper = 0.5
     wing.spans.projected = np.sqrt(wing.aspect_ratio * wing.areas.reference)
 
     wing.chords.root = 2*wing.spans.projected/(wing.aspect_ratio*(1+wing.taper))
