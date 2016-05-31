@@ -216,7 +216,7 @@ def base_setup():
 
     fuselage = SUAVE.Components.Fuselages.Fuselage()
     fuselage.tag = 'fuselage'
-    fuselage.origin = [0, 0, 0]  # yeyesyesyes
+    fuselage.origin = [0, 0, 0]
     fuselage.number_coach_seats = vehicle.passengers
     fuselage.seats_abreast = 0
     # fuselage.seat_pitch            = 0.7455

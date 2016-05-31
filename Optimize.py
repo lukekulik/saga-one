@@ -38,9 +38,9 @@ def main():
     print "SUAVE initialized...\n"
     problem = setup()  # "problem" is a nexus
 
-    output = problem.objective()  # uncomment this line when using the default inputs
+    # output = problem.objective()  # uncomment this line when using the default inputs
     # variable_sweep(problem)  #uncomment this to view some contours of the problem
-    # output = scipy_setup.SciPy_Solve(problem, solver='SLSQP') # uncomment this to optimize the values
+    output = scipy_setup.SciPy_Solve(problem, solver='SLSQP') # uncomment this to optimize the values
     # output = pyopt_setup.Pyopt_Solve(problem,solver='SNOPT') #,FD='single', nonderivative_line_search=False)
 
     # Plot_Mission.plot_mission(problem.results, show=False)
@@ -69,7 +69,7 @@ def setup():
     problem.inputs = np.array([
         # Variable inputs
         ['wing_area', 700, (400., 700.), 500., Units.meter ** 2],
-        ['MTOW', 181e3, (170000., 190000.), 180000., Units.kg],
+        ['MTOW', 190e3, (170000., 210000.), 180000., Units.kg],
         ['alt_outgoing_cruise', 13.14, (8., 20.), 15., Units.km],
         ['design_thrust', 91.7e3, (85e3, 115e3), 100e3, Units.N],
         ['outgoing_cruise_speed', 193., (150, 220), 200, Units['m/s']],
