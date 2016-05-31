@@ -57,6 +57,8 @@ def setup():
     # find the weights
     procedure.weights = weight
 
+    # AVL Analysis to create surrogate model
+
     # finalizes the data dependencies
     procedure.finalize = finalize
 
