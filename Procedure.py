@@ -514,16 +514,35 @@ def post_process(nexus):
     #
     #     segment.conditions.aerodynamics.lift_coefficient[:, 0],
     #
+    #     segment.conditions.aerodynamics.angle_of_attack[:, 0] / Units.deg
     #
-    #     gt_engine.number_of_engines,
+    #     segment.conditions.weight.weight_breakdown.propulsion?
     #
-    # zero_fuel_weight[0] + summary.base_mission_fuelburn,
-    # OEW
-    # design_landing_weight,
+    #
+    # segment.conditions.freestream.dynamic_viscosity, # need to loop it and add all segments
+    # segment.conditions.freestream.density,
+    #
+    #
+    #
+    # stability
+    #     static
+    #         cm_alpha
+    #         cn_beta
+    #
+    #
+    #
     #
     # dry engine weight(per
-    # engine)
-    # wet engine weight (design_landing_weight)
+    # engine wet engine
+    # weight(design_landing_weight)
+    #
+    #     gt_engine.number_of_engines,
+    #     summary.base_mission_fuelburn
+    #     zero_fuel_weight[0] + summary.base_mission_fuelburn,
+    #     OEW
+    #     design_landing_weight,
+    #
+    #
     #
     #
     # vehicle.wings.horizontal_stabilizer.sweep,
@@ -534,7 +553,6 @@ def post_process(nexus):
     # vehicle.wings.vertical_stabilizer.sweep,
     # vehicle.wing.vertical_stabilizer.taper,
     # vehicle.wing.vertical_stabilizer.chords.root,
-    #
     # gt_engine.nacelle_diameter
     # ]
 

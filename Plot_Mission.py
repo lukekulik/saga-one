@@ -20,7 +20,7 @@ import pylab as plt
 def plot_mission(results, show=True, line_style='bo-'):
     axis_font = {'fontname': 'Arial', 'size': '14'}
     folder = "output/graphs/"
-    file_format = ".eps"
+    file_format = ".jpg"
 
     # ------------------------------------------------------------------
     #   Aerodynamics 
