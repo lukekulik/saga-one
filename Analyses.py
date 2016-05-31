@@ -8,6 +8,7 @@
 # ----------------------------------------------------------------------    
 
 import SUAVE
+from Optimize import AVL_analysis
 
 
 # ----------------------------------------------------------------------
@@ -57,11 +58,21 @@ def base(vehicle):
 
     # ------------------------------------------------------------------
     #  Aerodynamics Analysis
-    aerodynamics = SUAVE.Analyses.Aerodynamics.Fidelity_Zero()
-    aerodynamics.geometry = vehicle
+    if AVL_analysis == False: #Run zero-fidelity method
+        aerodynamics = SUAVE.Analyses.Aerodynamics.Fidelity_Zero()
+        aerodynamics.geometry = vehicle
 
-    aerodynamics.settings.drag_coefficient_increment = 0.0000
-    analyses.append(aerodynamics)
+        aerodynamics.settings.drag_coefficient_increment = 0.0000
+        analyses.append(aerodynamics)
+
+    #  AVL-based analysis
+    else:
+        aerodynamics_avl = SUAVE.Analyses.Aerodynamics.AVL()
+        aerodynamics_avl.features = vehicle
+        aerodynamics_avl.geometry = vehicle
+
+
+        analyses.append(aerodynamics_avl)
 
     # ------------------------------------------------------------------
     #  Stability Analysis

@@ -473,6 +473,8 @@ def post_process(nexus):
 
     print "Aerosol released: ", summary.base_mission_sprayed[0], " kg\n\n"
 
+    # print vehicle.wings.main_wing.chords.root, vehicle.wings.main_wing.spans.projected, vehicle.wings.main_wing.areas.reference
+
     # print "cruise range: ",problem.summary.cruise_range/1000., " km"
 
 

@@ -107,9 +107,12 @@ def base_setup():
     wing.taper = 0.55
     wing.spans.projected = np.sqrt(wing.aspect_ratio * wing.areas.reference)
 
-    wing.chords.root = 2*wing.spans.projected/(wing.aspect_ratio*(1+wing.taper))
+    wing.chords.root = 2.*wing.spans.projected/(wing.aspect_ratio*(1+wing.taper))
+
     wing.chords.tip = wing.chords.root*wing.taper
-    # wing.chords.mean_aerodynamic = 3.680
+
+    #Assuming trapezoidal wing
+    wing.chords.mean_aerodynamic = 2.*wing.chords.root/3.*(1+wing.taper+wing.taper**2)/(1+wing.taper)
 
     wing.areas.wetted = 2.0 * wing.areas.reference
     wing.areas.exposed = 0.8 * wing.areas.wetted
@@ -118,7 +121,7 @@ def base_setup():
     wing.twists.root = 2.0 * Units.degrees
     wing.twists.tip = 0.0 * Units.degrees
 
-    wing.origin = [13.2, 0, 0]  # Need to fix
+    wing.origin = [8.0, 0, 0]  # Need to fix
     # wing.aerodynamic_center      = [3,0,0] # Need to fix  ---> MUST INCLUDE A SIZING CALL, TO GENERATE PLANFORM
 
     wing.vertical = False
@@ -161,7 +164,7 @@ def base_setup():
     wing.twists.root = 2.0 * Units.degrees
     wing.twists.tip = 2.0 * Units.degrees
 
-    wing.origin = [31., 0, 0]  # need to fix
+    wing.origin = [20., 0, 0]  # need to fix
     # wing.aerodynamic_center      = [3,0,0] # Need to fix  ---> MUST INCLUDE A SIZING CALL, TO GENERATE PLANFORM
 
     wing.vertical = False
@@ -200,7 +203,7 @@ def base_setup():
     wing.twists.root = 0.0 * Units.degrees
     wing.twists.tip = 0.0 * Units.degrees
 
-    wing.origin = [29.5, 0, 0]
+    wing.origin = [45., 0, 0]
     # wing.aerodynamic_center      = [3,0,0] # Need to fix  ---> MUST INCLUDE A SIZING CALL, TO GENERATE PLANFORM
 
     wing.vertical = True
@@ -217,7 +220,7 @@ def base_setup():
 
     fuselage = SUAVE.Components.Fuselages.Fuselage()
     fuselage.tag = 'fuselage'
-    fuselage.origin = [0, 0, 0]  # yeyesyesyes
+    fuselage.origin = [0, 10, 0]  # yeyesyesyes
     fuselage.number_coach_seats = vehicle.passengers
     fuselage.seats_abreast = 0
     # fuselage.seat_pitch            = 0.7455
@@ -225,19 +228,19 @@ def base_setup():
     fuselage.fineness.nose = 2.5
     fuselage.fineness.tail = 2.5
 
-    fuselage.lengths.nose = 1.0
-    fuselage.lengths.tail = 1.0
-    fuselage.lengths.cabin = 6
-    fuselage.lengths.total = 8
+    fuselage.lengths.nose = 5.0
+    fuselage.lengths.tail = 5.0
+    fuselage.lengths.cabin = 40.0
+    fuselage.lengths.total = 50.0
     fuselage.lengths.fore_space = 0.
     fuselage.lengths.aft_space = 0.
 
     fuselage.width = 1.4
 
     fuselage.heights.maximum = 1.4
-    fuselage.heights.at_quarter_length = 1.4
-    fuselage.heights.at_three_quarters_length = 1.4
-    fuselage.heights.at_wing_root_quarter_chord = 1.4
+    fuselage.heights.at_quarter_length = 1.
+    fuselage.heights.at_three_quarters_length = 0.8
+    fuselage.heights.at_wing_root_quarter_chord = 1.0
 
     fuselage.areas.side_projected = 8.
     fuselage.areas.wetted = 21.05
