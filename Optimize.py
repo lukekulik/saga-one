@@ -32,7 +32,7 @@ import SUAVE.Optimization.Package_Setups.pyopt_setup as pyopt_setup
 #  fuel burn:  [ 41769.08023241]
 
 #AVL Analysis on or off
-AVL_analysis = True
+AVL_analysis = False
 
 def main():
     print "SUAVE initialized...\n"
@@ -43,7 +43,7 @@ def main():
     # output = scipy_setup.SciPy_Solve(problem, solver='SLSQP') # uncomment this to optimize the values
     # output = pyopt_setup.Pyopt_Solve(problem,solver='SNOPT') #,FD='single', nonderivative_line_search=False)
 
-    Plot_Mission.plot_mission(problem.results, show=False)
+    # Plot_Mission.plot_mission(problem.results, show=False)
 
     return
 

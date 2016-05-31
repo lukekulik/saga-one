@@ -11,6 +11,7 @@
 import SUAVE
 from SUAVE.Core import Units
 from sprayer import update_weights_sprayer
+import numpy as np
 
 
 # ----------------------------------------------------------------------
@@ -508,8 +509,9 @@ def base(analyses):
     segment.planet = planet
 
     segment.altitude_end = 0.0 * Units.km
-    segment.air_speed = 125. * Units['m/s']
-    segment.descent_rate = 7.0 * Units['m/s']
+    segment.air_speed = 80. * Units['m/s']
+    landing_gradient = -3. * Units.deg
+    segment.descent_rate = segment.air_speed*np.sin(landing_gradient) * Units['m/s']
 
     segment.aerosol_mass_initial = 0 * Units.kg  # mass to be sprayed in this segment
 
@@ -518,6 +520,8 @@ def base(analyses):
 
     # append to mission
     mission.append_segment(segment)
+
+
 
     #  ------------------------------------------------------------------
     #   Mission definition complete

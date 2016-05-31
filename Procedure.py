@@ -463,6 +463,7 @@ def post_process(nexus):
     gt_engine = nexus.vehicle_configurations.base.propulsors.turbofan
 
 
+
     # print thrust
     # FIXME move that to printing/results section
     print "Turbofan thrust:", gt_engine.sealevel_static_thrust, " x ", int(
@@ -510,18 +511,25 @@ def post_process(nexus):
     #     vehicle.wing.main_wing.spans.projected,
     #     vehicle.fuselage.effective_diameter,
     #     vehicle.fuselage.lengths.total,
-    #     vehicle.wing.main_wing.chords.mean_aerodynamic
-    #     0
+    #     vehicle.wing.main_wing.chords.mean_aerodynamic,
+    #     distance_fus = 2.*vehicle.fuselage.origin[1],
     #
+    #     configs.takeoff.maximum_lift_coefficient
+    #     configs.landing.maximum_lift_coefficient
+    #     vehicle.maximum_lift_coefficient
+    #     missions.base.segments['descent_final'].air_speed
+    #     missions.base.segments['cruise_1'].air_speed
+    #
+    #     0
+    #     # SEGMENTS: need to loop it and add all segments
     #     segment.conditions.aerodynamics.lift_coefficient[:, 0],
     #
     #     segment.conditions.aerodynamics.angle_of_attack[:, 0] / Units.deg
     #
-    #     segment.conditions.weight.weight_breakdown.propulsion?
     #
     #
-    # segment.conditions.freestream.dynamic_viscosity, # need to loop it and add all segments
-    # segment.conditions.freestream.density,
+    #     segment.conditions.freestream.dynamic_viscosity,
+    #     segment.conditions.freestream.density,
     #
     #
     #
@@ -530,18 +538,26 @@ def post_process(nexus):
     #         cm_alpha
     #         cn_beta
     #
+    #       QUESTIONABLE: CL_alpha, CM_alpha, Lift distribution,
     #
     #
-    #
-    # dry engine weight(per
-    # engine wet engine
-    # weight(design_landing_weight)
     #
     #     gt_engine.number_of_engines,
-    #     summary.base_mission_fuelburn
+    #     gt_engine.mass_properties.mass/gt_engine.number_of_engines,      #PER ENGINE
+    #     gt_engine.mass_properties.mass/1.6/gt_engine.number_of_engines,  #PER ENGINE DRY WEIGHT
+    #
+    #     summary.base_mission_fuelburn,
     #     zero_fuel_weight[0] + summary.base_mission_fuelburn,
-    #     OEW
+    #     operating_empty,
     #     design_landing_weight,
+    #     vehicle.weight_breakdown.wing,
+    #     vehicle.weight_breakdown.fuselage,
+    #     vehicle.weight_breakdown.landing_gear,
+    #     vehicle.weight_breakdown.wing,
+    #     payload,
+    #
+    #     820., #Fuel density
+    #
     #
     #
     #
@@ -557,6 +573,8 @@ def post_process(nexus):
     # gt_engine.nacelle_diameter
     # ]
 
+
+    # print vehicle.weight_breakdown
     np.save(output_folder+"output_array.npy",output_array)
 
     for value in unscaled_inputs:
