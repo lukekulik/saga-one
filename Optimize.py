@@ -45,7 +45,7 @@ def main():
 
     print 'constraints=', problem.all_constraints()
 
-    Plot_Mission.plot_mission(problem.results, show=True)
+    Plot_Mission.plot_mission(problem.results, show=False)
 
     return
 
@@ -71,7 +71,7 @@ def setup():
     problem.inputs = np.array([
         # Variable inputs
         ['wing_area', 700, (400., 750.), 500., Units.meter ** 2],
-        ['MTOW', 200e3, (180000., 230000.), 180000., Units.kg],
+        ['MTOW', 203e3, (180000., 230000.), 200000., Units.kg],
         ['alt_outgoing_cruise', 13.14, (8., 20.), 15., Units.km],
         ['design_thrust', 100e3, (85e3, 115e3), 100e3, Units.N],
         ['outgoing_cruise_speed', 191., (150, 220), 200, Units['m/s']],
@@ -138,7 +138,7 @@ def setup():
     # [ tag, sense, edge, scaling, units ]
     problem.constraints = np.array([
 
-        ['min_throttle', '>', 0., 1e-2, Units.less],
+        # ['min_throttle', '>', 0., 1e-2, Units.less],
         ['max_throttle', '<', 1., 1e-2, Units.less],
         ['main_mission_time', '<', 11.1, 1, Units.h],
         ['mission_range', '>', 7000., 100., Units.km],
