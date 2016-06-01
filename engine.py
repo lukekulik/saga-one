@@ -37,7 +37,7 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
     low_pressure_compressor = SUAVE.Components.Energy.Converters.Compressor()
     low_pressure_compressor.tag = 'lpc'
     low_pressure_compressor.polytropic_efficiency = 0.89
-    low_pressure_compressor.pressure_ratio = 1.45
+    low_pressure_compressor.pressure_ratio = 1.46
     # add low pressure compressor to the network
     gt_engine.low_pressure_compressor = low_pressure_compressor
 
@@ -45,7 +45,7 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
     high_pressure_compressor = SUAVE.Components.Energy.Converters.Compressor()
     high_pressure_compressor.tag = 'hpc'
     high_pressure_compressor.polytropic_efficiency = 0.89  # FIXME
-    high_pressure_compressor.pressure_ratio = 12.0
+    high_pressure_compressor.pressure_ratio = 17.
     # add the high pressure compressor to the network
     gt_engine.high_pressure_compressor = high_pressure_compressor
 
@@ -96,7 +96,7 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
     fan = SUAVE.Components.Energy.Converters.Fan()
     fan.tag = 'fan'
     fan.polytropic_efficiency = 0.87
-    fan.pressure_ratio = 1.42
+    fan.pressure_ratio = 1.45
     # add the fan to the network
     gt_engine.fan = fan
 
