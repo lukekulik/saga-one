@@ -111,11 +111,12 @@ def base_setup():
     fuselage.heights.at_three_quarters_length = 1.4
     fuselage.heights.at_wing_root_quarter_chord = 1.4
 
+    fuselage.effective_diameter = np.sqrt(fuselage.heights.maximum*fuselage.width)
+
     fuselage.areas.side_projected = 8.
-    fuselage.areas.wetted = S_wet_fus(fuselage.width,fuselage.lengths.total)
+    fuselage.areas.wetted = S_wet_fus(fuselage.effective_diameter,fuselage.lengths.nose,fuselage.lengths.tail,fuselage.lengths.total)
     fuselage.areas.front_projected = 0.78
 
-    fuselage.effective_diameter = np.sqrt(fuselage.heights.maximum*fuselage.width)
 
     fuselage.differential_pressure = 0 * Units.pascal  # Maximum differential pressure
 
