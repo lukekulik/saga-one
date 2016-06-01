@@ -11,6 +11,8 @@ import SUAVE
 from SUAVE.Core import Units, Data
 import numpy as np
 from engine import engine_caluclations
+from S_wetted import S_wet_w, S_wet_fus
+
 
 # ----------------------------------------------------------------------
 #   Define the Vehicle
@@ -78,6 +80,85 @@ def base_setup():
     vehicle.systems.control = "fully powered"
     vehicle.systems.accessories = "long-range"
 
+    # ------------------------------------------------------------------
+    #  Fuselage (Right)
+    # ------------------------------------------------------------------
+
+    fuselage = SUAVE.Components.Fuselages.Fuselage()
+    fuselage.tag = 'fuselage'
+    fuselage.origin = [0, 0, 0]
+    fuselage.number_coach_seats = vehicle.passengers
+    fuselage.seats_abreast = 0
+    # fuselage.seat_pitch            = 0.7455
+
+    fuselage.fineness.nose = 2.5
+    fuselage.fineness.tail = 2.5
+
+    fuselage.lengths.nose = 5.0
+    fuselage.lengths.tail = 5.0
+    fuselage.lengths.cabin = 40.0
+    fuselage.lengths.total = 50.0 # FIXME add a formula
+    fuselage.lengths.fore_space = 0.
+    fuselage.lengths.aft_space = 0.
+
+    fuselage.width = 1.4
+
+    fuselage.heights.maximum = 1.4
+    fuselage.heights.at_quarter_length = 1.4
+    fuselage.heights.at_three_quarters_length = 1.4
+    fuselage.heights.at_wing_root_quarter_chord = 1.4
+
+    fuselage.areas.side_projected = 8.
+    fuselage.areas.wetted = S_wet_fus(fuselage.width,fuselage.lengths.total)
+    fuselage.areas.front_projected = 0.78
+
+    fuselage.effective_diameter = 1.4
+
+    fuselage.differential_pressure = 0 * Units.pascal  # Maximum differential pressure
+
+    # add to vehicle
+    vehicle.append_component(fuselage)
+
+    if twin == "ON":
+        # ------------------------------------------------------------------
+        #  Fuselage (Left)
+        # ------------------------------------------------------------------
+        print "Twin-fuselage activated"
+        fuselage = SUAVE.Components.Fuselages.Fuselage()
+        fuselage.tag = 'fuselage2'
+        fuselage.origin = [0, -10, 0]  # yeyesyesyes
+        fuselage.number_coach_seats = vehicle.passengers
+        fuselage.seats_abreast = 0
+        # fuselage.seat_pitch            = 0.7455
+
+        fuselage.fineness.nose = 2.5
+        fuselage.fineness.tail = 2.5
+
+        fuselage.lengths.nose = 1.0
+        fuselage.lengths.tail = 1.0
+        fuselage.lengths.cabin = 6
+        fuselage.lengths.total = 8
+        fuselage.lengths.fore_space = 0.
+        fuselage.lengths.aft_space = 0.
+
+        fuselage.width = 1.4
+
+        fuselage.heights.maximum = 1.4
+        fuselage.heights.at_quarter_length = 1.4
+        fuselage.heights.at_three_quarters_length = 1.4
+        fuselage.heights.at_wing_root_quarter_chord = 1.4
+
+        fuselage.areas.side_projected = 8.
+        fuselage.areas.wetted = 21.05
+        fuselage.areas.front_projected = 0.78
+
+        fuselage.effective_diameter = 1
+
+        fuselage.differential_pressure = 0 * Units.pascal  # Maximum differential pressure
+
+        # add to vehicle
+        vehicle.append_component(fuselage)
+
     # # ------------------------------------------------------------------
     # #  Airfoil
     # # ------------------------------------------------------------------
@@ -110,7 +191,8 @@ def base_setup():
     wing.chords.tip = wing.chords.root*wing.taper
     wing.chords.mean_aerodynamic = 2.* wing.chords.root/3.*(1+wing.taper+wing.taper**2)/(1+wing.taper)
 
-    wing.areas.wetted = 2.0 * wing.areas.reference
+    wing.areas.wetted = S_wet_w("sc3.dat",wing.taper,wing.areas.reference,wing.spans.projected\
+            ,wing.chords.root,100,fuselage.effective_diameter,fuselage.origin[1],twin) #2.0 * wing.areas.reference
     wing.areas.exposed = 0.8 * wing.areas.wetted
     wing.areas.affected = 0.6 * wing.areas.reference
 
@@ -210,84 +292,7 @@ def base_setup():
     # add to vehicle
     vehicle.append_component(wing)
 
-    # ------------------------------------------------------------------
-    #  Fuselage (Right)
-    # ------------------------------------------------------------------
 
-    fuselage = SUAVE.Components.Fuselages.Fuselage()
-    fuselage.tag = 'fuselage'
-    fuselage.origin = [0, 0, 0]
-    fuselage.number_coach_seats = vehicle.passengers
-    fuselage.seats_abreast = 0
-    # fuselage.seat_pitch            = 0.7455
-
-    fuselage.fineness.nose = 2.5
-    fuselage.fineness.tail = 2.5
-
-    fuselage.lengths.nose = 5.0
-    fuselage.lengths.tail = 5.0
-    fuselage.lengths.cabin = 40.0
-    fuselage.lengths.total = 50.0 # FIXME add a formula
-    fuselage.lengths.fore_space = 0.
-    fuselage.lengths.aft_space = 0.
-
-    fuselage.width = 1.4
-
-    fuselage.heights.maximum = 1.4
-    fuselage.heights.at_quarter_length = 1.4
-    fuselage.heights.at_three_quarters_length = 1.4
-    fuselage.heights.at_wing_root_quarter_chord = 1.4
-
-    fuselage.areas.side_projected = 8.
-    fuselage.areas.wetted = 21.05
-    fuselage.areas.front_projected = 0.78
-
-    fuselage.effective_diameter = 1.4
-
-    fuselage.differential_pressure = 0 * Units.pascal  # Maximum differential pressure
-
-    # add to vehicle
-    vehicle.append_component(fuselage)
-
-    if twin == "ON":
-        # ------------------------------------------------------------------
-        #  Fuselage (Left)
-        # ------------------------------------------------------------------
-        print "Twin-fuselage activated"
-        fuselage = SUAVE.Components.Fuselages.Fuselage()
-        fuselage.tag = 'fuselage2'
-        fuselage.origin = [0, -10, 0]  # yeyesyesyes
-        fuselage.number_coach_seats = vehicle.passengers
-        fuselage.seats_abreast = 0
-        # fuselage.seat_pitch            = 0.7455
-
-        fuselage.fineness.nose = 2.5
-        fuselage.fineness.tail = 2.5
-
-        fuselage.lengths.nose = 1.0
-        fuselage.lengths.tail = 1.0
-        fuselage.lengths.cabin = 6
-        fuselage.lengths.total = 8
-        fuselage.lengths.fore_space = 0.
-        fuselage.lengths.aft_space = 0.
-
-        fuselage.width = 1.4
-
-        fuselage.heights.maximum = 1.4
-        fuselage.heights.at_quarter_length = 1.4
-        fuselage.heights.at_three_quarters_length = 1.4
-        fuselage.heights.at_wing_root_quarter_chord = 1.4
-
-        fuselage.areas.side_projected = 8.
-        fuselage.areas.wetted = 21.05
-        fuselage.areas.front_projected = 0.78
-
-        fuselage.effective_diameter = 1
-
-        fuselage.differential_pressure = 0 * Units.pascal  # Maximum differential pressure
-
-        # add to vehicle
-        vehicle.append_component(fuselage)
 
     # ------------------------------------------------------------------
     #  Turbofan Network
