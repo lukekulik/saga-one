@@ -11,7 +11,7 @@ import SUAVE
 from SUAVE.Core import Units, Data
 import numpy as np
 from engine import engine_caluclations
-from S_wetted import S_wet_w, S_wet_fus
+from S_wetted_wing import S_wet_w, S_wet_fus
 
 
 # ----------------------------------------------------------------------
