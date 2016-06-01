@@ -58,7 +58,7 @@ def base(analyses):
     atmosphere = SUAVE.Attributes.Atmospheres.Earth.US_Standard_1976()
     planet = SUAVE.Attributes.Planets.Earth()
 
-    climb_throttle = 0.90 #Constant throttle for all climb segments
+    climb_throttle = 0.9 #Constant throttle for all climb segments
     climb_air_speed = 190. * Units['m/s']
 
 
@@ -303,7 +303,7 @@ def base(analyses):
     segment.planet = planet
 
     segment.air_speed = 210. * Units['m/s']
-    segment.distance = 900 * Units.km
+    segment.distance = 1000 * Units.km
 
     # segment.conditions.weights.vehicle_mass_rate = 2 * Units['kg/s']
 
@@ -367,7 +367,7 @@ def base(analyses):
     segment.planet = planet
 
     segment.air_speed = 210. * Units['m/s']
-    segment.distance = 950 * Units.km
+    segment.distance = 1250 * Units.km
 
     # segment.conditions.weights.vehicle_mass_rate = 2 * Units['kg/s']
 
