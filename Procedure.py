@@ -398,7 +398,7 @@ def post_process(nexus):
 
     # Fuel margin and base fuel calculations
 
-    vehicle.mass_properties.operating_empty += 000 # FIXME hardcoded wing mass correction # area scaling?
+    vehicle.mass_properties.operating_empty += 8000 # FIXME hardcoded wing mass correction # area scaling?
 
     operating_empty = vehicle.mass_properties.operating_empty
     payload = vehicle.mass_properties.payload  # TODO fuel margin makes little sense when ejecting aerosol
@@ -418,7 +418,6 @@ def post_process(nexus):
             results.base.segments[i - 1].conditions.weights.spray[-1]
 
     summary.op_empty = operating_empty
-    print "design langin", design_landing_weight
     summary.max_zero_fuel_margin = (design_landing_weight - operating_empty) / operating_empty # used to be (design_landing_weight - zero_fuel_weight) / zero_fuel_weight changed because of aerosol ejection
     summary.base_mission_fuelburn = results.base.segments[-1].conditions.weights.fuel_burn[-1]  # esults.base.segments[i].conditions.weights.fuel_burn0#results.base.segments.conditions.weights.fuel_burn                         #design_takeoff_weight - results.base.segments['descent_3'].conditions.weights.total_mass[-1] # - results.base.segments['cruise'].conditions.sprayer_rate
     summary.base_mission_sprayed = results.base.segments[-1].conditions.weights.spray[-1]
@@ -437,15 +436,16 @@ def post_process(nexus):
     summary.total_mission_time = (results.base.segments[-1].conditions.frames.inertial.time[-1] -
                                   results.base.segments[0].conditions.frames.inertial.time[0])
 
-    summary.MTOW_delta = zero_fuel_weight + summary.base_mission_fuelburn - vehicle.mass_properties.takeoff
+    summary.MTOW_delta = zero_fuel_weight[0] + summary.base_mission_fuelburn - vehicle.mass_properties.takeoff
 
     # summary.engine_weight =
 
     # print results.base.segments.keys()
     # print summary.engine_weight
 
-    print "zero fuel weight: ", zero_fuel_weight, "kg  i.e. (", payload, "+", operating_empty, ")"
-    print "MTOW selected: ", vehicle.mass_properties.takeoff, "kg, MTOW calculated: ", zero_fuel_weight + summary.base_mission_fuelburn
+    print "zero fuel weight: ", zero_fuel_weight[0], "kg  i.e. (", payload, "+", operating_empty[0], ")"
+    print "MTOW selected: ", vehicle.mass_properties.takeoff, "kg, MTOW calculated: ", zero_fuel_weight[
+                                                                                           0] + summary.base_mission_fuelburn
     # FIXME Fuel burn doesn't change when the operating empty weight changes!
     print "Max/Min throttle: ", summary.max_throttle, ", ", summary.min_throttle
     print "Take-off field length: ", summary.field_length_takeoff[0], "m"
@@ -457,7 +457,8 @@ def post_process(nexus):
     print "Mission time: ", summary.main_mission_time[0] * Units['s'] / Units.h, "hours (main) +", \
         (summary.total_mission_time - summary.main_mission_time)[0] * Units['s'] / Units.h, "hours (diversion)"
     summary.nothing = 0.0
-    print 'Fuel burn: ', summary.base_mission_fuelburn, " Fuel margin: ", summary.max_zero_fuel_margin
+    print 'Fuel burn: ', summary.base_mission_fuelburn
+    # print 'fuel margin=', problem.all_constraints()
 
     gt_engine = nexus.vehicle_configurations.base.propulsors.turbofan
 
@@ -474,8 +475,6 @@ def post_process(nexus):
     #FXI
 
     print "Aerosol released: ", summary.base_mission_sprayed[0], " kg\n\n"
-
-
 
     # print vehicle.wings.main_wing.chords.root, vehicle.wings.main_wing.spans.projected, vehicle.wings.main_wing.areas.reference
 
@@ -501,82 +500,112 @@ def post_process(nexus):
     scaled_inputs = unscaled_inputs / input_scaling
     problem_inputs = []
 
-    output_array = np.zeros(44)
+    # SEGMENTS: need to loop it and add all segments
+    output_array_segments = np.zeros(4).reshape(4,1)
+    for i in range(1, len(results.base.segments)):
+        # print results.base.segments[i].conditions.aerodynamics.lift_coefficient[:, 0]
+        # print results.base.segments[i].conditions.aerodynamics.angle_of_attack[:, 0] / Units.deg
+        # print results.base.segments[i].conditions.freestream.dynamic_viscosity[:,0]
+        # print results.base.segments[i].conditions.freestream.density[:,0]
+        output_array_i = np.vstack((results.base.segments[i].conditions.aerodynamics.lift_coefficient[:, 0],
+        results.base.segments[i].conditions.aerodynamics.angle_of_attack[:, 0] / Units.deg,
+        results.base.segments[i].conditions.freestream.dynamic_viscosity[:,0],
+        results.base.segments[i].conditions.freestream.density[:,0]))
+        output_array_segments = np.hstack((output_array_segments,output_array_i))
 
-    # output_array = np.array[
-    #     vehicle.wings.main_wing.aspect_ratio,
-    #     vehicle.wings.main_wing.areas.reference,
-    #     vehicle.wings.main_wing.sweep,
-    #     vehicle.wing.main_wing.taper,
-    #     vehicle.wing.main_wing.chords.root,
-    #     vehicle.wing.main_wing.spans.projected,
-    #     vehicle.fuselage.effective_diameter,
-    #     vehicle.fuselage.lengths.total,
-    #     vehicle.wing.main_wing.chords.mean_aerodynamic,
-    #     distance_fus = 2.*vehicle.fuselage.origin[1],
-    #
-    #     configs.takeoff.maximum_lift_coefficient
-    #     configs.landing.maximum_lift_coefficient
-    #     vehicle.maximum_lift_coefficient
-    #     missions.base.segments['descent_final'].air_speed
-    #     missions.base.segments['cruise_1'].air_speed
-    #
-    #     0
-    #     # SEGMENTS: need to loop it and add all segments
-    #     segment.conditions.aerodynamics.lift_coefficient[:, 0],
-    #
-    #     segment.conditions.aerodynamics.angle_of_attack[:, 0] / Units.deg
-    #
-    #
-    #
-    #     segment.conditions.freestream.dynamic_viscosity,
-    #     segment.conditions.freestream.density,
-    #
-    #
-    #
-    # stability
-    #     static
-    #         cm_alpha
-    #         cn_beta
-    #
-    #       QUESTIONABLE: CL_alpha, CM_alpha, Lift distribution,
-    #
-    #
-    #
-    #     gt_engine.number_of_engines,
-    #     gt_engine.mass_properties.mass/gt_engine.number_of_engines,      #PER ENGINE
-    #     gt_engine.mass_properties.mass/1.6/gt_engine.number_of_engines,  #PER ENGINE DRY WEIGHT
-    #
-    #     summary.base_mission_fuelburn,
-    #     zero_fuel_weight + summary.base_mission_fuelburn,
-    #     operating_empty,
-    #     design_landing_weight,
-    #     vehicle.weight_breakdown.wing,
-    #     vehicle.weight_breakdown.fuselage,
-    #     vehicle.weight_breakdown.landing_gear,
-    #     vehicle.weight_breakdown.wing,
-    #     payload,
-    #
-    #     820., #Fuel density
-    #
-    #
-    #
-    #
-    #
-    # vehicle.wings.horizontal_stabilizer.sweep,
-    # vehicle.wing.horizontal_stabilizer.spans.projected,
-    # vehicle.wing.horizontal_stabilizer.chords.root,
-    #
-    #
-    # vehicle.wings.vertical_stabilizer.sweep,
-    # vehicle.wing.vertical_stabilizer.taper,
-    # vehicle.wing.vertical_stabilizer.chords.root,
-    # gt_engine.nacelle_diameter
-    # ]
+    output_segment_indices = ["CL","alpha","dynamic_visc","air_density"]
 
+    # print output_array_segments[segment_output_indexes.index("CL")]
+
+    output_array = np.array([
+        vehicle.wings.main_wing.aspect_ratio,
+        vehicle.wings.main_wing.areas.reference,
+        vehicle.wings.main_wing.sweep,
+        vehicle.wings.main_wing.taper,
+        vehicle.wings.main_wing.chords.root,
+        vehicle.wings.main_wing.spans.projected,
+        vehicle.fuselages.fuselage.effective_diameter,
+        vehicle.fuselages.fuselage.lengths.total,
+        vehicle.wings.main_wing.chords.mean_aerodynamic,
+        2.*vehicle.fuselages.fuselage.origin[1],
+
+        configs.takeoff.maximum_lift_coefficient,
+        configs.landing.maximum_lift_coefficient,
+        vehicle.maximum_lift_coefficient,
+        missions.base.segments['descent_final'].air_speed,
+        missions.base.segments['cruise_1'].air_speed,
+
+        gt_engine.number_of_engines,
+        gt_engine.mass_properties.mass/gt_engine.number_of_engines,      #PER ENGINE
+        gt_engine.mass_properties.mass/1.6/gt_engine.number_of_engines,  #PER ENGINE DRY WEIGHT
+        gt_engine.nacelle_diameter,
+
+        summary.base_mission_fuelburn,
+        zero_fuel_weight[0] + summary.base_mission_fuelburn,
+        operating_empty,
+        design_landing_weight,
+        vehicle.weight_breakdown.wing,
+        vehicle.weight_breakdown.fuselage,
+        vehicle.weight_breakdown.landing_gear,
+        payload,
+
+        820., #Fuel density
+
+        vehicle.wings.horizontal_stabilizer.sweep,
+        vehicle.wings.horizontal_stabilizer.spans.projected,
+        vehicle.wings.horizontal_stabilizer.chords.root,
+
+        vehicle.wings.vertical_stabilizer.sweep,
+        vehicle.wings.vertical_stabilizer.taper,
+        vehicle.wings.vertical_stabilizer.chords.root
+
+        # QUESTIONABLE: CL_alpha, CM_alpha, Lift distribution, CM_delta, CL_delta
+        ])
+
+    output_indices = ["A",
+               "S",
+               "sweep",
+               "taper",
+               "c_r",
+               "b",
+               "d_fus",
+               "l_fus",
+               "c_mac",
+               "y_fuselages",
+               "CL_max_TO",
+               "CL_max_landing",
+               "CL_max_clean",
+               "v_landing",
+               "v_cr",
+               "N_engines",
+               "m_engine_wet",
+               "m_engine_dry",
+               "d_engine",
+               "m_fuel",
+               "MTOW",
+               "OEW",
+               "m_landing",
+               "m_wing",
+               "m_fus",
+               "m_landing_gear",
+               "m_payload",
+               "rho_fuel",
+               "sweep_h",
+               "b_h",
+               "c_r_h",
+               "sweep_v",
+               "taper_v",
+               "c_r_v"
+               ]
+
+    # print output_array[output_indexes.index("c_r_v")]
+    # print output_array[-1]
 
     # print vehicle.weight_breakdown
     np.save(output_folder+"output_array.npy",output_array)
+    np.save(output_folder+"output_indices.npy",output_indices)
+    np.save(output_folder+"output_array_segments.npy",output_array_segments)
+    np.save(output_folder+"output_segment_indices.npy",output_segment_indices)
 
     for value in unscaled_inputs:
         problem_inputs.append(value)
