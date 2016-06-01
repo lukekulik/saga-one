@@ -108,7 +108,7 @@ def base_setup():
     fuselage.fineness.tail = 2.5
 
     fuselage.lengths.nose = 5.0
-    fuselage.lengths.tail = 20.79-(0.7*wing.chords.root)+0.5*3
+    fuselage.lengths.tail = 20.79-(0.7*wing.chords.root)+0.5*3.1
     fuselage.lengths.cabin = wing.chords.root
     fuselage.lengths.total = fuselage.lengths.nose + fuselage.lengths.cabin + fuselage.lengths.tail
     fuselage.lengths.fore_space = 0.
