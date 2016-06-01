@@ -510,8 +510,10 @@ def base(analyses):
 
     segment.altitude_end = 0.0 * Units.km
     segment.air_speed = 80. * Units['m/s']
-    landing_gradient = -3. * Units.deg
+    landing_gradient = 3. * Units.deg
+    #segment.descent_rate = -8. * Units['m/s']
     segment.descent_rate = segment.air_speed*np.sin(landing_gradient) * Units['m/s']
+    print segment.descent_rate
 
     segment.aerosol_mass_initial = 0 * Units.kg  # mass to be sprayed in this segment
 

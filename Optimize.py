@@ -45,7 +45,7 @@ def main():
 
     print 'constraints=', problem.all_constraints()
 
-    Plot_Mission.plot_mission(problem.results, show=False)
+    Plot_Mission.plot_mission(problem.results, show=True)
 
     return
 
