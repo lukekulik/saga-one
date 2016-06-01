@@ -1,5 +1,5 @@
 import math
-
+import numpy as np
 
 def S_wet_w(filename,taper,S,b,c_r,sections,d_fus,y_fus,twin):
     f = open(filename, 'r')
