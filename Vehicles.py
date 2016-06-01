@@ -141,7 +141,7 @@ def base_setup():
     wing.tag = 'horizontal_stabilizer'
 
     wing.aspect_ratio = 5.5
-    wing.sweep = 34.5 * Units.deg
+    wing.sweep = 10 * Units.deg
     wing.thickness_to_chord = 0.11
     wing.taper = 0.11
     wing.span_efficiency = 0.9
@@ -150,7 +150,7 @@ def base_setup():
     wing.chords.tip = 0.883
     wing.chords.mean_aerodynamic = 2.3840
 
-    wing.areas.reference = 115
+    wing.areas.reference = 130
     wing.areas.wetted = 2.0 * wing.areas.reference
     wing.areas.exposed = 0.8 * wing.areas.wetted
     wing.areas.affected = 0.6 * wing.areas.reference
@@ -179,7 +179,7 @@ def base_setup():
     wing.tag = 'vertical_stabilizer'
 
     wing.aspect_ratio = 1.7  #
-    wing.sweep = 35 * Units.deg
+    wing.sweep = 15 * Units.deg
     wing.thickness_to_chord = 0.11
     wing.taper = 0.31
     wing.span_efficiency = 0.9
@@ -188,7 +188,7 @@ def base_setup():
     wing.chords.tip = 1.45
     wing.chords.mean_aerodynamic = 3.36
 
-    wing.areas.reference = 81.0  #
+    wing.areas.reference = 50.0  #
 
     wing.spans.projected = np.sqrt(wing.aspect_ratio * wing.areas.reference)
 

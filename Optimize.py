@@ -38,9 +38,9 @@ def main():
     print "SUAVE initialized...\n"
     problem = setup()  # "problem" is a nexus
 
-    # output = problem.objective()  # uncomment this line when using the default inputs
-    # variable_sweep(problem)  #uncomment this to view some contours of the problem
-    output = scipy_setup.SciPy_Solve(problem, solver='SLSQP') # uncomment this to optimize the values
+    output = problem.objective()  # uncomment this line when using the default inputs
+    # variable_sweep(problem)  # uncomment this to view some contours of the problem
+    # output = scipy_setup.SciPy_Solve(problem, solver='SLSQP') # uncomment this to optimize the values
     # output = pyopt_setup.Pyopt_Solve(problem,solver='SNOPT') #,FD='single', nonderivative_line_search=False)
 
     print 'constraints=', problem.all_constraints()
@@ -71,14 +71,14 @@ def setup():
     problem.inputs = np.array([
         # Variable inputs
         ['wing_area', 620, (400., 700.), 500., Units.meter ** 2],
-        ['MTOW', 195e3, (180000., 230000.), 180000., Units.kg],
+        ['MTOW', 195e3, (190000., 230000.), 180000., Units.kg],
         ['alt_outgoing_cruise', 13.14, (8., 20.), 15., Units.km],
-        ['design_thrust', 110e3, (85e3, 115e3), 100e3, Units.N],
+        ['design_thrust', 100e3, (85e3, 115e3), 100e3, Units.N],
         ['outgoing_cruise_speed', 193., (150, 220), 200, Units['m/s']],
         ['spray_cruise_speed', 200., (150, 220), 200, Units['m/s']],
 
         # "Set" inputs
-        ['AR', 15, (15, 15), 15, Units.less],
+        ['AR', 15, (14, 18), 15, Units.less],
         # speeds???
     ])
     # opt results: [700.0000000000755, 180623.48270764505, 13.147354544329831, 93680.83722141015, 193.90945445747235, 200.00000000005906, 15.00000022353205]
@@ -145,8 +145,8 @@ def setup():
         ['design_range_fuel_margin' , '>', 0., 1E-1, Units.less],
         ['take_off_field_length', '<', 2500., 1e-1, Units.m],
         ['landing_field_length', '<', 2500., 1e-1, Units.m],
-        # ['MTOW_delta', '<', '1' , 6, Units.kg],
-        # ['MTOW_delta', '>', '-1', 6, Units.kg], # tricky to predict the effects of MTOW constraints
+        ['MTOW_delta', '<', '1' , 4, Units.kg],
+        ['MTOW_delta', '>', '-1', 4, Units.kg], # tricky to predict the effects of MTOW constraints
 
 
     ])
