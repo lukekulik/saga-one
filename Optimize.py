@@ -70,11 +70,11 @@ def setup():
 
     problem.inputs = np.array([
         # Variable inputs
-        ['wing_area', 620, (400., 700.), 500., Units.meter ** 2],
+        ['wing_area', 700, (400., 700.), 500., Units.meter ** 2],
         ['MTOW', 200e3, (180000., 230000.), 180000., Units.kg],
         ['alt_outgoing_cruise', 13.14, (8., 20.), 15., Units.km],
         ['design_thrust', 102.5e3, (85e3, 115e3), 100e3, Units.N],
-        ['outgoing_cruise_speed', 193., (150, 220), 200, Units['m/s']],
+        ['outgoing_cruise_speed', 191., (150, 220), 200, Units['m/s']],
         ['spray_cruise_speed', 200., (150, 220), 200, Units['m/s']],
         # climb throttle as input?
 
