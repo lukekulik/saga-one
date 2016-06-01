@@ -398,7 +398,7 @@ def post_process(nexus):
 
     # Fuel margin and base fuel calculations
 
-    vehicle.mass_properties.operating_empty += 8000 # FIXME hardcoded wing mass correction # area scaling?
+    vehicle.mass_properties.operating_empty += 0 # FIXME hardcoded wing mass correction # area scaling?
 
     operating_empty = vehicle.mass_properties.operating_empty
     payload = vehicle.mass_properties.payload  # TODO fuel margin makes little sense when ejecting aerosol
@@ -436,16 +436,15 @@ def post_process(nexus):
     summary.total_mission_time = (results.base.segments[-1].conditions.frames.inertial.time[-1] -
                                   results.base.segments[0].conditions.frames.inertial.time[0])
 
-    summary.MTOW_delta = zero_fuel_weight[0] + summary.base_mission_fuelburn - vehicle.mass_properties.takeoff
+    summary.MTOW_delta = zero_fuel_weight + summary.base_mission_fuelburn - vehicle.mass_properties.takeoff
 
     # summary.engine_weight =
 
     # print results.base.segments.keys()
     # print summary.engine_weight
 
-    print "zero fuel weight: ", zero_fuel_weight[0], "kg  i.e. (", payload, "+", operating_empty[0], ")"
-    print "MTOW selected: ", vehicle.mass_properties.takeoff, "kg, MTOW calculated: ", zero_fuel_weight[
-                                                                                           0] + summary.base_mission_fuelburn
+    print "zero fuel weight: ", zero_fuel_weight, "kg  i.e. (", payload, "+", operating_empty, ")"
+    print "MTOW selected: ", vehicle.mass_properties.takeoff, "kg, MTOW calculated: ", zero_fuel_weight + summary.base_mission_fuelburn
     # FIXME Fuel burn doesn't change when the operating empty weight changes!
     print "Max/Min throttle: ", summary.max_throttle, ", ", summary.min_throttle
     print "Take-off field length: ", summary.field_length_takeoff[0], "m"
@@ -541,7 +540,7 @@ def post_process(nexus):
         gt_engine.nacelle_diameter,
 
         summary.base_mission_fuelburn,
-        zero_fuel_weight[0] + summary.base_mission_fuelburn,
+        zero_fuel_weight + summary.base_mission_fuelburn,
         operating_empty,
         design_landing_weight,
         vehicle.weight_breakdown.wing,
