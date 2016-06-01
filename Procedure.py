@@ -456,7 +456,7 @@ def post_process(nexus):
     print "Mission time: ", summary.main_mission_time[0] * Units['s'] / Units.h, "hours (main) +", \
         (summary.total_mission_time - summary.main_mission_time)[0] * Units['s'] / Units.h, "hours (diversion)"
     summary.nothing = 0.0
-    print 'Fuel burn: ', summary.base_mission_fuelburn
+    print 'Fuel burn: ', summary.base_mission_fuelburn, " Fuel margin: ", summary.max_zero_fuel_margin
     # print 'fuel margin=', problem.all_constraints()
 
     gt_engine = nexus.vehicle_configurations.base.propulsors.turbofan

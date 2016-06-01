@@ -71,14 +71,15 @@ def setup():
     problem.inputs = np.array([
         # Variable inputs
         ['wing_area', 620, (400., 700.), 500., Units.meter ** 2],
-        ['MTOW', 185e3, (190000., 230000.), 180000., Units.kg],
+        ['MTOW', 195e3, (180000., 230000.), 180000., Units.kg],
         ['alt_outgoing_cruise', 13.14, (8., 20.), 15., Units.km],
-        ['design_thrust', 100e3, (85e3, 115e3), 100e3, Units.N],
+        ['design_thrust', 102.5e3, (85e3, 115e3), 100e3, Units.N],
         ['outgoing_cruise_speed', 193., (150, 220), 200, Units['m/s']],
         ['spray_cruise_speed', 200., (150, 220), 200, Units['m/s']],
+        # climb throttle as input?
 
         # "Set" inputs
-        ['AR', 15, (14, 18), 15, Units.less],
+        ['AR', 15, (15, 15), 15, Units.less],
         # speeds???
     ])
     # opt results: [700.0000000000755, 180623.48270764505, 13.147354544329831, 93680.83722141015, 193.90945445747235, 200.00000000005906, 15.00000022353205]
@@ -142,7 +143,7 @@ def setup():
         ['main_mission_time', '<', 11.1, 1, Units.h],
         ['mission_range', '>', 7000., 100., Units.km],
         # ['aerosol_released', '=', 40000., 50., Units.kg ],
-        ['design_range_fuel_margin' , '>', 0., 1E-1, Units.less],
+        ['design_range_fuel_margin' , '>', 0.05, 1E-1, Units.less],
         ['take_off_field_length', '<', 2500., 1e-1, Units.m],
         ['landing_field_length', '<', 2500., 1e-1, Units.m],
         ['MTOW_delta', '<', '1' , 4, Units.kg],

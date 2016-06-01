@@ -76,7 +76,7 @@ def base_setup():
     vehicle.reference_area = 0  # selected in Optimize.py
     vehicle.passengers = 0
     vehicle.systems.control = "fully powered"
-    vehicle.systems.accessories = "long range"
+    vehicle.systems.accessories = "long-range"
 
     # # ------------------------------------------------------------------
     # #  Airfoil
