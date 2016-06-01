@@ -11,6 +11,8 @@ import SUAVE
 from SUAVE.Core import Units, Data
 import numpy as np
 from engine import engine_caluclations
+from S_wetted import S_wet_w, S_wet_fus
+
 
 # ----------------------------------------------------------------------
 #   Define the Vehicle
@@ -76,139 +78,7 @@ def base_setup():
     vehicle.reference_area = 0  # selected in Optimize.py
     vehicle.passengers = 0
     vehicle.systems.control = "fully powered"
-    vehicle.systems.accessories = "long range"
-
-    # # ------------------------------------------------------------------
-    # #  Airfoil
-    # # ------------------------------------------------------------------
-    #
-    # airfoil = SUAVE.Components.Wings.Airfoils.Airfoil()
-    # airfoils = SUAVE.Components.Wings.Airfoils.load_airfoils(
-    #     "/Users/lkulik/Dropbox/Shared/DSE Conceptual Design/suave_saga/")
-
-    # ------------------------------------------------------------------
-    #   Main Wing
-    # ------------------------------------------------------------------
-
-    wing = SUAVE.Components.Wings.Main_Wing()
-    wing.tag = 'main_wing'
-
-    # wing.airfoil = airfoils["sc3"]
-
-    wing.span_efficiency = 0.75
-    wing.areas.reference = 0  # selected in Optimize.py
-
-    wing.aspect_ratio = 0  # selected in Optimize.py
-
-    wing.sweep = 0.0 * Units.deg
-
-    wing.thickness_to_chord = 0.12
-    wing.taper = 0.55
-    wing.spans.projected = np.sqrt(wing.aspect_ratio * wing.areas.reference)
-
-    wing.chords.root = 2*wing.spans.projected/(wing.aspect_ratio*(1+wing.taper))
-    wing.chords.tip = wing.chords.root*wing.taper
-    wing.chords.mean_aerodynamic = 2.* wing.chords.root/3.*(1+wing.taper+wing.taper**2)/(1+wing.taper)
-
-    wing.areas.wetted = 2.0 * wing.areas.reference
-    wing.areas.exposed = 0.8 * wing.areas.wetted
-    wing.areas.affected = 0.6 * wing.areas.reference
-
-    wing.twists.root = 2.0 * Units.degrees
-    wing.twists.tip = 0.0 * Units.degrees
-
-    wing.origin = [13.2, 0, 0]  # Need to fix
-    # wing.aerodynamic_center      = [3,0,0] # Need to fix  ---> MUST INCLUDE A SIZING CALL, TO GENERATE PLANFORM
-
-    wing.vertical = False
-    wing.symmetric = True
-
-    wing.high_lift = True
-    wing.high_mach = True
-    wing.flaps.type = "double_slotted"
-    wing.flaps.chord = 1.0  # FIXME
-
-    wing.dynamic_pressure_ratio = 1.0
-
-    # add to vehicle
-    vehicle.append_component(wing)
-
-    # ------------------------------------------------------------------
-    #  Horizontal Stabilizer
-    # ------------------------------------------------------------------
-
-    wing = SUAVE.Components.Wings.Wing()
-    wing.tag = 'horizontal_stabilizer'
-
-    wing.aspect_ratio = 5.5
-    wing.sweep = 34.5 * Units.deg
-    wing.thickness_to_chord = 0.11
-    wing.taper = 0.11
-    wing.span_efficiency = 0.9
-
-    wing.chords.root = 3.030
-    wing.chords.tip = 0.883
-    wing.chords.mean_aerodynamic = 2.3840
-
-    wing.areas.reference = 115
-    wing.areas.wetted = 2.0 * wing.areas.reference
-    wing.areas.exposed = 0.8 * wing.areas.wetted
-    wing.areas.affected = 0.6 * wing.areas.reference
-
-    wing.spans.projected = np.sqrt(wing.aspect_ratio * wing.areas.reference)
-
-    wing.twists.root = 2.0 * Units.degrees
-    wing.twists.tip = 2.0 * Units.degrees
-
-    wing.origin = [31., 0, 0]  # need to fix
-    # wing.aerodynamic_center      = [3,0,0] # Need to fix  ---> MUST INCLUDE A SIZING CALL, TO GENERATE PLANFORM
-
-    wing.vertical = False
-    wing.symmetric = True
-
-    wing.dynamic_pressure_ratio = 0.9
-
-    # add to vehicle
-    vehicle.append_component(wing)
-
-    # ------------------------------------------------------------------
-    #   Vertical Stabilizer
-    # ------------------------------------------------------------------
-
-    wing = SUAVE.Components.Wings.Wing()
-    wing.tag = 'vertical_stabilizer'
-
-    wing.aspect_ratio = 1.7  #
-    wing.sweep = 35 * Units.deg
-    wing.thickness_to_chord = 0.11
-    wing.taper = 0.31
-    wing.span_efficiency = 0.9
-
-    wing.chords.root = 4.70
-    wing.chords.tip = 1.45
-    wing.chords.mean_aerodynamic = 3.36
-
-    wing.areas.reference = 81.0  #
-
-    wing.spans.projected = np.sqrt(wing.aspect_ratio * wing.areas.reference)
-
-    wing.areas.wetted = 2.0 * wing.areas.reference
-    wing.areas.exposed = 0.8 * wing.areas.wetted
-    wing.areas.affected = 0.6 * wing.areas.reference
-
-    wing.twists.root = 0.0 * Units.degrees
-    wing.twists.tip = 0.0 * Units.degrees
-
-    wing.origin = [29.5, 0, 0]
-    # wing.aerodynamic_center      = [3,0,0] # Need to fix  ---> MUST INCLUDE A SIZING CALL, TO GENERATE PLANFORM
-
-    wing.vertical = True
-    wing.symmetric = False
-
-    wing.dynamic_pressure_ratio = 1.0
-
-    # add to vehicle
-    vehicle.append_component(wing)
+    vehicle.systems.accessories = "long-range"
 
     # ------------------------------------------------------------------
     #  Fuselage (Right)
@@ -239,7 +109,7 @@ def base_setup():
     fuselage.heights.at_wing_root_quarter_chord = 1.4
 
     fuselage.areas.side_projected = 8.
-    fuselage.areas.wetted = 21.05
+    fuselage.areas.wetted = S_wet_fus(fuselage.width,fuselage.lengths.total)
     fuselage.areas.front_projected = 0.78
 
     fuselage.effective_diameter = 1.4
@@ -271,9 +141,9 @@ def base_setup():
         fuselage.lengths.fore_space = 0.
         fuselage.lengths.aft_space = 0.
 
-        fuselage.width = 1.4
+        fuselage.width = 2.
 
-        fuselage.heights.maximum = 1.4
+        fuselage.heights.maximum = 3.7
         fuselage.heights.at_quarter_length = 1.4
         fuselage.heights.at_three_quarters_length = 1.4
         fuselage.heights.at_wing_root_quarter_chord = 1.4
@@ -282,12 +152,147 @@ def base_setup():
         fuselage.areas.wetted = 21.05
         fuselage.areas.front_projected = 0.78
 
-        fuselage.effective_diameter = 1
+        fuselage.effective_diameter = np.sqrt(fuselage.width*fuselage.heights.maximum)
 
         fuselage.differential_pressure = 0 * Units.pascal  # Maximum differential pressure
 
         # add to vehicle
         vehicle.append_component(fuselage)
+
+    # # ------------------------------------------------------------------
+    # #  Airfoil
+    # # ------------------------------------------------------------------
+    #
+    # airfoil = SUAVE.Components.Wings.Airfoils.Airfoil()
+    # airfoils = SUAVE.Components.Wings.Airfoils.load_airfoils(
+    #     "/Users/lkulik/Dropbox/Shared/DSE Conceptual Design/suave_saga/")
+
+    # ------------------------------------------------------------------
+    #   Main Wing
+    # ------------------------------------------------------------------
+
+    wing = SUAVE.Components.Wings.Main_Wing()
+    wing.tag = 'main_wing'
+
+    # wing.airfoil = airfoils["sc3"]
+
+    wing.span_efficiency = 0.75
+    wing.areas.reference = 0  # selected in Optimize.py
+
+    wing.aspect_ratio = 0  # selected in Optimize.py
+
+    wing.sweep = 0.0 * Units.deg
+
+    wing.thickness_to_chord = 0.12
+    wing.taper = 0.5
+    wing.spans.projected = np.sqrt(wing.aspect_ratio * wing.areas.reference)
+
+    wing.chords.root = 2*wing.spans.projected/(wing.aspect_ratio*(1+wing.taper))
+    wing.chords.tip = wing.chords.root*wing.taper
+    wing.chords.mean_aerodynamic = 2.* wing.chords.root/3.*(1+wing.taper+wing.taper**2)/(1+wing.taper)
+
+    wing.areas.wetted = S_wet_w("sc3.dat",wing.taper,wing.areas.reference,wing.spans.projected\
+            ,wing.chords.root,100,fuselage.effective_diameter,fuselage.origin[1],twin) #2.0 * wing.areas.reference
+    wing.areas.exposed = 0.8 * wing.areas.wetted
+    wing.areas.affected = 0.6 * wing.areas.reference
+
+    wing.twists.root = 2.0 * Units.degrees
+    wing.twists.tip = 0.0 * Units.degrees
+
+    wing.origin = [13.2, 0, 0]  # Need to fix
+    # wing.aerodynamic_center      = [3,0,0] # Need to fix  ---> MUST INCLUDE A SIZING CALL, TO GENERATE PLANFORM
+
+    wing.vertical = False
+    wing.symmetric = True
+
+    wing.high_lift = True
+    wing.high_mach = True
+    wing.flaps.type = "double_slotted"
+    wing.flaps.chord = 1.0  # FIXME
+
+    wing.dynamic_pressure_ratio = 1.0
+
+    # add to vehicle
+    vehicle.append_component(wing)
+
+    # ------------------------------------------------------------------
+    #  Horizontal Stabilizer
+    # ------------------------------------------------------------------
+
+    wing = SUAVE.Components.Wings.Wing()
+    wing.tag = 'horizontal_stabilizer'
+
+    wing.aspect_ratio = 5.5
+    wing.sweep = 10 * Units.deg
+    wing.thickness_to_chord = 0.11
+    wing.taper = 0.11
+    wing.span_efficiency = 0.9
+
+    wing.chords.root = 3.030
+    wing.chords.tip = 0.883
+    wing.chords.mean_aerodynamic = 2.3840
+
+    wing.areas.reference = 130
+    wing.areas.wetted = 2.0 * wing.areas.reference
+    wing.areas.exposed = 0.8 * wing.areas.wetted
+    wing.areas.affected = 0.6 * wing.areas.reference
+
+    wing.spans.projected = np.sqrt(wing.aspect_ratio * wing.areas.reference)
+
+    wing.twists.root = 2.0 * Units.degrees
+    wing.twists.tip = 2.0 * Units.degrees
+
+    wing.origin = [31., 0, 0]  # need to fix
+    # wing.aerodynamic_center      = [3,0,0] # Need to fix  ---> MUST INCLUDE A SIZING CALL, TO GENERATE PLANFORM
+
+    wing.vertical = False
+    wing.symmetric = True
+
+    wing.dynamic_pressure_ratio = 0.9
+
+    # add to vehicle
+    vehicle.append_component(wing)
+
+    # ------------------------------------------------------------------
+    #   Vertical Stabilizer
+    # ------------------------------------------------------------------
+
+    wing = SUAVE.Components.Wings.Wing()
+    wing.tag = 'vertical_stabilizer'
+
+    wing.aspect_ratio = 1.7  #
+    wing.sweep = 15 * Units.deg
+    wing.thickness_to_chord = 0.11
+    wing.taper = 0.31
+    wing.span_efficiency = 0.9
+
+    wing.chords.root = 4.70
+    wing.chords.tip = 1.45
+    wing.chords.mean_aerodynamic = 3.36
+
+    wing.areas.reference = 50.0  #
+
+    wing.spans.projected = np.sqrt(wing.aspect_ratio * wing.areas.reference)
+
+    wing.areas.wetted = 2.0 * wing.areas.reference
+    wing.areas.exposed = 0.8 * wing.areas.wetted
+    wing.areas.affected = 0.6 * wing.areas.reference
+
+    wing.twists.root = 0.0 * Units.degrees
+    wing.twists.tip = 0.0 * Units.degrees
+
+    wing.origin = [29.5, 0, 0]
+    # wing.aerodynamic_center      = [3,0,0] # Need to fix  ---> MUST INCLUDE A SIZING CALL, TO GENERATE PLANFORM
+
+    wing.vertical = True
+    wing.symmetric = False
+
+    wing.dynamic_pressure_ratio = 1.0
+
+    # add to vehicle
+    vehicle.append_component(wing)
+
+
 
     # ------------------------------------------------------------------
     #  Turbofan Network

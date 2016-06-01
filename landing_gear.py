@@ -7,7 +7,7 @@
 #   Landing Gear
 # ----------------------------------------------------------------------
 
-def landing_gear(TOW, d_eng, d_fus, V_descent, landing_gear_wt_factor=0.04):
+def landing_gear(TOW, d_eng, h_fus, V_descent, landing_gear_wt_factor=0.04):
     """ weight = SUAVE.Methods.Weights.Correlations.Tube_Wing.landing_gear(TOW)
         Calculate the weight of the landing gear assuming that the gear
         weight is 4 percent of the takeoff weight
@@ -37,7 +37,7 @@ def landing_gear(TOW, d_eng, d_fus, V_descent, landing_gear_wt_factor=0.04):
     d_nacelle = 1.15 * d_eng
     h_pyl = 0.4  # m
     h_wing_gear = d_nacelle + h_pyl + 1.25
-    h_gear = h_wing_gear - d_fus
+    h_gear = h_wing_gear - h_fus
     h_nosegear = h_gear
     W_maingear = 0.0106 * (MLW / 0.45359237) ** 0.888 * Nl ** 0.25 * (
                                                                      h_gear * 39.3700787) ** 0.4 * Nmw ** 0.321 * Nmss ** (
@@ -47,4 +47,4 @@ def landing_gear(TOW, d_eng, d_fus, V_descent, landing_gear_wt_factor=0.04):
     W_gear = W_maingear + W_nosegear
     weight = W_gear
 
-    return weight
+    return weight,h_gear
