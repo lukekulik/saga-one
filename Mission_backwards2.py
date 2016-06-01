@@ -242,7 +242,7 @@ def base(analyses):
     segment.atmosphere = atmosphere
     segment.planet = planet
 
-    segment.altitude_start = 15. * Units.km
+    # segment.altitude_start = 15. * Units.km
     segment.altitude_end = 17 * Units.km
     segment.air_speed = climb_air_speed * Units['m/s']
     segment.throttle = climb_throttle
@@ -274,7 +274,7 @@ def base(analyses):
     # segment.battery_energy = 10 #Charge the battery to start
 
 
-    segment.altitude_start = 17 * Units.km
+    # segment.altitude_start = 17 * Units.km
     segment.altitude_end = 18 * Units.km
     segment.air_speed = climb_air_speed * Units['m/s']
     segment.throttle = climb_throttle
