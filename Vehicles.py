@@ -81,6 +81,19 @@ def base_setup():
     vehicle.systems.accessories = "long-range"
 
     # ------------------------------------------------------------------
+    #   Main Wing
+    # ------------------------------------------------------------------
+
+    wing = SUAVE.Components.Wings.Main_Wing()
+    wing.tag = 'main_wing'
+    wing.aspect_ratio = 0  # selected in Optimize.py
+    wing.taper = 0.5
+    wing.spans.projected = np.sqrt(wing.aspect_ratio * wing.areas.reference)
+
+    wing.chords.root = 2*wing.spans.projected/(wing.aspect_ratio*(1+wing.taper))
+
+
+    # ------------------------------------------------------------------
     #  Fuselage (Right)
     # ------------------------------------------------------------------
 
@@ -97,7 +110,7 @@ def base_setup():
     fuselage.lengths.nose = 5.0
     fuselage.lengths.tail = 5.0
     fuselage.lengths.cabin = 40.0
-    fuselage.lengths.total = 50.0 # FIXME add a formula
+    fuselage.lengths.total = fuselage.lengths.nose + fuselage.lengths.cabin + fuselage.lengths.tail
     fuselage.lengths.fore_space = 0.
     fuselage.lengths.aft_space = 0.
 
@@ -171,23 +184,15 @@ def base_setup():
     #   Main Wing
     # ------------------------------------------------------------------
 
-    wing = SUAVE.Components.Wings.Main_Wing()
-    wing.tag = 'main_wing'
-
     # wing.airfoil = airfoils["sc3"]
 
     wing.span_efficiency = 0.75
     wing.areas.reference = 0  # selected in Optimize.py
 
-    wing.aspect_ratio = 0  # selected in Optimize.py
-
     wing.sweep = 0.0 * Units.deg
 
     wing.thickness_to_chord = 0.12
-    wing.taper = 0.5
-    wing.spans.projected = np.sqrt(wing.aspect_ratio * wing.areas.reference)
 
-    wing.chords.root = 2*wing.spans.projected/(wing.aspect_ratio*(1+wing.taper))
     wing.chords.tip = wing.chords.root*wing.taper
     wing.chords.mean_aerodynamic = 2.* wing.chords.root/3.*(1+wing.taper+wing.taper**2)/(1+wing.taper)
 
