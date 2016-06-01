@@ -62,7 +62,7 @@ def tube(S_fus, diff_p_fus, w_fus, h_fus, l_fus, Nlim, wt_zf, wt_wing, wt_propul
     #Calculate weight of wing for traditional aircraft vertical tail without rudder
     fuselage_weight = ((1.051+0.102*I_f) * area)  * Units.lb # Convert from lbs to kg
 
-    h_gf = 2*1 #m - factor of 2 because there are two bays
+    h_gf = 2*1.5 #m - factor of 2 because there are two bays
     w_gf = 1.5#m
     d_gf = np.sqrt(h_gf*w_gf)
     l1 = 0.5*d_gf+0.05
