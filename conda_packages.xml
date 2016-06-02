@@ -285,7 +285,7 @@
         <entry key="numba" value="0.26.0" />
         <entry key="numbapro" value="0.23.1" />
         <entry key="numbapro_cudalib" value="0.2" />
-        <entry key="numexpr" value="2.5.2" />
+        <entry key="numexpr" value="2.6.0" />
         <entry key="numpy" value="1.11.0" />
         <entry key="numpydoc" value="0.5" />
         <entry key="odo" value="0.5.0" />
@@ -3609,6 +3609,7 @@
               <option value="2.0.1" />
               <option value="2.5" />
               <option value="2.5.1" />
+              <option value="2.6.0" />
             </list>
           </value>
         </entry>
@@ -5757,6 +5758,6 @@
     <option name="CONDA_CHANNELS">
       <set />
     </option>
-    <option name="LAST_TIME_CHECKED" value="1464707481673" />
+    <option name="LAST_TIME_CHECKED" value="1464862479296" />
   </component>
 </application>
