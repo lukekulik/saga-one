@@ -516,6 +516,9 @@ def post_process(nexus):
 
     # print output_array_segments[segment_output_indexes.index("CL")]
 
+    #print         vehicle.wings.main_wing.areas.wetted + vehicle.wings.horizontal_stabilizer.areas.wetted +\
+    #    vehicle.wings.vertical_stabilizer.areas.wetted + vehicle.fuselages.fuselage.areas.wetted
+
     output_array = np.array([
         vehicle.wings.main_wing.aspect_ratio,
         vehicle.wings.main_wing.areas.reference,
@@ -556,7 +559,13 @@ def post_process(nexus):
 
         vehicle.wings.vertical_stabilizer.sweep,
         vehicle.wings.vertical_stabilizer.taper,
-        vehicle.wings.vertical_stabilizer.chords.root
+        vehicle.wings.vertical_stabilizer.chords.root,
+
+        vehicle.wings.main_wing.areas.wetted + vehicle.wings.horizontal_stabilizer.areas.wetted +\
+        vehicle.wings.vertical_stabilizer.areas.wetted + vehicle.fuselages.fuselage.areas.wetted
+
+        # Oswald
+        # Wetted area
 
         # QUESTIONABLE: CL_alpha, CM_alpha, Lift distribution, CM_delta, CL_delta
         ])
@@ -594,7 +603,8 @@ def post_process(nexus):
                "c_r_h",
                "sweep_v",
                "taper_v",
-               "c_r_v"
+               "c_r_v",
+               "S_wet"
                ]
 
     # print output_array[output_indexes.index("c_r_v")]
