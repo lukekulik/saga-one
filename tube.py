@@ -15,7 +15,7 @@ import numpy as np
 #   Tube
 # ----------------------------------------------------------------------
 
-def tube(S_fus, diff_p_fus, w_fus, h_fus, l_fus, Nlim, wt_zf, wt_wing, wt_propulsion, wing_c_r,MTOW,h_gear):
+def tube(S_fus, diff_p_fus, w_fus, h_fus, l_nose, l_center,l_tail, l_fus, Nlim, wt_zf, wt_wing, wt_propulsion, wing_c_r,MTOW,h_gear):
     """ weight = SUAVE.Methods.Weights.Correlations.Tube_Wing.tube(S_fus, diff_p_fus, w_fus, h_fus, l_fus, Nlim, wt_zf, wt_wing, wt_propulsion, wing_c_r)
         Calculate the weight of a fuselage in the state tube and wing configuration
         
@@ -64,31 +64,46 @@ def tube(S_fus, diff_p_fus, w_fus, h_fus, l_fus, Nlim, wt_zf, wt_wing, wt_propul
 
     h_gf = 2*1.5 #m - factor of 2 because there are two bays
     w_gf = 1.5#m
-    d_gf = np.sqrt(h_gf*w_gf)
+    #d_gf = np.sqrt(h_gf*w_gf)
+    R_gf = (h_gf-w_gf)/(h_gf+w_gf)
+    d_gf = 0.5*(w_gf+h_gf)*(63-3*R_gf**4)/(64-16*R_gf**2)
     l1 = 0.5*d_gf+0.05
     l2 = l1
     l_gf = (h_gear-l2)+l1 + l2#m
-    k1_gf = l1/l_gf
-    k2_gf = l2/l_gf
-    eta1_gf = np.sqrt(1-((d_gf/l_gf)/(2*k1_gf))**2)
-    eta2_gf = np.sqrt(1-((d_gf/l_gf)/(2*k2_gf))**2)
-    fe1_gf = np.arcsin(eta1_gf)/eta1_gf
-    fe2_gf = np.arcsin(eta2_gf)/eta2_gf
-    Sw_gf = (0.5*np.pi*d_gf**2)*(1+(l_gf/d_gf)*(k1_gf*(fe1_gf-2)+k2_gf*(fe2_gf-2)+2))* np.sqrt(h_gf/w_gf + w_gf/h_gf)/np.sqrt(2)
+    Sw_gf = 0.75*np.pi*l1*d_gf + np.pi*d_gf*(h_gear-l2) + 0.72*np.pi*l2
+    #k1_gf = l1/l_gf
+   #k2_gf = l2/l_gf
+   #eta1_gf = np.sqrt(1-((d_gf/l_gf)/(2*k1_gf))**2)
+   #eta2_gf = np.sqrt(1-((d_gf/l_gf)/(2*k2_gf))**2)
+   #fe1_gf = np.arcsin(eta1_gf)/eta1_gf
+   #fe2_gf = np.arcsin(eta2_gf)/eta2_gf
+   #Sw_gf = (0.5*np.pi*d_gf**2)*(1+(l_gf/d_gf)*(k1_gf*(fe1_gf-2)+k2_gf*(fe2_gf-2)+2))* np.sqrt(h_gf/w_gf + w_gf/h_gf)/np.sqrt(2)
 
     Klg = 1.12 #for fuselage mounteg gears
-    d_fus = np.sqrt(h_fus*w_fus)
-    l_nose = 0.07*l_fus
-    l_center = 0.27*l_fus
-    l_tail = 0.66*l_fus
-    k1 = l_nose/l_fus
-    k2 = l_tail/l_fus
-    eta1 = np.sqrt(1-((d_fus/l_fus)/(2*k1))**2)
-    eta2 = np.sqrt(1-((d_fus/l_fus)/(2*k2))**2)
-    fe1 = np.arcsin(eta1)/eta1
-    fe2 = np.arcsin(eta2)/eta2
+    R = (h_fus-w_fus)/(h_fus+w_fus)
+    d_fus = 0.5*(w_fus+h_fus)*(63-3*R**4)/(64-16*R**2)
+   #d_fus = np.sqrt(h_fus*w_fus)
+   #k1 = l_nose/l_fus
+   #k2 = l_tail/l_fus
+   #eta1 = np.sqrt(1-((d_fus/l_fus)/(2*k1))**2)
+   #eta2 = np.sqrt(1-((d_fus/l_fus)/(2*k2))**2)
+   #fe1 = np.arcsin(eta1)/eta1
+   #fe2 = np.arcsin(eta2)/eta2
 
-    Sw_fus = (0.5*np.pi*d_fus**2)*(1+(l_fus/d_fus)*(k1*(fe1-2)+k2*(fe2-2)+2)) + Sw_gf #m^2
-    W_fus = 0.92*0.9*0.328*Klg*(MTOW/Units.lb *Nlim)**0.5*(l_fus/0.3048)**0.25*(Sw_fus/(0.3048**2))**0.302*(l_fus/d_fus)**0.1*0.45359237#kg
+    tc_hor = 0.1
+    tc_ver = 0.08
+    c_root_h = 3.58 #m
+    c_root_v = 2.9 #m
+    t_hor = tc_hor*c_root_h #m
+    t_ver = tc_ver*c_root_v #m
+
+    #Sw_fus = (0.5*np.pi*d_fus**2)*(1+(l_fus/d_fus)*(k1*(fe1-2)+k2*(fe2-2)+2)) + Sw_gf #m^2 -- Southhammpton method
+    #Sw_fus = 0.75*np.pi*d_fus*l_nose + np.pi*d_fus*l_center + 0.72*np.pi*d_fus*l_tail + Sw_gf # -- Stamford method
+    k_ar = np.pi #Raymer Method
+    A_side = 0.5*h_fus*l_nose*1.05 + h_fus*l_center + 0.2*l_tail*(h_fus+0.6*h_fus)/2 + 0.8*l_tail*(0.6*h_fus+1.1*t_hor)/2
+    A_top = 0.5*w_fus*l_nose*1.05 + w_fus*l_center + 0.2*l_tail*(w_fus+0.6*w_fus)/2 + 0.8*l_tail*(0.6*w_fus+1.1*t_ver)/2
+    Sw_fus = k_ar*(A_side+A_top)/2. + Sw_gf
+    W_fus = 0.92*0.9*0.328*Klg*(MTOW*2.20462262 *Nlim)**0.5*(l_fus/0.3048)**0.25*(Sw_fus/(0.3048**2))**0.302*(l_fus/d_fus)**0.1*0.45359237#kg
+    print 'W_fus = ', W_fus,'kg'
     fuselage_weight = W_fus
     return fuselage_weight

@@ -46,7 +46,7 @@ def S_wet_w(filename,taper,S,b,c_r,sections,d_fus,y_fus,twin):
     S_wet = 2*A_wet
     return S_wet
 
-def S_wet_fus(d_fus,l_nose,l_tail,l_fus):
+def S_wet_fus(d_fus,h_fus,w_fus,l_nose,l_tail,l_center,l_fus):
     #S_wet_fus = math.pi*d_fus*(l_fus-1.3*d_fus)
     h_gf = 2*1 #m - factor of 2 because there are two bays
     w_gf = 1.5#m
@@ -62,12 +62,24 @@ def S_wet_fus(d_fus,l_nose,l_tail,l_fus):
     fe2_gf = np.arcsin(eta2_gf)/eta2_gf
     Sw_gf = (0.5*np.pi*d_gf**2)*(1+(l_gf/d_gf)*(k1_gf*(fe1_gf-2)+k2_gf*(fe2_gf-2)+2))* np.sqrt(h_gf/w_gf + w_gf/h_gf)/np.sqrt(2)
 
-    k1 = l_nose/l_fus
-    k2 = l_tail/l_fus
-    eta1 = np.sqrt(1-((d_fus/l_fus)/(2*k1))**2)
-    eta2 = np.sqrt(1-((d_fus/l_fus)/(2*k2))**2)
-    fe1 = np.arcsin(eta1)/eta1
-    fe2 = np.arcsin(eta2)/eta2
+   #k1 = l_nose/l_fus
+   #k2 = l_tail/l_fus
+   #eta1 = np.sqrt(1-((d_fus/l_fus)/(2*k1))**2)
+   #eta2 = np.sqrt(1-((d_fus/l_fus)/(2*k2))**2)
+   #fe1 = np.arcsin(eta1)/eta1
+   #fe2 = np.arcsin(eta2)/eta2
 
-    S_wet_fus = (0.5*np.pi*d_fus**2)*(1+(l_fus/d_fus)*(k1*(fe1-2)+k2*(fe2-2)+2)) + Sw_gf #m^2
+    tc_hor = 0.1
+    tc_ver = 0.08
+    c_root_h = 3.58 #m
+    c_root_v = 2.9 #m
+    t_hor = tc_hor*c_root_h #m
+    t_ver = tc_ver*c_root_v #m
+
+    k_ar = np.pi #Raymer Method
+    A_side = 0.5*h_fus*l_nose*1.05 + h_fus*l_center + 0.2*l_tail*(h_fus+0.6*h_fus)/2 + 0.8*l_tail*(0.6*h_fus+1.1*t_hor)/2 #m^2
+    A_top = 0.5*w_fus*l_nose*1.05 + w_fus*l_center + 0.2*l_tail*(w_fus+0.6*w_fus)/2 + 0.8*l_tail*(0.6*w_fus+1.1*t_ver)/2 #m^2
+    S_wet_fus = k_ar*(A_side+A_top)/2. + Sw_gf #m^2
+
+    #S_wet_fus = (0.5*np.pi*d_fus**2)*(1+(l_fus/d_fus)*(k1*(fe1-2)+k2*(fe2-2)+2)) + Sw_gf #m^2
     return S_wet_fus

@@ -54,6 +54,6 @@ def wing_main(S_gross_w,b,lambda_w,t_c_w,sweep_w,Nult,TOW,wt_zf):
     
     A = span**2/area
     Scsw = 100/ Units.ft**2 #control surface area on wing
-    W_wing = 0.85* 0.82* 0.0051* (mtow*Nult)**0.557* area**0.649* A**0.5* t_c_w**(-0.4)* (1+taper)**0.1* Scsw**0.1 *0.45359237 #kg assuming composite braced wing
+    W_wing =  0.0051* (mtow*Nult)**0.557* area**0.649* A**0.5* t_c_w**(-0.4)* (1+taper)**0.1* Scsw**0.1 *0.45359237 #kg assuming composite braced wing
     weight = W_wing
     return weight

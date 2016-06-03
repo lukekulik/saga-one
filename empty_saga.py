@@ -150,6 +150,9 @@ def empty(vehicle):
     w_fus = vehicle.fuselages['fuselage'].width
     h_fus = vehicle.fuselages['fuselage'].heights.maximum
     l_fus = vehicle.fuselages['fuselage'].lengths.total
+    l_nose = vehicle.fuselages['fuselage'].lengths.nose
+    l_center = vehicle.fuselages['fuselage'].lengths.cabin
+    l_tail = vehicle.fuselages['fuselage'].lengths.tail
 
     if not vehicle.wings.has_key('horizontal_stabilizer'):
         wt_tail_horizontal = 0.0
@@ -188,8 +191,8 @@ def empty(vehicle):
         vehicle.wings['vertical_stabilizer'].mass_properties.mass = output_3.wt_tail_vertical + output_3.wt_rudder
 
     # Calculating Empty Weight of Aircraft
-    wt_landing_gear,gear = landing_gear(TOW, d_eng, d_fus, V_descent)
-    wt_fuselage = tube(S_fus, diff_p_fus, w_fus, h_fus, l_fus, Nlim, wt_zf, wt_wing, wt_propulsion, wing_c_r, TOW, gear)
+    wt_landing_gear,wt_maingear,gear = landing_gear(TOW, d_eng, h_fus, V_descent)
+    wt_fuselage = tube(S_fus, diff_p_fus, w_fus, h_fus,l_nose,l_center,l_tail, l_fus, Nlim, wt_zf, wt_wing, wt_propulsion, wing_c_r, TOW, gear)
     output_2 = systems(num_seats, ctrl_type, S_h, S_v, S_gross_w, ac_type)
 
     # Calculate the equipment empty weight of the aircraft

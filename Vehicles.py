@@ -99,22 +99,22 @@ def base_setup():
 
     fuselage.lengths.nose = 5.0
     fuselage.lengths.cabin = 10
-    fuselage.lengths.tail = 20.79-(0.6*fuselage.lengths.cabin)+0.5*3.1
+    fuselage.lengths.tail = 20.79-(0.65*fuselage.lengths.cabin)+0.5*3.1
     fuselage.lengths.total = fuselage.lengths.nose + fuselage.lengths.cabin + fuselage.lengths.tail
     fuselage.lengths.fore_space = 0.
     fuselage.lengths.aft_space = 0.
-
     fuselage.width = 2
 
-    fuselage.heights.maximum = 3.7
+    fuselage.heights.maximum = 5.7
     fuselage.heights.at_quarter_length = 1.4
     fuselage.heights.at_three_quarters_length = 1.4
     fuselage.heights.at_wing_root_quarter_chord = 1.4
 
-    fuselage.effective_diameter = np.sqrt(fuselage.heights.maximum*fuselage.width)
+    R = (fuselage.heights.maximum - fuselage.width)/(fuselage.heights.maximum + fuselage.width)
+    fuselage.effective_diameter = 0.5*(fuselage.heights.maximum + fuselage.width)*(63-3*R**4)/(64-16*R**2)
 
     fuselage.areas.side_projected = 8.
-    fuselage.areas.wetted = S_wet_fus(fuselage.effective_diameter,fuselage.lengths.nose,fuselage.lengths.tail,fuselage.lengths.total)
+    fuselage.areas.wetted = S_wet_fus(fuselage.effective_diameter,fuselage.heights.maximum,fuselage.width,fuselage.lengths.nose,fuselage.lengths.cabin,fuselage.lengths.tail,fuselage.lengths.total)
     fuselage.areas.front_projected = 0.78
 
 
@@ -147,7 +147,7 @@ def base_setup():
 
         fuselage.width = 2.
 
-        fuselage.heights.maximum = 3.7
+        fuselage.heights.maximum = 5.7
         fuselage.heights.at_quarter_length = 1.4
         fuselage.heights.at_three_quarters_length = 1.4
         fuselage.heights.at_wing_root_quarter_chord = 1.4
