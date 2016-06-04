@@ -23,9 +23,9 @@ from SUAVE.Methods.Performance import estimate_landing_field_length
 from SUAVE.Methods.Flight_Dynamics.Dynamic_Stability.Full_Linearized_Equations.longitudinal import longitudinal
 from SUAVE.Input_Output.Results import print_parasite_drag, \
     print_compress_drag, \
-    print_engine_data, \
     print_mission_breakdown, \
     print_weight_breakdown
+from print_engine_data import print_engine_data
 
 def pretty_print(d, indent=0): # recursive printer
    for key in d.keys():
