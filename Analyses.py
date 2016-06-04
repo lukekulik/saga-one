@@ -62,14 +62,14 @@ def base(vehicle):
 
     # ------------------------------------------------------------------
     #  Aerodynamics Analysis
-    if AVL_analysis == False: #Run zero-fidelity method
+    if AVL_analysis == False:  # Run zero-fidelity method
         aerodynamics = SUAVE.Analyses.Aerodynamics.Fidelity_Zero()
         aerodynamics.geometry = vehicle
 
         aerodynamics.settings.drag_coefficient_increment = 0.0000
         analyses.append(aerodynamics)
 
-    #  AVL-based analysis
+    # AVL-based analysis
     else:
         aerodynamics = SUAVE.Analyses.Aerodynamics.Fidelity_Zero()
         aerodynamics.geometry = vehicle
@@ -77,14 +77,14 @@ def base(vehicle):
         aerodynamics_avl = SUAVE.Analyses.Aerodynamics.Surrogates.AVL()
         aerodynamics_avl.features = vehicle
         aerodynamics_avl.geometry = vehicle
-        aerodynamics_avl.training.angle_of_attack = np.array([-5.,0.,15.]) * Units.deg
+        aerodynamics_avl.training.angle_of_attack = np.array([-5., 0., 15.]) * Units.deg
         analyses.append(aerodynamics_avl)
-        #aerodynamics.process.compute.lift = aerodynamics_avl
+        # aerodynamics.process.compute.lift = aerodynamics_avl
 
-        #aerodynamics_avl.process.compute.lift.aerodynamics_avl = aerodynamics_avl
-        #aerodynamics.initialize()
+        # aerodynamics_avl.process.compute.lift.aerodynamics_avl = aerodynamics_avl
+        # aerodynamics.initialize()
 
-        #aerodynamics_avl.lift.total
+        # aerodynamics_avl.lift.total
 
         # aerodynamics_avl.finalized = False
         # print aerodynamics_avl

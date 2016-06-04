@@ -116,7 +116,7 @@ class Turbofan(Propulsor):
         generator.inputs.mdhc = thrust.compressor_nondimensional_massflow
         generator.inputs.Tref = thrust.reference_temperature
         generator.inputs.Pref = thrust.reference_pressure
-        generator.inputs.total_temperature_reference =  low_pressure_compressor.outputs.stagnation_temperature
+        generator.inputs.total_temperature_reference = low_pressure_compressor.outputs.stagnation_temperature
         generator.inputs.total_pressure_reference = low_pressure_compressor.outputs.stagnation_pressure
 
         generator()
@@ -184,7 +184,7 @@ class Turbofan(Propulsor):
         thrust.inputs.bypass_ratio = bypass_ratio
         thrust.inputs.flow_through_core = 1. / (1. + bypass_ratio)  # scaled constant to turn on core thrust computation
         thrust.inputs.flow_through_fan = bypass_ratio / (
-        1. + bypass_ratio)  # scaled constant to turn on fan thrust computation
+            1. + bypass_ratio)  # scaled constant to turn on fan thrust computation
 
         # compute the trust
         thrust(conditions)
@@ -245,7 +245,7 @@ class Turbofan(Propulsor):
             state.conditions.propulsion.throttle[i] = temp_throttle[i]
 
         results.thrust_force_vector = results.thrust_force_vector / self.number_of_engines * (
-        self.number_of_engines - 1)
+            self.number_of_engines - 1)
         results.vehicle_mass_rate = results.vehicle_mass_rate / self.number_of_engines * (self.number_of_engines - 1)
 
         return results
@@ -253,4 +253,3 @@ class Turbofan(Propulsor):
         # return
 
     __call__ = evaluate_thrust
-

@@ -26,9 +26,6 @@ def setup():
 
 
 def base_setup():
-
-
-
     # ------------------------------------------------------------------
     #   Initialize the Vehicle
     # ------------------------------------------------------------------
@@ -40,14 +37,12 @@ def base_setup():
 
     twin = "OFF"
     vehicle.thrust_total = 0e3 * Units.N  # defined in Optimize.py
-    num_engine = 4 # move to main -> how to guarantee these parameters when not optimized for??? - selected at the top and entered in inputs from there?
+    num_engine = 4  # move to main -> how to guarantee these parameters when not optimized for??? - selected at the top and entered in inputs from there?
     bypass = 7.5
 
     # design sizing conditions
     altitude = 19. * Units.km
     mach_number = 0.68
-
-
 
     # ------------------------------------------------------------------
     #   Vehicle-level Properties
@@ -70,7 +65,7 @@ def base_setup():
     # vehicle.mass_properties.moments_of_inertia.tensor = [[10 ** 5, 0, 0], [0, 10 ** 6, 0, ],
     #                                                      [0, 0, 10 ** 7]]  # Not Correct
 
-# envelope properties
+    # envelope properties
     vehicle.envelope.ultimate_load = 3.75
     vehicle.envelope.limit_load = 2.5
 
@@ -79,9 +74,6 @@ def base_setup():
     vehicle.passengers = 0
     vehicle.systems.control = "fully powered"
     vehicle.systems.accessories = "long-range"
-
-
-
 
     # ------------------------------------------------------------------
     #  Fuselage (Right)
@@ -99,7 +91,7 @@ def base_setup():
 
     fuselage.lengths.nose = 5.0
     fuselage.lengths.cabin = 10
-    fuselage.lengths.tail = 20.79-(0.6*fuselage.lengths.cabin)+0.5*3.1
+    fuselage.lengths.tail = 20.79 - (0.6 * fuselage.lengths.cabin) + 0.5 * 3.1
     fuselage.lengths.total = fuselage.lengths.nose + fuselage.lengths.cabin + fuselage.lengths.tail
     fuselage.lengths.fore_space = 0.
     fuselage.lengths.aft_space = 0.
@@ -111,12 +103,12 @@ def base_setup():
     fuselage.heights.at_three_quarters_length = 1.4
     fuselage.heights.at_wing_root_quarter_chord = 1.4
 
-    fuselage.effective_diameter = np.sqrt(fuselage.heights.maximum*fuselage.width)
+    fuselage.effective_diameter = np.sqrt(fuselage.heights.maximum * fuselage.width)
 
     fuselage.areas.side_projected = 8.
-    fuselage.areas.wetted = S_wet_fus(fuselage.effective_diameter,fuselage.lengths.nose,fuselage.lengths.tail,fuselage.lengths.total)
+    fuselage.areas.wetted = S_wet_fus(fuselage.effective_diameter, fuselage.lengths.nose, fuselage.lengths.tail,
+                                      fuselage.lengths.total)
     fuselage.areas.front_projected = 0.78
-
 
     fuselage.differential_pressure = 0 * Units.pascal  # Maximum differential pressure
 
@@ -156,7 +148,7 @@ def base_setup():
         fuselage.areas.wetted = 21.05
         fuselage.areas.front_projected = 0.78
 
-        fuselage.effective_diameter = np.sqrt(fuselage.width*fuselage.heights.maximum)
+        fuselage.effective_diameter = np.sqrt(fuselage.width * fuselage.heights.maximum)
 
         fuselage.differential_pressure = 0 * Units.pascal  # Maximum differential pressure
 
@@ -181,7 +173,7 @@ def base_setup():
     wing.taper = 0.5
     wing.spans.projected = np.sqrt(wing.aspect_ratio * wing.areas.reference)
 
-    wing.chords.root = 2*wing.spans.projected/(wing.aspect_ratio*(1+wing.taper))
+    wing.chords.root = 2 * wing.spans.projected / (wing.aspect_ratio * (1 + wing.taper))
 
     # wing.airfoil = airfoils["sc3"]
 
@@ -192,11 +184,12 @@ def base_setup():
 
     wing.thickness_to_chord = 0.12
 
-    wing.chords.tip = wing.chords.root*wing.taper
-    wing.chords.mean_aerodynamic = 2.* wing.chords.root/3.*(1+wing.taper+wing.taper**2)/(1+wing.taper)
+    wing.chords.tip = wing.chords.root * wing.taper
+    wing.chords.mean_aerodynamic = 2. * wing.chords.root / 3. * (1 + wing.taper + wing.taper ** 2) / (1 + wing.taper)
 
-    wing.areas.wetted = S_wet_w("sc3.dat",wing.taper,wing.areas.reference,wing.spans.projected\
-            ,wing.chords.root,100,fuselage.effective_diameter,fuselage.origin[1],twin) #2.0 * wing.areas.reference
+    wing.areas.wetted = S_wet_w("sc3.dat", wing.taper, wing.areas.reference, wing.spans.projected \
+                                , wing.chords.root, 100, fuselage.effective_diameter, fuselage.origin[1],
+                                twin)  # 2.0 * wing.areas.reference
     wing.areas.exposed = 0.8 * wing.areas.wetted
     wing.areas.affected = 0.6 * wing.areas.reference
 
@@ -296,8 +289,6 @@ def base_setup():
     # add to vehicle
     vehicle.append_component(wing)
 
-
-
     # ------------------------------------------------------------------
     #  Turbofan Network
     # ------------------------------------------------------------------
@@ -380,7 +371,6 @@ def configs_setup(vehicle):
     config.maximum_lift_coefficient = 1.4
 
     configs.append(config)
-
 
     # ------------------------------------------------------------------
     #   Takeoff Configuration

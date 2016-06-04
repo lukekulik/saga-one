@@ -5,6 +5,7 @@ from SUAVE.Methods.Propulsion.turbofan_sizing import turbofan_sizing
 from SUAVE.Methods.Geometry.Two_Dimensional.Cross_Section.Propulsion import compute_turbofan_geometry
 from Generator import Generator
 
+
 def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total):
     # initialize the gas turbine network
 
@@ -106,7 +107,7 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
 
     generator = Generator()
     generator.tag = 'generator'
-    generator.power_draw = 2.5e6 / gt_engine.number_of_engines # it's constant which is wrong FIXME
+    generator.power_draw = 2.5e6 / gt_engine.number_of_engines  # it's constant which is wrong FIXME
     gt_engine.generator = generator
 
     #        #computing the core mass flow
@@ -114,14 +115,14 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
 
 
     # Define OPR
-    OPR = fan.pressure_ratio*high_pressure_compressor.pressure_ratio*low_pressure_compressor.pressure_ratio
+    OPR = fan.pressure_ratio * high_pressure_compressor.pressure_ratio * low_pressure_compressor.pressure_ratio
 
     # Component 10 : thrust (to compute the thrust)
     thrust = SUAVE.Components.Energy.Processes.Thrust()
 
     thrust.tag = 'compute_thrust'
     # total design thrust (includes all the engines)
-    thrust.total_design = thrust_total # should be just a pointer not a number
+    thrust.total_design = thrust_total  # should be just a pointer not a number
     # add thrust to the network
     gt_engine.thrust = thrust
     gt_engine.OPR = OPR

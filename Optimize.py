@@ -19,8 +19,7 @@ from SUAVE.Optimization import Nexus, carpet_plot
 import SUAVE.Optimization.Package_Setups.scipy_setup as scipy_setup
 import SUAVE.Optimization.Package_Setups.pyopt_setup as pyopt_setup
 
-
-# ----------------------------------------------------------------------        
+# ----------------------------------------------------------------------
 #   Run the whole thing
 # ----------------------------------------------------------------------
 
@@ -31,8 +30,9 @@ import SUAVE.Optimization.Package_Setups.pyopt_setup as pyopt_setup
 # MTOW: 170T, thrust: 115kN
 #  fuel burn:  [ 41769.08023241]
 
-#AVL Analysis on or off
+# AVL Analysis on or off
 AVL_analysis = False
+
 
 def main():
     print "SUAVE initialized...\n"
@@ -86,37 +86,37 @@ def setup():
 
     #   [ tag, initial, (lb,ub) , scaling , units ]
     # problem.inputs = np.array([
-        # ['wing_area', 700, (400., 600.), 500., Units.meter ** 2],  # was 480 before -> constrained by tip deflection not strength!
-        # ['MTOW', 180000., (160000.,160000.), 160000., Units.kg],
-        #['cruise_speed', 700., (600., 900.), 500., Units['km/h']],  # 756
-        #['return_cruise_alt', 19.2, (8., 20.), 10, Units.km],
-        # ['AR',15,(10,15),10,Units.less], # wing area, vs MTOW fuel weight for different
-        #['return_cruise_speed', 750., (600., 760.), 500., Units['km/h']],
+    # ['wing_area', 700, (400., 600.), 500., Units.meter ** 2],  # was 480 before -> constrained by tip deflection not strength!
+    # ['MTOW', 180000., (160000.,160000.), 160000., Units.kg],
+    # ['cruise_speed', 700., (600., 900.), 500., Units['km/h']],  # 756
+    # ['return_cruise_alt', 19.2, (8., 20.), 10, Units.km],
+    # ['AR',15,(10,15),10,Units.less], # wing area, vs MTOW fuel weight for different
+    # ['return_cruise_speed', 750., (600., 760.), 500., Units['km/h']],
 
-        # ['cruise_altitude',19,(19,19),19,Units.km],
-        # ['wing_sweep', 0, (0,0),5,Units.less],
+    # ['cruise_altitude',19,(19,19),19,Units.km],
+    # ['wing_sweep', 0, (0,0),5,Units.less],
 
-        # [ 'cruise_altitude'              ,  19.5    , (   19.5   ,    21.   ) ,   10.  , Units.km],
-        # [ 'c1_airspeed'              ,  90    , (   50   ,    250.   ) ,   100.  , Units['m/s']],
-        # [ 'c1_rate'              ,  15    , (   1   ,    25.   ) ,   10.  , Units['m/s']],
-        #
-        # [ 'c2_airspeed'              ,  110    , (   50   ,    250.   ) ,   100.  , Units['m/s']],
-        # [ 'c2_rate'              ,  11    , (   1   ,    25.   ) ,   10.  , Units['m/s']],
-        #
-        # [ 'c3_airspeed'              ,  120    , (   50   ,    250.   ) ,   100.  , Units['m/s']],
-        # [ 'c3_rate'              ,  8    , (   1   ,    25.   ) ,   10.  , Units['m/s']],
-        #
-        # [ 'c4_airspeed'              ,  150    , (   50   ,    250.   ) ,   100.  , Units['m/s']],
-        # [ 'c4_rate'              ,  6    , (   1   ,    25.   ) ,   10.  , Units['m/s']],
-        #
-        # [ 'c5_airspeed'              ,  200    , (   50   ,    250.   ) ,   100.  , Units['m/s']],
-        # [ 'c5_rate'              ,  4    , (   1   ,    25.   ) ,   10.  , Units['m/s']]
+    # [ 'cruise_altitude'              ,  19.5    , (   19.5   ,    21.   ) ,   10.  , Units.km],
+    # [ 'c1_airspeed'              ,  90    , (   50   ,    250.   ) ,   100.  , Units['m/s']],
+    # [ 'c1_rate'              ,  15    , (   1   ,    25.   ) ,   10.  , Units['m/s']],
+    #
+    # [ 'c2_airspeed'              ,  110    , (   50   ,    250.   ) ,   100.  , Units['m/s']],
+    # [ 'c2_rate'              ,  11    , (   1   ,    25.   ) ,   10.  , Units['m/s']],
+    #
+    # [ 'c3_airspeed'              ,  120    , (   50   ,    250.   ) ,   100.  , Units['m/s']],
+    # [ 'c3_rate'              ,  8    , (   1   ,    25.   ) ,   10.  , Units['m/s']],
+    #
+    # [ 'c4_airspeed'              ,  150    , (   50   ,    250.   ) ,   100.  , Units['m/s']],
+    # [ 'c4_rate'              ,  6    , (   1   ,    25.   ) ,   10.  , Units['m/s']],
+    #
+    # [ 'c5_airspeed'              ,  200    , (   50   ,    250.   ) ,   100.  , Units['m/s']],
+    # [ 'c5_rate'              ,  4    , (   1   ,    25.   ) ,   10.  , Units['m/s']]
 
-        # segment.altitude_end   = 3 * Units.km
-        #     segment.air_speed      = 118.0 * Units['m/s']
-        #     segment.climb_rate     = 15. * Units['m/s']
+    # segment.altitude_end   = 3 * Units.km
+    #     segment.air_speed      = 118.0 * Units['m/s']
+    #     segment.climb_rate     = 15. * Units['m/s']
 
-    #])
+    # ])
 
     # -------------------------------------------------------------------
     # Objective
@@ -143,12 +143,11 @@ def setup():
         ['main_mission_time', '<', 11.1, 1, Units.h],
         ['mission_range', '>', 7000., 100., Units.km],
         # ['aerosol_released', '=', 40000., 50., Units.kg ],
-        ['design_range_fuel_margin' , '>', 0.05, 1E-1, Units.less],
+        ['design_range_fuel_margin', '>', 0.05, 1E-1, Units.less],
         ['take_off_field_length', '<', 2500., 1e-1, Units.m],
         ['landing_field_length', '<', 2500., 1e-1, Units.m],
-        ['MTOW_delta', '<', '1' , 4, Units.kg],
-        ['MTOW_delta', '>', '-1', 4, Units.kg], # tricky to predict the effects of MTOW constraints
-
+        ['MTOW_delta', '<', '1', 4, Units.kg],
+        ['MTOW_delta', '>', '-1', 4, Units.kg],  # tricky to predict the effects of MTOW constraints
 
     ])
 
@@ -180,9 +179,7 @@ def setup():
 
         ['AR', 'vehicle_configurations.*.wings.main_wing.aspect_ratio'],
 
-
         ['fuel_burn', 'summary.base_mission_fuelburn'],
-
 
         ['min_throttle', 'summary.min_throttle'],
 
@@ -202,21 +199,15 @@ def setup():
 
         ['MTOW_delta', 'summary.MTOW_delta'],
 
-
-
-
-
-
         ['cruise_speed', 'missions.base.segments.cruise_empty.air_speed'],
-         # [
-         #    "missions.base.segments.cruise_highlift.air_speed",
-         #
-         #    "missions.base.segments.cruise_2.air_speed"]],
+        # [
+        #    "missions.base.segments.cruise_highlift.air_speed",
+        #
+        #    "missions.base.segments.cruise_2.air_speed"]],
         ['return_cruise_speed', "missions.base.segments.cruise_final.air_speed"],
 
         ['oswald', 'vehicle_configurations.*.wings.main_wing.span_efficiency'],
         ['cruise_altitude', "missions.base.segments.climb_8.altitude_end"],
-
 
         ['return_cruise_alt', 'missions.base.segments.descent_1.altitude_end'],
 

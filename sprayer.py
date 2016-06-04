@@ -9,10 +9,10 @@ def update_weights_sprayer(segment, state):
     mdot_fuel = conditions.weights.vehicle_mass_rate
     I = state.numerics.time.integrate
     g = conditions.freestream.gravity
-    v_x = conditions.frames.inertial.velocity_vector[:,0]
+    v_x = conditions.frames.inertial.velocity_vector[:, 0]
     v_x_mean = np.mean(v_x)
     # x = conditions.frames.inertial.position_vector[:,0]
-    distance = np.dot(I,v_x)[-1]
+    distance = np.dot(I, v_x)[-1]
     # add some global counter of spray mass
 
     # Add in the sprayer mass rate
@@ -21,12 +21,12 @@ def update_weights_sprayer(segment, state):
             segment.distance / segment.air_speed)
     elif hasattr(segment, 'sprayrate_override'):
         segment.sprayer_rate = segment.sprayrate_override
-    elif distance != 0.: #FIXME
+    elif distance != 0.:  # FIXME
         segment.sprayer_rate = segment.aerosol_mass_initial / (
             distance / v_x_mean)
     else:
         segment.sprayer_rate = 0.
-    #print segment.sprayer_rate
+    # print segment.sprayer_rate
 
     sprayer = segment.sprayer_rate * state.ones_row(1)
 

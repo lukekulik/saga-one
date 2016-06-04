@@ -11,7 +11,8 @@ import SUAVE
 from SUAVE.Core import Units
 from sprayer import update_weights_sprayer
 
-#have alternative mission files
+
+# have alternative mission files
 
 # ----------------------------------------------------------------------
 #   Define the Mission
@@ -115,7 +116,7 @@ def base(analyses):
     # mission.append_segment(segment)
 
 
-    #CLIMB PHASES START HERE:
+    # CLIMB PHASES START HERE:
 
 
     # ------------------------------------------------------------------
@@ -271,9 +272,9 @@ def base(analyses):
     # add to mission
     mission.append_segment(segment)
 
-     # ------------------------------------------------------------------
-     #   Seventh Climb Segment: Constant Speed, Constant Rate
-     # ------------------------------------------------------------------
+    # ------------------------------------------------------------------
+    #   Seventh Climb Segment: Constant Speed, Constant Rate
+    # ------------------------------------------------------------------
     #
     # segment = Segments.Climb.Constant_Speed_Constant_Rate(base_segment)
     # segment.tag = "climb_7"
@@ -553,7 +554,6 @@ def base(analyses):
 
     # add to mission
     mission.append_segment(segment)
-
 
     #
     # # ------------------------------------------------------------------
