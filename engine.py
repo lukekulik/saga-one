@@ -1,7 +1,9 @@
 import SUAVE
 from Turbofan_thr import Turbofan
+import Turbine_saga
 from SUAVE.Methods.Propulsion.turbofan_sizing import turbofan_sizing
 from SUAVE.Methods.Geometry.Two_Dimensional.Cross_Section.Propulsion import compute_turbofan_geometry
+from Generator import Generator
 
 def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total):
     # initialize the gas turbine network
@@ -50,7 +52,7 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
     gt_engine.high_pressure_compressor = high_pressure_compressor
 
     # Component 5 :low pressure turbine
-    low_pressure_turbine = SUAVE.Components.Energy.Converters.Turbine()
+    low_pressure_turbine = Turbine_saga.Turbine()
     low_pressure_turbine.tag = 'lpt'
     low_pressure_turbine.mechanical_efficiency = 0.99
     low_pressure_turbine.polytropic_efficiency = 0.89
@@ -58,7 +60,7 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
     gt_engine.low_pressure_turbine = low_pressure_turbine
 
     # Component 5 :high pressure turbine
-    high_pressure_turbine = SUAVE.Components.Energy.Converters.Turbine()
+    high_pressure_turbine = Turbine_saga.Turbine()
     high_pressure_turbine.tag = 'hpt'
     high_pressure_turbine.mechanical_efficiency = 0.99
     high_pressure_turbine.polytropic_efficiency = 0.89
@@ -102,10 +104,13 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
 
     # Component 10 : Payload power draw
 
-    payload = SUAVE.Components.Energy.Peripherals.Payload()
-    payload.tag = 'payload'
-    payload.power_draw = 2e6
-    gt_engine.payload = payload
+    generator = Generator()
+    generator.tag = 'generator'
+    generator.power_draw = 2.5e6 / gt_engine.number_of_engines # it's constant which is wrong FIXME
+    gt_engine.generator = generator
+
+    #        #computing the core mass flow
+    # mdot_core        = mdhc*np.sqrt(Tref/total_temperature_reference)*(total_pressure_reference/Pref)
 
 
     # Define OPR

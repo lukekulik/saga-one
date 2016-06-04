@@ -169,7 +169,7 @@ def plot_mission(results, show=True, line_style='bo-'):
         axes = fig.add_subplot(3, 1, 3)
         axes.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
         axes.plot(time, sfc, line_style)
-        axes.set_ylabel('Specific fuel consumption (N/Ns)', axis_font)
+        axes.set_ylabel('Specific fuel consumption (kg/Ns)', axis_font)
         axes.grid(True)
 
         axes.set_xlabel('Time (min)')

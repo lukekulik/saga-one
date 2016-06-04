@@ -73,7 +73,7 @@ def setup():
         ['wing_area', 700, (400., 750.), 500., Units.meter ** 2],
         ['MTOW', 203e3, (180000., 230000.), 200000., Units.kg],
         ['alt_outgoing_cruise', 13.14, (8., 20.), 15., Units.km],
-        ['design_thrust', 100e3, (85e3, 115e3), 100e3, Units.N],
+        ['design_thrust', 103e3, (85e3, 115e3), 100e3, Units.N],
         ['outgoing_cruise_speed', 191., (150, 220), 200, Units['m/s']],
         ['spray_cruise_speed', 200., (150, 220), 200, Units['m/s']],
         # climb throttle as input?
