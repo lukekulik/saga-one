@@ -122,7 +122,6 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
     gt_engine.OPR = OPR
     # print thrust
     # size the turbofan
-    print "The thrust",gt_engine
     turbofan_sizing(gt_engine, mach_number, altitude)
 
     compute_turbofan_geometry(gt_engine, None)
