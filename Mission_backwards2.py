@@ -274,9 +274,9 @@ def base(analyses):
 
 
     # segment.altitude_start = 17 * Units.km
-    segment.altitude_end = 18 * Units.km
+    segment.altitude_end = 18.5 * Units.km
     segment.air_speed = climb_air_speed * Units['m/s']
-    segment.throttle = climb_throttle
+    segment.throttle = climb_throttle + 0.05
 
     # segment.process.iterate.conditions.weights = update_weights_sprayer
     segment.sprayer_rate = 0 * Units['kg/s']
@@ -295,7 +295,7 @@ def base(analyses):
     segment.tag = "cruise_1"
 
     # connect vehicle configuration
-    segment.analyses.extend(analyses.cruise)
+    segment.analyses.extend(analyses.cruise_spraying)
 
     # segment attributes
     segment.atmosphere = atmosphere
@@ -307,7 +307,7 @@ def base(analyses):
     # segment.conditions.weights.vehicle_mass_rate = 2 * Units['kg/s']
 
     # segment.process.iterate.conditions.weights = update_weights_sprayer
-    segment.aerosol_mass_initial = 13000 * Units.kg  # mass to be sprayed in this segment
+    segment.aerosol_mass_initial = 13500 * Units.kg  # mass to be sprayed in this segment
 
     # segment.sprayer_rate = aerosol_mass_initial / (segment.distance / segment.air_speed ) #* Units['kg/s'] #1.2121 * Units['kg/s']
     # print segment.sprayer_rate # delegate rate to a method which will calculate live rate?
@@ -330,7 +330,7 @@ def base(analyses):
     segment.tag = "climb_2_1"
 
     # connect vehicle configuration
-    segment.analyses.extend(analyses.cruise)
+    segment.analyses.extend(analyses.cruise_spraying)
 
     # define segment attributes
     segment.atmosphere = atmosphere
@@ -338,7 +338,6 @@ def base(analyses):
     # segment.battery_energy = 10 #Charge the battery to start
 
 
-    segment.altitude_start = 18 * Units.km
     segment.altitude_end = 19 * Units.km
     segment.air_speed = (climb_air_speed - 5) * Units['m/s']
     segment.throttle = climb_throttle
@@ -346,7 +345,7 @@ def base(analyses):
     # segment.process.iterate.conditions.weights = update_weights_sprayer
     # segment.sprayer_rate = 0 * Units['kg/s']
 
-    segment.aerosol_mass_initial = 2500. * Units.kg  # mass to be sprayed in this segment
+    segment.aerosol_mass_initial = 1500. * Units.kg  # mass to be sprayed in this segment
 
     # add to misison
     mission.append_segment(segment)
@@ -359,7 +358,7 @@ def base(analyses):
     segment.tag = "cruise_2"
 
     # connect vehicle configuration
-    segment.analyses.extend(analyses.cruise)
+    segment.analyses.extend(analyses.cruise_spraying)
 
     # segment attributes
     segment.atmosphere = atmosphere
@@ -371,7 +370,9 @@ def base(analyses):
     # segment.conditions.weights.vehicle_mass_rate = 2 * Units['kg/s']
 
     # segment.process.iterate.conditions.weights = update_weights_sprayer
-    segment.aerosol_mass_initial = 13000 * Units.kg  # mass to be sprayed in this segment
+    segment.aerosol_mass_initial = 14000 * Units.kg  # mass to be sprayed in this segment
+
+    # FIXME add iteration which roughly equalizes the mass flow kg/m for all phases
 
     # segment.sprayer_rate = aerosol_mass_initial / (segment.distance / segment.air_speed ) #* Units['kg/s'] #1.2121 * Units['kg/s']
     # print segment.sprayer_rate # delegate rate to a method which will calculate live rate?
@@ -393,7 +394,7 @@ def base(analyses):
     segment.state.unknowns.wind_angle = ones_row(1) * 5.0 * Units.deg
 
     # connect vehicle configuration
-    segment.analyses.extend(analyses.cruise)
+    segment.analyses.extend(analyses.cruise_spraying)
 
     # define segment attributes
     segment.atmosphere = atmosphere
@@ -401,14 +402,13 @@ def base(analyses):
     # segment.battery_energy = 10 #Charge the battery to start
 
 
-    segment.altitude_start = 19 * Units.km
     segment.altitude_end = 20 * Units.km
     segment.air_speed = climb_air_speed * Units['m/s']
     segment.throttle = climb_throttle
 
     # segment.process.iterate.conditions.weights = update_weights_sprayer
     # segment.sprayer_rate = 0 * Units['kg/s']
-    segment.aerosol_mass_initial = 1100. * Units.kg  # mass to be sprayed in this segment
+    segment.aerosol_mass_initial = 1000. * Units.kg  # mass to be sprayed in this segment
 
     # add to misison
     mission.append_segment(segment)
@@ -421,7 +421,7 @@ def base(analyses):
     segment.tag = "cruise_final"
 
     # connect vehicle configuration
-    segment.analyses.extend(analyses.cruise)
+    segment.analyses.extend(analyses.cruise_spraying)
 
     # segment attributes
     segment.atmosphere = atmosphere
@@ -433,7 +433,7 @@ def base(analyses):
     # segment.conditions.weights.vehicle_mass_rate = 2 * Units['kg/s']
 
     # segment.process.iterate.conditions.weights = update_weights_sprayer
-    segment.aerosol_mass_initial = 10300 * Units.kg  # mass to be sprayed in this segment
+    segment.aerosol_mass_initial = 10000 * Units.kg  # mass to be sprayed in this segment
 
     # segment.sprayer_rate = aerosol_mass_initial / (segment.distance / segment.air_speed ) #* Units['kg/s'] #1.2121 * Units['kg/s']
     # print segment.sprayer_rate # delegate rate to a method which will calculate live rate?

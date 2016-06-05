@@ -50,11 +50,13 @@ class Generator(Energy_Component):
         self.outputs.power = self.power_draw
 
         mdot_core = mdhc * np.sqrt(Tref / total_temperature_reference) * (total_pressure_reference / Pref)
+
         if np.all(mdot_core) != 0:
             self.outputs.work_done = self.outputs.power / mdot_core
         else:
             self.outputs.work_done = 0
             # print mdot_core
+
 
             # print self.outputs.work_done
 

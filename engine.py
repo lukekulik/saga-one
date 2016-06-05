@@ -107,7 +107,7 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
 
     generator = Generator()
     generator.tag = 'generator'
-    generator.power_draw = 2.5e6 / gt_engine.number_of_engines  # it's constant which is wrong FIXME
+    generator.power_draw = 0e6 / gt_engine.number_of_engines  # it's constant which is wrong FIXME
     gt_engine.generator = generator
 
     #        #computing the core mass flow

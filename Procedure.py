@@ -79,47 +79,47 @@ def setup():
 #   Target Range Function
 # ----------------------------------------------------------------------    
 
-def find_target_range(nexus, mission):
-    segments = mission.segments
-    # cruise_altitude = mission.segments['climb_5'].altitude_end
-
-    climb_1 = segments['climb_1']
-    climb_2 = segments['climb_2']
-    climb_3 = segments['climb_3']
-    climb_4 = segments['climb_4_final_outgoing']
-    climb_5 = segments['climb_5']
-
-    descent_1 = segments['descent_1']
-    descent_2 = segments['descent_2']
-    # descent_3 = segments['descent_3']
-
-    x_climb_1 = climb_1.altitude_end / np.tan(np.arcsin(climb_1.climb_rate / climb_1.air_speed))
-    x_climb_2 = (climb_2.altitude_end - climb_1.altitude_end) / np.tan(
-        np.arcsin(climb_2.climb_rate / climb_2.air_speed))
-    x_climb_3 = (climb_3.altitude_end - climb_2.altitude_end) / np.tan(
-        np.arcsin(climb_3.climb_rate / climb_3.air_speed))
-    x_climb_4 = (climb_4.altitude_end - climb_3.altitude_end) / np.tan(
-        np.arcsin(climb_4.climb_rate / climb_4.air_speed))
-    x_climb_5 = (climb_5.altitude_end - climb_4.altitude_end) / np.tan(
-        np.arcsin(climb_5.climb_rate / climb_5.air_speed))
-    x_descent_1 = (climb_5.altitude_end - descent_1.altitude_end) / np.tan(
-        np.arcsin(descent_1.descent_rate / descent_1.air_speed))
-    x_descent_2 = (descent_1.altitude_end - descent_2.altitude_end) / np.tan(
-        np.arcsin(descent_2.descent_rate / descent_2.air_speed))
-    # x_descent_3 = (descent_2.altitude_end - descent_3.altitude_end) / np.tan(
-    #    np.arcsin(descent_3.descent_rate / descent_3.air_speed))
-
-    cruise_range = mission.design_range - (
-        x_climb_1 + x_climb_2 + x_climb_3 + x_climb_4 + x_climb_5 + x_descent_1 + x_descent_2)  # + x_descent_3)
-    # some sort of a sum here?
-
-
-    # segments['cruise_2'].distance=cruise_range # FIXME need to add other cruises
-
-    # print segments.cruise.distance
-    # print cruise_range
-
-    return nexus
+# def find_target_range(nexus, mission):
+#     segments = mission.segments
+#     # cruise_altitude = mission.segments['climb_5'].altitude_end
+#
+#     climb_1 = segments['climb_1']
+#     climb_2 = segments['climb_2']
+#     climb_3 = segments['climb_3']
+#     climb_4 = segments['climb_4_final_outgoing']
+#     climb_5 = segments['climb_5']
+#
+#     descent_1 = segments['descent_1']
+#     descent_2 = segments['descent_2']
+#     # descent_3 = segments['descent_3']
+#
+#     x_climb_1 = climb_1.altitude_end / np.tan(np.arcsin(climb_1.climb_rate / climb_1.air_speed))
+#     x_climb_2 = (climb_2.altitude_end - climb_1.altitude_end) / np.tan(
+#         np.arcsin(climb_2.climb_rate / climb_2.air_speed))
+#     x_climb_3 = (climb_3.altitude_end - climb_2.altitude_end) / np.tan(
+#         np.arcsin(climb_3.climb_rate / climb_3.air_speed))
+#     x_climb_4 = (climb_4.altitude_end - climb_3.altitude_end) / np.tan(
+#         np.arcsin(climb_4.climb_rate / climb_4.air_speed))
+#     x_climb_5 = (climb_5.altitude_end - climb_4.altitude_end) / np.tan(
+#         np.arcsin(climb_5.climb_rate / climb_5.air_speed))
+#     x_descent_1 = (climb_5.altitude_end - descent_1.altitude_end) / np.tan(
+#         np.arcsin(descent_1.descent_rate / descent_1.air_speed))
+#     x_descent_2 = (descent_1.altitude_end - descent_2.altitude_end) / np.tan(
+#         np.arcsin(descent_2.descent_rate / descent_2.air_speed))
+#     # x_descent_3 = (descent_2.altitude_end - descent_3.altitude_end) / np.tan(
+#     #    np.arcsin(descent_3.descent_rate / descent_3.air_speed))
+#
+#     cruise_range = mission.design_range - (
+#         x_climb_1 + x_climb_2 + x_climb_3 + x_climb_4 + x_climb_5 + x_descent_1 + x_descent_2)  # + x_descent_3)
+#     # some sort of a sum here?
+#
+#
+#     # segments['cruise_2'].distance=cruise_range # FIXME need to add other cruises
+#
+#     # print segments.cruise.distance
+#     # print cruise_range
+#
+#     return nexus
 
 
 def evaluate_field_length(configs, analyses, mission, results):

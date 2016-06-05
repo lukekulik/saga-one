@@ -73,13 +73,14 @@ def setup():
         ['wing_area', 700, (400., 750.), 500., Units.meter ** 2],
         ['MTOW', 203e3, (180000., 230000.), 200000., Units.kg],
         ['alt_outgoing_cruise', 13.14, (8., 20.), 15., Units.km],
-        ['design_thrust', 103e3, (85e3, 115e3), 100e3, Units.N],
+        ['design_thrust', 104e3, (85e3, 115e3), 100e3, Units.N],
         ['outgoing_cruise_speed', 191., (150, 220), 200, Units['m/s']],
         ['spray_cruise_speed', 200., (150, 220), 200, Units['m/s']],
         # climb throttle as input?
 
         # "Set" inputs
         ['AR', 15, (15, 15), 15, Units.less],
+        ['payload', 40e3, (40e3, 40e3), 40e3, Units.kg],
         # speeds???
     ])
     # opt results: [700.0000000000755, 180623.48270764505, 13.147354544329831, 93680.83722141015, 193.90945445747235, 200.00000000005906, 15.00000022353205]
@@ -141,7 +142,6 @@ def setup():
         # ['min_throttle', '>', 0., 1e-2, Units.less],
         ['max_throttle', '<', 1., 1e-2, Units.less],
         ['main_mission_time', '<', 11.1, 1, Units.h],
-        ['mission_range', '>', 7000., 100., Units.km],
         # ['aerosol_released', '=', 40000., 50., Units.kg ],
         ['design_range_fuel_margin', '>', 0.05, 1E-1, Units.less],
         ['take_off_field_length', '<', 2500., 1e-1, Units.m],
@@ -179,6 +179,9 @@ def setup():
 
         ['AR', 'vehicle_configurations.*.wings.main_wing.aspect_ratio'],
 
+        ['payload', ['vehicle_configurations.*.mass_properties.max_payload',
+                     'vehicle_configurations.*.mass_properties.payload']],
+
         ['fuel_burn', 'summary.base_mission_fuelburn'],
 
         ['min_throttle', 'summary.min_throttle'],
@@ -190,6 +193,14 @@ def setup():
         ['mission_range', 'summary.mission_range'],
 
         # ['aerosol_released', '=', 40000., 50., Units.kg], #FIXME
+
+
+
+
+
+
+
+
 
         ['design_range_fuel_margin', 'summary.max_zero_fuel_margin'],
 

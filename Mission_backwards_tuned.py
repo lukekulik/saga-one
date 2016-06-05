@@ -57,7 +57,7 @@ def base(analyses):
     atmosphere = SUAVE.Attributes.Atmospheres.Earth.US_Standard_1976()
     planet = SUAVE.Attributes.Planets.Earth()
 
-    climb_throttle = 0.89  # Constant throttle for all climb segments
+    climb_throttle = 0.90  # Constant throttle for all climb segments
     climb_air_speed = 190. * Units['m/s']
 
     # CLIMB PHASES START HERE:
