@@ -308,6 +308,7 @@ def plot_mission(results, show=True, line_style='bo-'):
         # axes.plot(time,cl_inviscid,'ro-')
         # axes.plot(time, cl_compressible, 'ro-')
 
+
         axes.set_ylabel('Engine Power (W)', axis_font)
         axes.grid(True)
 

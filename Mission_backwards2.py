@@ -59,7 +59,7 @@ def base(analyses):
     planet = SUAVE.Attributes.Planets.Earth()
 
     climb_throttle = 0.925  # Constant throttle for all climb segments
-    climb_air_speed = 190. * Units['m/s']
+    climb_air_speed = 210. * Units['m/s']
 
     # CLIMB PHASES START HERE:
 
@@ -172,7 +172,7 @@ def base(analyses):
     # ------------------------------------------------------------------
 
     segment = Segments.Climb.Constant_Throttle_Constant_Speed(base_segment)
-    segment.tag = "climb_4_final_outgoing"
+    segment.tag = "final_outgoing"
 
     # Initial conditions
     ones_row = segment.state.ones_row
@@ -307,7 +307,7 @@ def base(analyses):
     # segment.conditions.weights.vehicle_mass_rate = 2 * Units['kg/s']
 
     # segment.process.iterate.conditions.weights = update_weights_sprayer
-    segment.aerosol_mass_initial = 13500 * Units.kg  # mass to be sprayed in this segment
+    segment.aerosol_mass_initial = 14500 * Units.kg  # mass to be sprayed in this segment
 
     # segment.sprayer_rate = aerosol_mass_initial / (segment.distance / segment.air_speed ) #* Units['kg/s'] #1.2121 * Units['kg/s']
     # print segment.sprayer_rate # delegate rate to a method which will calculate live rate?
@@ -339,15 +339,15 @@ def base(analyses):
 
 
     segment.altitude_end = 19 * Units.km
-    segment.air_speed = (climb_air_speed - 5) * Units['m/s']
+    segment.air_speed = (climb_air_speed ) * Units['m/s']
     segment.throttle = climb_throttle
 
     # segment.process.iterate.conditions.weights = update_weights_sprayer
     # segment.sprayer_rate = 0 * Units['kg/s']
 
-    segment.aerosol_mass_initial = 1500. * Units.kg  # mass to be sprayed in this segment
+    segment.aerosol_mass_initial = 500. * Units.kg  # mass to be sprayed in this segment
 
-    # add to misison
+    # add to mission
     mission.append_segment(segment)
 
     # ------------------------------------------------------------------

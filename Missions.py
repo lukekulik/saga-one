@@ -353,7 +353,7 @@ def base(analyses):
     # ------------------------------------------------------------------
 
     segment = Segments.Cruise.Constant_Speed_Constant_Altitude(base_segment)
-    segment.tag = "cruise_2_3"
+    segment.tag = "cruise_final"
 
     # connect vehicle configuration
     segment.analyses.extend(analyses.cruise)
@@ -382,7 +382,7 @@ def base(analyses):
     # ------------------------------------------------------------------
 
     segment = Segments.Descent.Constant_Speed_Constant_Rate(base_segment)
-    segment.tag = "descent_1"
+    segment.tag = "final_outgoing"
 
     # connect vehicle configuration
     segment.analyses.extend(analyses.cruise)
@@ -406,7 +406,7 @@ def base(analyses):
     # ------------------------------------------------------------------
 
     segment = Segments.Cruise.Constant_Speed_Constant_Altitude(base_segment)
-    segment.tag = "cruise_final"
+    segment.tag = "cruise_outgoing"
 
     # connect vehicle configuration
     segment.analyses.extend(analyses.cruise)

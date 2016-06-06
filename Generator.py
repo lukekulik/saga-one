@@ -25,7 +25,7 @@ class Generator(Energy_Component):
         self.reference_pressure = 1.01325 * 10 ** 5
         self.compressor_nondimensional_massflow = 0.0
 
-    def compute(self):
+    def compute(self, state):
         """ The avionics input power
             
             Inputs:

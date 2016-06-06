@@ -119,7 +119,7 @@ class Turbofan(Propulsor):
         generator.inputs.total_temperature_reference = low_pressure_compressor.outputs.stagnation_temperature
         generator.inputs.total_pressure_reference = low_pressure_compressor.outputs.stagnation_pressure
 
-        generator()
+        generator(conditions)
 
         # link the high pressure turbione to the combustor
         high_pressure_turbine.inputs.stagnation_temperature = combustor.outputs.stagnation_temperature

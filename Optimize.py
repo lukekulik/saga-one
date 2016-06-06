@@ -41,7 +41,6 @@ def main():
     output = problem.objective()  # uncomment this line when using the default inputs
     # variable_sweep(problem)  # uncomment this to view some contours of the problem
     # output = scipy_setup.SciPy_Solve(problem, solver='SLSQP') # uncomment this to optimize the values
-    # output = pyopt_setup.Pyopt_Solve(problem,solver='SNOPT') #,FD='single', nonderivative_line_search=False)
 
     print 'constraints=', problem.all_constraints()
 
@@ -71,16 +70,16 @@ def setup():
     problem.inputs = np.array([
         # Variable inputs
         ['wing_area', 700, (400., 750.), 500., Units.meter ** 2],
-        ['MTOW', 203e3, (180000., 230000.), 200000., Units.kg],
-        ['alt_outgoing_cruise', 13.14, (8., 20.), 15., Units.km],
-        ['design_thrust', 104e3, (85e3, 115e3), 100e3, Units.N],
+        ['MTOW', 220e3, (170000., 250000.), 200000., Units.kg],
+        ['alt_outgoing_cruise', 13.14, (8., 15.), 13., Units.km],
+        ['design_thrust', 120e3, (80e3, 120e3), 100e3, Units.N],
         ['outgoing_cruise_speed', 191., (150, 220), 200, Units['m/s']],
-        ['spray_cruise_speed', 200., (150, 220), 200, Units['m/s']],
+        ['spray_cruise_speed', 210., (150, 220), 200, Units['m/s']],
         # climb throttle as input?
 
         # "Set" inputs
         ['AR', 15, (15, 15), 15, Units.less],
-        ['payload', 40e3, (40e3, 40e3), 40e3, Units.kg],
+        ['payload', 30e3, (20e3, 40e3), 40e3, Units.kg],
         # speeds???
     ])
     # opt results: [700.0000000000755, 180623.48270764505, 13.147354544329831, 93680.83722141015, 193.90945445747235, 200.00000000005906, 15.00000022353205]
@@ -164,7 +163,7 @@ def setup():
         ['MTOW', ['vehicle_configurations.*.mass_properties.takeoff',
                   "vehicle_configurations.*.mass_properties.max_takeoff"]],
 
-        ['alt_outgoing_cruise', 'missions.base.segments.climb_4_final_outgoing.altitude_end'],
+        ['alt_outgoing_cruise', 'missions.base.segments.final_outgoing.altitude_end'],
 
         ['design_thrust', 'vehicle_configurations.*.propulsors.turbofan.thrust.total_design'],
 
@@ -215,7 +214,7 @@ def setup():
         #    "missions.base.segments.cruise_highlift.air_speed",
         #
         #    "missions.base.segments.cruise_2.air_speed"]],
-        ['return_cruise_speed', "missions.base.segments.cruise_final.air_speed"],
+        # ['return_cruise_speed', "missions.base.segments.cruise_final.air_speed"],
 
         ['oswald', 'vehicle_configurations.*.wings.main_wing.span_efficiency'],
         ['cruise_altitude', "missions.base.segments.climb_8.altitude_end"],

@@ -23,9 +23,9 @@ from SUAVE.Methods.Performance import estimate_landing_field_length
 from SUAVE.Methods.Flight_Dynamics.Dynamic_Stability.Full_Linearized_Equations.longitudinal import longitudinal
 from SUAVE.Input_Output.Results import print_parasite_drag, \
     print_compress_drag, \
-    print_mission_breakdown, \
     print_weight_breakdown
 from print_engine_data import print_engine_data
+from print_mission_breakdown import print_mission_breakdown
 
 
 def pretty_print(d, indent=0):  # recursive printer
@@ -68,6 +68,14 @@ def setup():
     procedure.missions = Process()
     procedure.missions.design_mission = design_mission
 
+    # # Noise evaluation
+    # procedure.noise = Process()
+    # procedure.noise.sideline_init = noise_sideline_init
+    # procedure.noise.takeoff_init = noise_takeoff_init
+    # procedure.noise.noise_sideline = noise_sideline
+    # procedure.noise.noise_flyover = noise_flyover
+    # procedure.noise.noise_approach = noise_approach
+
     # post process the results
     procedure.post_process = post_process
 
@@ -79,47 +87,57 @@ def setup():
 #   Target Range Function
 # ----------------------------------------------------------------------    
 
-# def find_target_range(nexus, mission):
-#     segments = mission.segments
-#     # cruise_altitude = mission.segments['climb_5'].altitude_end
-#
-#     climb_1 = segments['climb_1']
-#     climb_2 = segments['climb_2']
-#     climb_3 = segments['climb_3']
-#     climb_4 = segments['climb_4_final_outgoing']
-#     climb_5 = segments['climb_5']
-#
-#     descent_1 = segments['descent_1']
-#     descent_2 = segments['descent_2']
-#     # descent_3 = segments['descent_3']
-#
-#     x_climb_1 = climb_1.altitude_end / np.tan(np.arcsin(climb_1.climb_rate / climb_1.air_speed))
-#     x_climb_2 = (climb_2.altitude_end - climb_1.altitude_end) / np.tan(
-#         np.arcsin(climb_2.climb_rate / climb_2.air_speed))
-#     x_climb_3 = (climb_3.altitude_end - climb_2.altitude_end) / np.tan(
-#         np.arcsin(climb_3.climb_rate / climb_3.air_speed))
-#     x_climb_4 = (climb_4.altitude_end - climb_3.altitude_end) / np.tan(
-#         np.arcsin(climb_4.climb_rate / climb_4.air_speed))
-#     x_climb_5 = (climb_5.altitude_end - climb_4.altitude_end) / np.tan(
-#         np.arcsin(climb_5.climb_rate / climb_5.air_speed))
-#     x_descent_1 = (climb_5.altitude_end - descent_1.altitude_end) / np.tan(
-#         np.arcsin(descent_1.descent_rate / descent_1.air_speed))
-#     x_descent_2 = (descent_1.altitude_end - descent_2.altitude_end) / np.tan(
-#         np.arcsin(descent_2.descent_rate / descent_2.air_speed))
-#     # x_descent_3 = (descent_2.altitude_end - descent_3.altitude_end) / np.tan(
-#     #    np.arcsin(descent_3.descent_rate / descent_3.air_speed))
-#
-#     cruise_range = mission.design_range - (
-#         x_climb_1 + x_climb_2 + x_climb_3 + x_climb_4 + x_climb_5 + x_descent_1 + x_descent_2)  # + x_descent_3)
-#     # some sort of a sum here?
-#
-#
-#     # segments['cruise_2'].distance=cruise_range # FIXME need to add other cruises
-#
-#     # print segments.cruise.distance
-#     # print cruise_range
-#
-#     return nexus
+def find_target_range(nexus, mission):
+    segments = mission.segments
+    # cruise_altitude = mission.segments['climb_5'].altitude_end
+    #
+    # climb_1 = segments['climb_1']
+    # climb_2 = segments['climb_2']
+    # climb_3 = segments['climb_3']
+    # climb_4 = segments['climb_4_final_outgoing']
+    # climb_5 = segments['climb_5']
+    #
+    # descent_1 = segments['descent_1']
+    # descent_2 = segments['descent_2']
+    # # descent_3 = segments['descent_3']
+    #
+    # x_climb_1 = climb_1.altitude_end / np.tan(np.arcsin(climb_1.climb_rate / climb_1.air_speed))
+    # x_climb_2 = (climb_2.altitude_end - climb_1.altitude_end) / np.tan(
+    #     np.arcsin(climb_2.climb_rate / climb_2.air_speed))
+    # x_climb_3 = (climb_3.altitude_end - climb_2.altitude_end) / np.tan(
+    #     np.arcsin(climb_3.climb_rate / climb_3.air_speed))
+    # x_climb_4 = (climb_4.altitude_end - climb_3.altitude_end) / np.tan(
+    #     np.arcsin(climb_4.climb_rate / climb_4.air_speed))
+    # x_climb_5 = (climb_5.altitude_end - climb_4.altitude_end) / np.tan(
+    #     np.arcsin(climb_5.climb_rate / climb_5.air_speed))
+    # x_descent_1 = (climb_5.altitude_end - descent_1.altitude_end) / np.tan(
+    #     np.arcsin(descent_1.descent_rate / descent_1.air_speed))
+    # x_descent_2 = (descent_1.altitude_end - descent_2.altitude_end) / np.tan(
+    #     np.arcsin(descent_2.descent_rate / descent_2.air_speed))
+    # # x_descent_3 = (descent_2.altitude_end - descent_3.altitude_end) / np.tan(
+    # #    np.arcsin(descent_3.descent_rate / descent_3.air_speed))
+    #
+    # cruise_range = mission.design_range - (
+    #     x_climb_1 + x_climb_2 + x_climb_3 + x_climb_4 + x_climb_5 + x_descent_1 + x_descent_2)  # + x_descent_3)
+    # # some sort of a sum here?
+
+    aerosol_sum = 0.
+    payload = nexus.vehicle_configurations.base.mass_properties.payload
+    for segment in segments:
+        aerosol_sum += segment.aerosol_mass_initial
+
+    for segment in segments:
+        segment.aerosol_mass_initial = segment.aerosol_mass_initial * (payload / aerosol_sum) # scaling to account for possible changed payload
+
+
+    # segments.aerosol_mass_initial
+
+    # segments['cruise_2'].distance=cruise_range # FIXME need to add other cruises
+
+    # print segments.cruise.distance
+    # print cruise_range
+
+    return nexus
 
 
 def evaluate_field_length(configs, analyses, mission, results):
@@ -151,7 +169,7 @@ def evaluate_field_length(configs, analyses, mission, results):
 def design_mission(nexus):
     mission = nexus.missions.base
     mission.design_range = 7000. * Units['km']
-    # find_target_range(nexus,mission)
+    find_target_range(nexus,mission)
 
     results = nexus.results
     results.base = mission.evaluate()
@@ -206,6 +224,9 @@ def simple_sizing(nexus):
         fuselage = config.fuselages['fuselage']
         fuselage.differential_pressure = diff_pressure
 
+        print config.tag
+        # print mach_number, altitude
+        # print config.propulsors.turbofan
         turbofan_sizing(config.propulsors['turbofan'], mach_number, altitude)
         compute_turbofan_geometry(config.propulsors['turbofan'], conditions)
 
@@ -410,6 +431,13 @@ def post_process(nexus):
     zero_fuel_weight = payload + operating_empty
 
     # pretty_print(nexus.vehicle_configurations)
+    clmax = 0
+    for segment in results.base.segments.values():
+        cl = np.max(segment.conditions.aerodynamics.lift_coefficient[:, 0])
+        if cl>clmax:
+            clmax=cl
+
+    summary.clmax = clmax
 
 
     for i in range(1, len(results.base.segments)):  # make fuel burn and sprayer continuous
@@ -442,6 +470,8 @@ def post_process(nexus):
 
     summary.MTOW_delta = zero_fuel_weight + summary.base_mission_fuelburn - vehicle.mass_properties.takeoff
 
+    # summary.power_draw = results.base.segments.
+
     # summary.engine_weight =
 
     # print results.base.segments.keys()
@@ -461,6 +491,7 @@ def post_process(nexus):
         (summary.total_mission_time - summary.main_mission_time)[0] * Units['s'] / Units.h, "hours (diversion)"
     summary.nothing = 0.0
     print 'Fuel burn: ', summary.base_mission_fuelburn, " Fuel margin: ", summary.max_zero_fuel_margin
+    print "CL_max: ", summary.clmax
     # print 'fuel margin=', problem.all_constraints()
 
     gt_engine = nexus.vehicle_configurations.base.propulsors.turbofan

@@ -177,7 +177,7 @@ def base_setup():
 
     # wing.airfoil = airfoils["sc3"]
 
-    wing.span_efficiency = 0.75
+    wing.span_efficiency = 0.95
     wing.areas.reference = 0  # selected in Optimize.py
 
     wing.sweep = 0.0 * Units.deg
@@ -203,7 +203,7 @@ def base_setup():
     wing.symmetric = True
 
     wing.high_lift = True
-    wing.high_mach = True
+    # wing.high_mach = False
     wing.flaps.type = "double_slotted"
     wing.flaps.chord = 0  # FIXME
 
@@ -369,7 +369,7 @@ def configs_setup(vehicle):
     config.tag = 'cruise'
 
     config.maximum_lift_coefficient = 1.4
-    config.propulsors.turbofan.generator.power_draw = 0.5e6 / config.propulsors.turbofan.number_of_engines
+    # config.propulsors.turbofan.generator.power_draw = 0.5e6 / config.propulsors.turbofan.number_of_engines # MW per engine
 
     configs.append(config)
 
@@ -381,7 +381,7 @@ def configs_setup(vehicle):
     config.tag = 'cruise_spraying'
 
     config.maximum_lift_coefficient = 1.4
-    config.propulsors.turbofan.generator.power_draw = 2.5e6 / config.propulsors.turbofan.number_of_engines
+    # config.propulsors.turbofan.generator.power_draw = 2.5e6 / config.propulsors.turbofan.number_of_engines  # MW per engine
 
     configs.append(config)
 
