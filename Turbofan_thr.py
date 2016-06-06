@@ -52,6 +52,7 @@ class Turbofan(Propulsor):
         inlet_nozzle = self.inlet_nozzle
         low_pressure_compressor = self.low_pressure_compressor
         high_pressure_compressor = self.high_pressure_compressor
+        generator = self.generator
         fan = self.fan
         combustor = self.combustor
         high_pressure_turbine = self.high_pressure_turbine
@@ -86,6 +87,8 @@ class Turbofan(Propulsor):
         # Flow through the low pressure compressor
         low_pressure_compressor(conditions)
 
+        # low_pressure_compressor.outputs.work_done += 2e6/4.  # PAYLOAD POWER EXTRACTION IN MW
+
         # link the high pressure compressor to the low pressure compressor
         high_pressure_compressor.inputs.stagnation_temperature = low_pressure_compressor.outputs.stagnation_temperature
         high_pressure_compressor.inputs.stagnation_pressure = low_pressure_compressor.outputs.stagnation_pressure
@@ -105,8 +108,18 @@ class Turbofan(Propulsor):
         combustor.inputs.stagnation_pressure = high_pressure_compressor.outputs.stagnation_pressure
         # combustor.inputs.nozzle_exit_stagnation_temperature = inlet_nozzle.outputs.stagnation_temperature
 
-        # flow through the high pressor comprresor
+        # flow through the high pressure compressor
         combustor(conditions)
+
+        # link the generator to the lpc
+
+        generator.inputs.mdhc = thrust.compressor_nondimensional_massflow
+        generator.inputs.Tref = thrust.reference_temperature
+        generator.inputs.Pref = thrust.reference_pressure
+        generator.inputs.total_temperature_reference = low_pressure_compressor.outputs.stagnation_temperature
+        generator.inputs.total_pressure_reference = low_pressure_compressor.outputs.stagnation_pressure
+
+        generator()
 
         # link the high pressure turbione to the combustor
         high_pressure_turbine.inputs.stagnation_temperature = combustor.outputs.stagnation_temperature
@@ -130,6 +143,8 @@ class Turbofan(Propulsor):
         low_pressure_turbine.inputs.fuel_to_air_ratio = combustor.outputs.fuel_to_air_ratio
         # link the low pressure turbine to the fan
         low_pressure_turbine.inputs.fan = fan.outputs
+        # link the low pressure turbine to the generator
+        low_pressure_turbine.inputs.generator = generator.outputs
         # get the bypass ratio from the thrust component
         low_pressure_turbine.inputs.bypass_ratio = bypass_ratio
 
@@ -169,7 +184,7 @@ class Turbofan(Propulsor):
         thrust.inputs.bypass_ratio = bypass_ratio
         thrust.inputs.flow_through_core = 1. / (1. + bypass_ratio)  # scaled constant to turn on core thrust computation
         thrust.inputs.flow_through_fan = bypass_ratio / (
-        1. + bypass_ratio)  # scaled constant to turn on fan thrust computation
+            1. + bypass_ratio)  # scaled constant to turn on fan thrust computation
 
         # compute the trust
         thrust(conditions)
@@ -230,7 +245,7 @@ class Turbofan(Propulsor):
             state.conditions.propulsion.throttle[i] = temp_throttle[i]
 
         results.thrust_force_vector = results.thrust_force_vector / self.number_of_engines * (
-        self.number_of_engines - 1)
+            self.number_of_engines - 1)
         results.vehicle_mass_rate = results.vehicle_mass_rate / self.number_of_engines * (self.number_of_engines - 1)
 
         return results
@@ -238,4 +253,3 @@ class Turbofan(Propulsor):
         # return
 
     __call__ = evaluate_thrust
-

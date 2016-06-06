@@ -40,11 +40,11 @@ def landing_gear(TOW, d_eng, h_fus, V_descent, landing_gear_wt_factor=0.04):
     h_gear = h_wing_gear - h_fus
     h_nosegear = h_gear
     W_maingear = 0.0106 * (MLW / 0.45359237) ** 0.888 * Nl ** 0.25 * (
-                                                                     h_gear * 39.3700787) ** 0.4 * Nmw ** 0.321 * Nmss ** (
-    -0.5) * (V_stall / 0.514444444) ** 0.1 * 0.45359237  # kg
+                                                                         h_gear * 39.3700787) ** 0.4 * Nmw ** 0.321 * Nmss ** (
+        -0.5) * (V_stall / 0.514444444) ** 0.1 * 0.45359237  # kg
     W_nosegear = 0.032 * (MLW / 0.45359237) ** 0.646 * Nl ** 0.2 * (
-                                                                   h_nosegear * 39.3700787) ** 0.5 * Nnw ** 0.45 * 0.45359237  # kg
-    W_gear = 1.1*(W_maingear + W_nosegear)
+                                                                       h_nosegear * 39.3700787) ** 0.5 * Nnw ** 0.45 * 0.45359237  # kg
+    W_gear = 1.1 * (W_maingear + W_nosegear)
     weight = W_gear
 
-    return weight,h_gear
+    return weight, h_gear

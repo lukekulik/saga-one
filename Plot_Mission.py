@@ -44,22 +44,19 @@ def plot_mission(results, show=True, line_style='bo-'):
 
 
         Thrust = segment.conditions.frames.body.thrust_force_vector[:, 0]
-        Position = segment.conditions.frames.inertial.position_vector[:, 0] # ['position_vector', 'velocity_vector', 'acceleration_vector', 'gravity_force_vector', 'total_force_vector', 'time']
-
-
+        Position = segment.conditions.frames.inertial.position_vector[:,
+                   0]  # ['position_vector', 'velocity_vector', 'acceleration_vector', 'gravity_force_vector', 'total_force_vector', 'time']
 
         # print segment.conditions.frames.inertial.velocity_vector.keys()
         # print segment.conditions.frames.inertial.gravity_force_vector.keys()
 
         aoa = segment.conditions.aerodynamics.angle_of_attack[:, 0] / Units.deg
-        body_angle = segment.unknowns.body_angle[:,0] / Units.deg
+        body_angle = segment.unknowns.body_angle[:, 0] / Units.deg
 
         # vel segment.conditions.frames.wind.velocity_vector.keys()
         # print segment.conditions.frames.wind.lift_vector.keys()
 
         l_d = CLift / CDrag
-
-
 
         axes = fig.add_subplot(4, 1, 1)
         axes.plot(time, CLift, line_style)
@@ -85,8 +82,6 @@ def plot_mission(results, show=True, line_style='bo-'):
         axes.set_xlabel('Time (min)', axis_font)
         axes.set_ylabel('AOA + body angle (deg)', axis_font)
         axes.grid(True)
-
-
 
     plt.savefig(folder + "fig1" + file_format)
 
@@ -169,7 +164,7 @@ def plot_mission(results, show=True, line_style='bo-'):
         axes = fig.add_subplot(3, 1, 3)
         axes.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
         axes.plot(time, sfc, line_style)
-        axes.set_ylabel('Specific fuel consumption (N/Ns)', axis_font)
+        axes.set_ylabel('Specific fuel consumption (kg/Ns)', axis_font)
         axes.grid(True)
 
         axes.set_xlabel('Time (min)')
@@ -185,9 +180,7 @@ def plot_mission(results, show=True, line_style='bo-'):
         Drag = -segment.conditions.frames.wind.drag_force_vector[:, 0]
         Thrust = segment.conditions.frames.body.thrust_force_vector[:, 0]
         spray_rate = segment.conditions.weights.sprayer[:, 0]
-        spray_rate_meter = segment.conditions.weights.sprayer[:, 0]/velocity
-
-
+        spray_rate_meter = segment.conditions.weights.sprayer[:, 0] / velocity
 
         # axes = fig.add_subplot(5, 1, 1)
         # axes.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
@@ -233,25 +226,25 @@ def plot_mission(results, show=True, line_style='bo-'):
     for segment in results.base.segments.values():
         time = segment.conditions.frames.inertial.time[:, 0] / Units.min
 
-        acc_x = segment.conditions.frames.inertial.acceleration_vector[:,0]
+        acc_x = segment.conditions.frames.inertial.acceleration_vector[:, 0]
         acc_y = segment.conditions.frames.inertial.acceleration_vector[:, 1]
         acc_z = segment.conditions.frames.inertial.acceleration_vector[:, 2]
 
         # segment.conditions.frames.inertial
 
-        vel_x = segment.conditions.frames.inertial.velocity_vector[:,0]
-        vel_y = segment.conditions.frames.inertial.velocity_vector[:, 1] # airspeed is very different (earth is moving)
+        vel_x = segment.conditions.frames.inertial.velocity_vector[:, 0]
+        vel_y = segment.conditions.frames.inertial.velocity_vector[:, 1]  # airspeed is very different (earth is moving)
         vel_z = segment.conditions.frames.inertial.velocity_vector[:, 2]
 
         f_x = segment.conditions.frames.inertial.gravity_force_vector[:, 0]
         f_y = segment.conditions.frames.inertial.gravity_force_vector[:, 1]
         f_z = segment.conditions.frames.inertial.gravity_force_vector[:, 2]
 
-        temp =  segment.conditions.freestream.temperature[:,0]
+        temp = segment.conditions.freestream.temperature[:, 0]
 
         # engine_power =  segment.conditions.energies.propulsion_power[:,0]
 
-        net_acceleration = (f_x**2+f_y**2+f_z**2)**(1./3.)
+        net_acceleration = (f_x ** 2 + f_y ** 2 + f_z ** 2) ** (1. / 3.)
 
         Lift = -segment.conditions.frames.wind.lift_force_vector[:, 2]
 
@@ -289,7 +282,7 @@ def plot_mission(results, show=True, line_style='bo-'):
 
         axes = fig.add_subplot(5, 1, 3)
         axes.plot(time, Lift, line_style)
-        axes.plot(time, net_acceleration , 'ro-')
+        axes.plot(time, net_acceleration, 'ro-')
         # axes.plot(time, acc_y, line_style)
         # axes.plot(time, -vel_z, line_style)
         # axes.plot(time,cl_inviscid,'ro-')
@@ -317,8 +310,6 @@ def plot_mission(results, show=True, line_style='bo-'):
 
         axes.set_ylabel('Engine Power (W)', axis_font)
         axes.grid(True)
-
-
 
         # print segment.conditions.freestream.keys()
 

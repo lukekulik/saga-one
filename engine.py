@@ -1,7 +1,10 @@
 import SUAVE
 from Turbofan_thr import Turbofan
+import Turbine_saga
 from SUAVE.Methods.Propulsion.turbofan_sizing import turbofan_sizing
 from SUAVE.Methods.Geometry.Two_Dimensional.Cross_Section.Propulsion import compute_turbofan_geometry
+from Generator import Generator
+
 
 def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total):
     # initialize the gas turbine network
@@ -36,7 +39,7 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
     # Component 3 :low pressure compressor
     low_pressure_compressor = SUAVE.Components.Energy.Converters.Compressor()
     low_pressure_compressor.tag = 'lpc'
-    low_pressure_compressor.polytropic_efficiency = 0.89
+    low_pressure_compressor.polytropic_efficiency = 0.90
     low_pressure_compressor.pressure_ratio = 1.46
     # add low pressure compressor to the network
     gt_engine.low_pressure_compressor = low_pressure_compressor
@@ -44,24 +47,24 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
     # Component 4 :high pressure compressor
     high_pressure_compressor = SUAVE.Components.Energy.Converters.Compressor()
     high_pressure_compressor.tag = 'hpc'
-    high_pressure_compressor.polytropic_efficiency = 0.89  # FIXME
+    high_pressure_compressor.polytropic_efficiency = 0.90  # FIXME
     high_pressure_compressor.pressure_ratio = 17.
     # add the high pressure compressor to the network
     gt_engine.high_pressure_compressor = high_pressure_compressor
 
     # Component 5 :low pressure turbine
-    low_pressure_turbine = SUAVE.Components.Energy.Converters.Turbine()
+    low_pressure_turbine = Turbine_saga.Turbine()
     low_pressure_turbine.tag = 'lpt'
     low_pressure_turbine.mechanical_efficiency = 0.99
-    low_pressure_turbine.polytropic_efficiency = 0.90
+    low_pressure_turbine.polytropic_efficiency = 0.89
     # add low pressure turbine to the network
     gt_engine.low_pressure_turbine = low_pressure_turbine
 
     # Component 5 :high pressure turbine
-    high_pressure_turbine = SUAVE.Components.Energy.Converters.Turbine()
+    high_pressure_turbine = Turbine_saga.Turbine()
     high_pressure_turbine.tag = 'hpt'
     high_pressure_turbine.mechanical_efficiency = 0.99
-    high_pressure_turbine.polytropic_efficiency = 0.90
+    high_pressure_turbine.polytropic_efficiency = 0.89
     # add the high pressure turbine to the network
     gt_engine.high_pressure_turbine = high_pressure_turbine
 
@@ -71,7 +74,7 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
     combustor.efficiency = 0.99
     combustor.alphac = 1.0
     combustor.turbine_inlet_temperature = 1450
-    combustor.pressure_ratio = 0.95
+    combustor.pressure_ratio = 0.96
     combustor.fuel_data = SUAVE.Attributes.Propellants.Jet_A()
     # add the combustor to the network
     gt_engine.combustor = combustor
@@ -95,34 +98,36 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
     # Component 9 : fan
     fan = SUAVE.Components.Energy.Converters.Fan()
     fan.tag = 'fan'
-    fan.polytropic_efficiency = 0.87
+    fan.polytropic_efficiency = 0.89
     fan.pressure_ratio = 1.45
     # add the fan to the network
     gt_engine.fan = fan
 
     # Component 10 : Payload power draw
 
-    payload = SUAVE.Components.Energy.Peripherals.Payload()
-    payload.tag = 'payload'
-    payload.power_draw = 2e6
-    gt_engine.payload = payload
+    generator = Generator()
+    generator.tag = 'generator'
+    generator.power_draw = 0e6 / gt_engine.number_of_engines  # it's constant which is wrong FIXME
+    gt_engine.generator = generator
+
+    #        #computing the core mass flow
+    # mdot_core        = mdhc*np.sqrt(Tref/total_temperature_reference)*(total_pressure_reference/Pref)
 
 
     # Define OPR
-    OPR = fan.pressure_ratio*high_pressure_compressor.pressure_ratio*low_pressure_compressor.pressure_ratio
+    OPR = fan.pressure_ratio * high_pressure_compressor.pressure_ratio * low_pressure_compressor.pressure_ratio
 
     # Component 10 : thrust (to compute the thrust)
     thrust = SUAVE.Components.Energy.Processes.Thrust()
 
     thrust.tag = 'compute_thrust'
     # total design thrust (includes all the engines)
-    thrust.total_design = thrust_total # should be just a pointer not a number
+    thrust.total_design = thrust_total  # should be just a pointer not a number
     # add thrust to the network
     gt_engine.thrust = thrust
     gt_engine.OPR = OPR
     # print thrust
     # size the turbofan
-
     turbofan_sizing(gt_engine, mach_number, altitude)
 
     compute_turbofan_geometry(gt_engine, None)
