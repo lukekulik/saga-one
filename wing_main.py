@@ -11,11 +11,12 @@
 from SUAVE.Core import Units
 import numpy as np
 
+
 # ----------------------------------------------------------------------
 #   Wing Main
 # ----------------------------------------------------------------------
 
-def wing_main(S_gross_w,b,lambda_w,t_c_w,sweep_w,Nult,TOW,wt_zf):
+def wing_main(S_gross_w, b, lambda_w, t_c_w, sweep_w, Nult, TOW, wt_zf):
     """ weight = SUAVE.Methods.Weights.Correlations.Tube_Wing.wing_main\
     (S_gross_w,b,lambda_w,t_c_w,sweep_w,Nult,TOW,wt_zf)
         Calculate the wing weight of the aircraft based on the fully-stressed 
@@ -38,22 +39,23 @@ def wing_main(S_gross_w,b,lambda_w,t_c_w,sweep_w,Nult,TOW,wt_zf):
             calculated total wing weight based on a bending index and actual data 
             from 15 transport aircraft
     """
-    
+
     # unpack inputs
-    span  = b / Units.ft # Convert meters to ft
+    span = b / Units.ft  # Convert meters to ft
     taper = lambda_w
     sweep = sweep_w
-    area  = S_gross_w / Units.ft**2 # Convert meters squared to ft squared
-    mtow  = TOW / Units.lb # Convert kg to lbs
-    zfw   = wt_zf / Units.lb # Convert kg to lbs
+    area = S_gross_w / Units.ft ** 2  # Convert meters squared to ft squared
+    mtow = TOW / Units.lb  # Convert kg to lbs
+    zfw = wt_zf / Units.lb  # Convert kg to lbs
 
-    #Calculate weight of wing for traditional aircraft wing
-    weight = 4.22*area + 1.642*10.**-6. * Nult*(span)**3. *(mtow*zfw)**0.5 \
-             * (1.+2.*taper)/(t_c_w*(np.cos(sweep))**2. * area*(1.+taper) )
-    weight = weight * Units.lb # Convert lb to kg
-    
-    A = span**2/area
-    Scsw = 100/ Units.ft**2 #control surface area on wing
-    W_wing = 1* 0.0051* (mtow*Nult)**0.557* area**0.649* A**0.5* t_c_w**(-0.4)* (1+taper)**0.1* Scsw**0.1 *0.45359237 #kg assuming composite braced wing
-    weight = W_wing
+    # Calculate weight of wing for traditional aircraft wing
+    weight = 4.22 * area + 1.642 * 10. ** -6. * Nult * span ** 3. * (mtow * zfw) ** 0.5 \
+                           * (1. + 2. * taper) / (t_c_w * (np.cos(sweep)) ** 2. * area * (1. + taper))
+    weight = weight * Units.lb  # Convert lb to kg
+
+    A = span ** 2 / area
+    Scsw = 100 / Units.ft ** 2  # control surface area on wing
+    W_wing = 0.85 * 0.82 * 0.0051 * (mtow * Nult) ** 0.557 * area ** 0.649 * A ** 0.5 * t_c_w ** (-0.4) * (
+                                                                                                              1 + taper) ** 0.1 * Scsw ** 0.1 * 0.45359237  # kg assuming composite braced wing
+    weight = W_wing *1.25
     return weight

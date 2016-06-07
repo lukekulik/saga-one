@@ -23,20 +23,22 @@ from SUAVE.Methods.Performance import estimate_landing_field_length
 from SUAVE.Methods.Flight_Dynamics.Dynamic_Stability.Full_Linearized_Equations.longitudinal import longitudinal
 from SUAVE.Input_Output.Results import print_parasite_drag, \
     print_compress_drag, \
-    print_engine_data, \
-    print_mission_breakdown, \
     print_weight_breakdown
+from print_engine_data import print_engine_data
+from print_mission_breakdown import print_mission_breakdown
 
-def pretty_print(d, indent=0): # recursive printer
-   for key in d.keys():
-      print '\t' * indent + str(key)
-      v=d[key]
-      if isinstance(v, Data):
-         pretty_print(v, indent+1)
-      elif isinstance(v, (np.ndarray, np.generic) ):
-         continue
-      else:
-         print '\t' * (indent + 1) + str(v)
+
+def pretty_print(d, indent=0):  # recursive printer
+    for key in d.keys():
+        print '\t' * indent + str(key)
+        v = d[key]
+        if isinstance(v, Data):
+            pretty_print(v, indent + 1)
+        elif isinstance(v, (np.ndarray, np.generic)):
+            continue
+        else:
+            print '\t' * (indent + 1) + str(v)
+
 
 output_folder = "output/"
 
@@ -66,6 +68,14 @@ def setup():
     procedure.missions = Process()
     procedure.missions.design_mission = design_mission
 
+    # # Noise evaluation
+    # procedure.noise = Process()
+    # procedure.noise.sideline_init = noise_sideline_init
+    # procedure.noise.takeoff_init = noise_takeoff_init
+    # procedure.noise.noise_sideline = noise_sideline
+    # procedure.noise.noise_flyover = noise_flyover
+    # procedure.noise.noise_approach = noise_approach
+
     # post process the results
     procedure.post_process = post_process
 
@@ -80,37 +90,47 @@ def setup():
 def find_target_range(nexus, mission):
     segments = mission.segments
     # cruise_altitude = mission.segments['climb_5'].altitude_end
+    #
+    # climb_1 = segments['climb_1']
+    # climb_2 = segments['climb_2']
+    # climb_3 = segments['climb_3']
+    # climb_4 = segments['climb_4_final_outgoing']
+    # climb_5 = segments['climb_5']
+    #
+    # descent_1 = segments['descent_1']
+    # descent_2 = segments['descent_2']
+    # # descent_3 = segments['descent_3']
+    #
+    # x_climb_1 = climb_1.altitude_end / np.tan(np.arcsin(climb_1.climb_rate / climb_1.air_speed))
+    # x_climb_2 = (climb_2.altitude_end - climb_1.altitude_end) / np.tan(
+    #     np.arcsin(climb_2.climb_rate / climb_2.air_speed))
+    # x_climb_3 = (climb_3.altitude_end - climb_2.altitude_end) / np.tan(
+    #     np.arcsin(climb_3.climb_rate / climb_3.air_speed))
+    # x_climb_4 = (climb_4.altitude_end - climb_3.altitude_end) / np.tan(
+    #     np.arcsin(climb_4.climb_rate / climb_4.air_speed))
+    # x_climb_5 = (climb_5.altitude_end - climb_4.altitude_end) / np.tan(
+    #     np.arcsin(climb_5.climb_rate / climb_5.air_speed))
+    # x_descent_1 = (climb_5.altitude_end - descent_1.altitude_end) / np.tan(
+    #     np.arcsin(descent_1.descent_rate / descent_1.air_speed))
+    # x_descent_2 = (descent_1.altitude_end - descent_2.altitude_end) / np.tan(
+    #     np.arcsin(descent_2.descent_rate / descent_2.air_speed))
+    # # x_descent_3 = (descent_2.altitude_end - descent_3.altitude_end) / np.tan(
+    # #    np.arcsin(descent_3.descent_rate / descent_3.air_speed))
+    #
+    # cruise_range = mission.design_range - (
+    #     x_climb_1 + x_climb_2 + x_climb_3 + x_climb_4 + x_climb_5 + x_descent_1 + x_descent_2)  # + x_descent_3)
+    # # some sort of a sum here?
 
-    climb_1 = segments['climb_1']
-    climb_2 = segments['climb_2']
-    climb_3 = segments['climb_3']
-    climb_4 = segments['climb_4_final_outgoing']
-    climb_5 = segments['climb_5']
+    aerosol_sum = 0.
+    payload = nexus.vehicle_configurations.base.mass_properties.payload
+    for segment in segments:
+        aerosol_sum += segment.aerosol_mass_initial
 
-    descent_1 = segments['descent_1']
-    descent_2 = segments['descent_2']
-    #descent_3 = segments['descent_3']
+    for segment in segments:
+        segment.aerosol_mass_initial = segment.aerosol_mass_initial * (payload / aerosol_sum) # scaling to account for possible changed payload
 
-    x_climb_1 = climb_1.altitude_end / np.tan(np.arcsin(climb_1.climb_rate / climb_1.air_speed))
-    x_climb_2 = (climb_2.altitude_end - climb_1.altitude_end) / np.tan(
-        np.arcsin(climb_2.climb_rate / climb_2.air_speed))
-    x_climb_3 = (climb_3.altitude_end - climb_2.altitude_end) / np.tan(
-        np.arcsin(climb_3.climb_rate / climb_3.air_speed))
-    x_climb_4 = (climb_4.altitude_end - climb_3.altitude_end) / np.tan(
-        np.arcsin(climb_4.climb_rate / climb_4.air_speed))
-    x_climb_5 = (climb_5.altitude_end - climb_4.altitude_end) / np.tan(
-        np.arcsin(climb_5.climb_rate / climb_5.air_speed))
-    x_descent_1 = (climb_5.altitude_end - descent_1.altitude_end) / np.tan(
-        np.arcsin(descent_1.descent_rate / descent_1.air_speed))
-    x_descent_2 = (descent_1.altitude_end - descent_2.altitude_end) / np.tan(
-        np.arcsin(descent_2.descent_rate / descent_2.air_speed))
-    #x_descent_3 = (descent_2.altitude_end - descent_3.altitude_end) / np.tan(
-    #    np.arcsin(descent_3.descent_rate / descent_3.air_speed))
 
-    cruise_range = mission.design_range - (
-        x_climb_1 + x_climb_2 + x_climb_3 + x_climb_4 + x_climb_5 + x_descent_1 + x_descent_2) # + x_descent_3)
-    # some sort of a sum here?
-
+    # segments.aerosol_mass_initial
 
     # segments['cruise_2'].distance=cruise_range # FIXME need to add other cruises
 
@@ -132,7 +152,7 @@ def evaluate_field_length(configs, analyses, mission, results):
     airport.atmosphere = analyses.base.atmosphere
 
     TOFL = estimate_take_off_field_length(takeoff_config, analyses, airport)
-    LFL = estimate_landing_field_length(landing_config, analyses, airport) #FIXME
+    LFL = estimate_landing_field_length(landing_config, analyses, airport)  # FIXME
 
     # pack
     field_length = SUAVE.Core.Data()
@@ -149,7 +169,7 @@ def evaluate_field_length(configs, analyses, mission, results):
 def design_mission(nexus):
     mission = nexus.missions.base
     mission.design_range = 7000. * Units['km']
-    #find_target_range(nexus,mission)
+    find_target_range(nexus,mission)
 
     results = nexus.results
     results.base = mission.evaluate()
@@ -168,7 +188,7 @@ def simple_sizing(nexus):
     # find conditions
     air_speed = nexus.missions.base.segments['cruise_2'].air_speed
 
-    altitude = 18.5 * Units.km #nexus.missions.base.segments['climb_8'].altitude_end #FIXME
+    altitude = 18.5 * Units.km  # nexus.missions.base.segments['climb_8'].altitude_end #FIXME
 
     atmosphere = SUAVE.Analyses.Atmospheric.US_Standard_1976()
 
@@ -204,6 +224,9 @@ def simple_sizing(nexus):
         fuselage = config.fuselages['fuselage']
         fuselage.differential_pressure = diff_pressure
 
+        print config.tag
+        # print mach_number, altitude
+        # print config.propulsors.turbofan
         turbofan_sizing(config.propulsors['turbofan'], mach_number, altitude)
         compute_turbofan_geometry(config.propulsors['turbofan'], conditions)
 
@@ -287,7 +310,7 @@ def weight(nexus):
     weights = nexus.analyses.landing.weights.evaluate()
     # print weights
     weights = nexus.analyses.takeoff.weights.evaluate()
-#    weights = nexus.analyses.short_field_takeoff.weights.evaluate()
+    #    weights = nexus.analyses.short_field_takeoff.weights.evaluate()
 
     empty_weight = vehicle.mass_properties.operating_empty
 
@@ -398,7 +421,7 @@ def post_process(nexus):
 
     # Fuel margin and base fuel calculations
 
-    vehicle.mass_properties.operating_empty += 10e3 # FIXME hardcoded wing mass correction # area scaling?
+    vehicle.mass_properties.operating_empty += 10e3  # FIXME hardcoded wing mass correction # area scaling?
 
     operating_empty = vehicle.mass_properties.operating_empty
     payload = vehicle.mass_properties.payload  # TODO fuel margin makes little sense when ejecting aerosol
@@ -408,9 +431,16 @@ def post_process(nexus):
     zero_fuel_weight = payload + operating_empty
 
     # pretty_print(nexus.vehicle_configurations)
+    clmax = 0
+    for segment in results.base.segments.values():
+        cl = np.max(segment.conditions.aerodynamics.lift_coefficient[:, 0])
+        if cl>clmax:
+            clmax=cl
+
+    summary.clmax = clmax
 
 
-    for i in range(1, len(results.base.segments)): # make fuel burn and sprayer continuous
+    for i in range(1, len(results.base.segments)):  # make fuel burn and sprayer continuous
         # print i
         results.base.segments[i].conditions.weights.fuel_burn[:, 0] += \
             results.base.segments[i - 1].conditions.weights.fuel_burn[-1]
@@ -418,18 +448,20 @@ def post_process(nexus):
             results.base.segments[i - 1].conditions.weights.spray[-1]
 
     summary.op_empty = operating_empty
-    summary.max_zero_fuel_margin = (design_landing_weight - operating_empty) / operating_empty # used to be (design_landing_weight - zero_fuel_weight) / zero_fuel_weight changed because of aerosol ejection
-    summary.base_mission_fuelburn = results.base.segments[-1].conditions.weights.fuel_burn[-1]  # esults.base.segments[i].conditions.weights.fuel_burn0#results.base.segments.conditions.weights.fuel_burn                         #design_takeoff_weight - results.base.segments['descent_3'].conditions.weights.total_mass[-1] # - results.base.segments['cruise'].conditions.sprayer_rate
+    summary.max_zero_fuel_margin = (
+                                       design_landing_weight - operating_empty) / operating_empty  # used to be (design_landing_weight - zero_fuel_weight) / zero_fuel_weight changed because of aerosol ejection
+    summary.base_mission_fuelburn = results.base.segments[-1].conditions.weights.fuel_burn[
+        -1]  # esults.base.segments[i].conditions.weights.fuel_burn0#results.base.segments.conditions.weights.fuel_burn                         #design_takeoff_weight - results.base.segments['descent_3'].conditions.weights.total_mass[-1] # - results.base.segments['cruise'].conditions.sprayer_rate
     summary.base_mission_sprayed = results.base.segments[-1].conditions.weights.spray[-1]
 
-    summary.cruise_range = 0#missions.base.segments.cruise_2.distance # assume we're flying straight
-    summary.empty_range = results.base.segments['cruise_outgoing'].conditions.frames.inertial.position_vector[:, 0][-1]/1000.
-    summary.mission_range = results.base.segments['cruise_final'].conditions.frames.inertial.position_vector[:, 0][-1]/1000. # Assuming mission ends at cruise altitude
+    summary.cruise_range = 0  # missions.base.segments.cruise_2.distance # assume we're flying straight
+    summary.empty_range = results.base.segments['cruise_outgoing'].conditions.frames.inertial.position_vector[:, 0][
+                              -1] / 1000.
+    summary.mission_range = results.base.segments['cruise_final'].conditions.frames.inertial.position_vector[:, 0][
+                                -1] / 1000.  # Assuming mission ends at cruise altitude
     summary.spray_range = summary.mission_range - summary.empty_range
 
-    summary.total_range = results.base.segments[-1].conditions.frames.inertial.position_vector[:, 0][-1]/1000.
-
-
+    summary.total_range = results.base.segments[-1].conditions.frames.inertial.position_vector[:, 0][-1] / 1000.
 
     summary.main_mission_time = (results.base.segments['descent_final'].conditions.frames.inertial.time[-1] -
                                  results.base.segments[0].conditions.frames.inertial.time[0])
@@ -437,6 +469,8 @@ def post_process(nexus):
                                   results.base.segments[0].conditions.frames.inertial.time[0])
 
     summary.MTOW_delta = zero_fuel_weight + summary.base_mission_fuelburn - vehicle.mass_properties.takeoff
+
+    # summary.power_draw = results.base.segments.
 
     # summary.engine_weight =
 
@@ -452,16 +486,15 @@ def post_process(nexus):
     print "Mission Range (must be at least 7000km): ", summary.mission_range, " km"
     print "Non-spraying range (must be at least 3500km): ", summary.empty_range, " km"
     print "Spraying Range (must be at least 3500km): ", summary.spray_range, " km"
-    print "Total Range: ", summary.total_range, " km", "(+",summary.total_range-summary.mission_range,")"
+    print "Total Range: ", summary.total_range, " km", "(+", summary.total_range - summary.mission_range, ")"
     print "Mission time: ", summary.main_mission_time[0] * Units['s'] / Units.h, "hours (main) +", \
         (summary.total_mission_time - summary.main_mission_time)[0] * Units['s'] / Units.h, "hours (diversion)"
     summary.nothing = 0.0
     print 'Fuel burn: ', summary.base_mission_fuelburn, " Fuel margin: ", summary.max_zero_fuel_margin
+    print "CL_max: ", summary.clmax
     # print 'fuel margin=', problem.all_constraints()
 
     gt_engine = nexus.vehicle_configurations.base.propulsors.turbofan
-
-
 
     # print thrust
     # FIXME move that to printing/results section
@@ -471,7 +504,7 @@ def post_process(nexus):
 
     print "Estimated engine length: ", gt_engine.engine_length, ", diameter: ", gt_engine.nacelle_diameter, ", wetted area: ", gt_engine.areas.wetted
 
-    #FXI
+    # FXI
 
     print "Aerosol released: ", summary.base_mission_sprayed[0], " kg\n\n"
 
@@ -500,23 +533,23 @@ def post_process(nexus):
     problem_inputs = []
 
     # SEGMENTS: need to loop it and add all segments
-    output_array_segments = np.zeros(4).reshape(4,1)
+    output_array_segments = np.zeros(4).reshape(4, 1)
     for i in range(1, len(results.base.segments)):
         # print results.base.segments[i].conditions.aerodynamics.lift_coefficient[:, 0]
         # print results.base.segments[i].conditions.aerodynamics.angle_of_attack[:, 0] / Units.deg
         # print results.base.segments[i].conditions.freestream.dynamic_viscosity[:,0]
         # print results.base.segments[i].conditions.freestream.density[:,0]
         output_array_i = np.vstack((results.base.segments[i].conditions.aerodynamics.lift_coefficient[:, 0],
-        results.base.segments[i].conditions.aerodynamics.angle_of_attack[:, 0] / Units.deg,
-        results.base.segments[i].conditions.freestream.dynamic_viscosity[:,0],
-        results.base.segments[i].conditions.freestream.density[:,0]))
-        output_array_segments = np.hstack((output_array_segments,output_array_i))
+                                    results.base.segments[i].conditions.aerodynamics.angle_of_attack[:, 0] / Units.deg,
+                                    results.base.segments[i].conditions.freestream.dynamic_viscosity[:, 0],
+                                    results.base.segments[i].conditions.freestream.density[:, 0]))
+        output_array_segments = np.hstack((output_array_segments, output_array_i))
 
-    output_segment_indices = ["CL","alpha","dynamic_visc","air_density"]
+    output_segment_indices = ["CL", "alpha", "dynamic_visc", "air_density"]
 
     # print output_array_segments[segment_output_indexes.index("CL")]
 
-    #print         vehicle.wings.main_wing.areas.wetted + vehicle.wings.horizontal_stabilizer.areas.wetted +\
+    # print         vehicle.wings.main_wing.areas.wetted + vehicle.wings.horizontal_stabilizer.areas.wetted +\
     #    vehicle.wings.vertical_stabilizer.areas.wetted + vehicle.fuselages.fuselage.areas.wetted
 
     output_array = np.array([
@@ -529,7 +562,7 @@ def post_process(nexus):
         vehicle.fuselages.fuselage.effective_diameter,
         vehicle.fuselages.fuselage.lengths.total,
         vehicle.wings.main_wing.chords.mean_aerodynamic,
-        2.*vehicle.fuselages.fuselage.origin[1],
+        2. * vehicle.fuselages.fuselage.origin[1],
 
         configs.takeoff.maximum_lift_coefficient,
         configs.landing.maximum_lift_coefficient,
@@ -538,8 +571,8 @@ def post_process(nexus):
         missions.base.segments['cruise_1'].air_speed,
 
         gt_engine.number_of_engines,
-        gt_engine.mass_properties.mass/gt_engine.number_of_engines,      #PER ENGINE
-        gt_engine.mass_properties.mass/1.6/gt_engine.number_of_engines,  #PER ENGINE DRY WEIGHT
+        gt_engine.mass_properties.mass / gt_engine.number_of_engines,  # PER ENGINE
+        gt_engine.mass_properties.mass / 1.6 / gt_engine.number_of_engines,  # PER ENGINE DRY WEIGHT
         gt_engine.nacelle_diameter,
 
         summary.base_mission_fuelburn,
@@ -551,7 +584,7 @@ def post_process(nexus):
         vehicle.weight_breakdown.landing_gear,
         payload,
 
-        820., #Fuel density
+        820.,  # Fuel density
 
         vehicle.wings.horizontal_stabilizer.sweep,
         vehicle.wings.horizontal_stabilizer.spans.projected,
@@ -561,65 +594,65 @@ def post_process(nexus):
         vehicle.wings.vertical_stabilizer.taper,
         vehicle.wings.vertical_stabilizer.chords.root,
 
-        vehicle.wings.main_wing.areas.wetted + vehicle.wings.horizontal_stabilizer.areas.wetted +\
+        vehicle.wings.main_wing.areas.wetted + vehicle.wings.horizontal_stabilizer.areas.wetted + \
         vehicle.wings.vertical_stabilizer.areas.wetted + vehicle.fuselages.fuselage.areas.wetted
 
         # Oswald
         # Wetted area
 
         # QUESTIONABLE: CL_alpha, CM_alpha, Lift distribution, CM_delta, CL_delta
-        ])
+    ])
 
     output_indices = ["A",
-               "S",
-               "sweep",
-               "taper",
-               "c_r",
-               "b",
-               "d_fus",
-               "l_fus",
-               "c_mac",
-               "y_fuselages",
-               "CL_max_TO",
-               "CL_max_landing",
-               "CL_max_clean",
-               "v_landing",
-               "v_cr",
-               "N_engines",
-               "m_engine_wet",
-               "m_engine_dry",
-               "d_engine",
-               "m_fuel",
-               "MTOW",
-               "OEW",
-               "m_landing",
-               "m_wing",
-               "m_fus",
-               "m_landing_gear",
-               "m_payload",
-               "rho_fuel",
-               "sweep_h",
-               "b_h",
-               "c_r_h",
-               "sweep_v",
-               "taper_v",
-               "c_r_v",
-               "S_wet"
-               ]
+                      "S",
+                      "sweep",
+                      "taper",
+                      "c_r",
+                      "b",
+                      "d_fus",
+                      "l_fus",
+                      "c_mac",
+                      "y_fuselages",
+                      "CL_max_TO",
+                      "CL_max_landing",
+                      "CL_max_clean",
+                      "v_landing",
+                      "v_cr",
+                      "N_engines",
+                      "m_engine_wet",
+                      "m_engine_dry",
+                      "d_engine",
+                      "m_fuel",
+                      "MTOW",
+                      "OEW",
+                      "m_landing",
+                      "m_wing",
+                      "m_fus",
+                      "m_landing_gear",
+                      "m_payload",
+                      "rho_fuel",
+                      "sweep_h",
+                      "b_h",
+                      "c_r_h",
+                      "sweep_v",
+                      "taper_v",
+                      "c_r_v",
+                      "S_wet"
+                      ]
 
     # print output_array[output_indexes.index("c_r_v")]
     # print output_array[-1]
 
     # print vehicle.weight_breakdown
-    np.save(output_folder+"output_array.npy",output_array)
-    np.save(output_folder+"output_indices.npy",output_indices)
-    np.save(output_folder+"output_array_segments.npy",output_array_segments)
-    np.save(output_folder+"output_segment_indices.npy",output_segment_indices)
+    np.save(output_folder + "output_array.npy", output_array)
+    np.save(output_folder + "output_indices.npy", output_indices)
+    np.save(output_folder + "output_array_segments.npy", output_array_segments)
+    np.save(output_folder + "output_segment_indices.npy", output_segment_indices)
 
     for value in unscaled_inputs:
         problem_inputs.append(value)
 
-    file_out = open(output_folder+'results.txt', 'ab')
+    file_out = open(output_folder + 'results.txt', 'ab')
 
     file_out.write('fuel weight = ')
     file_out.write(str(summary.base_mission_fuelburn))

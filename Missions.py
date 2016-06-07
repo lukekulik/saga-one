@@ -56,8 +56,7 @@ def base(analyses):
     atmosphere = SUAVE.Attributes.Atmospheres.Earth.US_Standard_1976()
     planet = SUAVE.Attributes.Planets.Earth()
 
-
-    #CLIMB PHASES START HERE:
+    # CLIMB PHASES START HERE:
 
 
     # ------------------------------------------------------------------
@@ -68,18 +67,18 @@ def base(analyses):
     segment.tag = "climb_1"
 
     # connect vehicle configuration
-    segment.analyses.extend( analyses.cruise )
+    segment.analyses.extend(analyses.cruise)
 
     # define segment attributes
-    segment.atmosphere     = atmosphere
-    segment.planet         = planet
+    segment.atmosphere = atmosphere
+    segment.planet = planet
     # segment.battery_energy = 10 #Charge the battery to start
 
 
-    segment.altitude_start = 0.0   * Units.km
-    segment.altitude_end   = 3.0 * Units.km
-    segment.air_speed      = 118.0 * Units['m/s']
-    segment.throttle     = 0.9
+    segment.altitude_start = 0.0 * Units.km
+    segment.altitude_end = 3.0 * Units.km
+    segment.air_speed = 118.0 * Units['m/s']
+    segment.throttle = 0.9
 
     # segment.process.iterate.conditions.weights = update_weights_sprayer
     segment.sprayer_rate = 0 * Units['kg/s']
@@ -201,18 +200,18 @@ def base(analyses):
     segment.tag = "climb_6"
 
     # connect vehicle configuration
-    segment.analyses.extend( analyses.cruise )
+    segment.analyses.extend(analyses.cruise)
 
     # define segment attributes
-    segment.atmosphere     = atmosphere
-    segment.planet         = planet
+    segment.atmosphere = atmosphere
+    segment.planet = planet
     # segment.battery_energy = 10 #Charge the battery to start
 
 
-    segment.altitude_start = 17  * Units.km
-    segment.altitude_end   = 18.5 * Units.km
-    segment.air_speed      = 200.0 * Units['m/s']
-    segment.throttle     = 0.9
+    segment.altitude_start = 17 * Units.km
+    segment.altitude_end = 18.5 * Units.km
+    segment.air_speed = 200.0 * Units['m/s']
+    segment.throttle = 0.9
 
     # segment.process.iterate.conditions.weights = update_weights_sprayer
     segment.sprayer_rate = 0 * Units['kg/s']
@@ -220,7 +219,6 @@ def base(analyses):
 
     # add to misison
     mission.append_segment(segment)
-
 
     # CRUISE STARTS HERE!!
 
@@ -267,21 +265,21 @@ def base(analyses):
     segment.tag = "climb_2_1"
 
     # connect vehicle configuration
-    segment.analyses.extend( analyses.cruise )
+    segment.analyses.extend(analyses.cruise)
 
     # define segment attributes
-    segment.atmosphere     = atmosphere
-    segment.planet         = planet
+    segment.atmosphere = atmosphere
+    segment.planet = planet
     # segment.battery_energy = 10 #Charge the battery to start
 
 
-    segment.altitude_start = 18.5  * Units.km
-    segment.altitude_end   = 19.5 * Units.km
-    segment.air_speed      = 190.0 * Units['m/s']
-    segment.throttle     = 0.9
+    segment.altitude_start = 18.5 * Units.km
+    segment.altitude_end = 19.5 * Units.km
+    segment.air_speed = 190.0 * Units['m/s']
+    segment.throttle = 0.9
 
     # segment.process.iterate.conditions.weights = update_weights_sprayer
-    #segment.sprayer_rate = 0 * Units['kg/s']
+    # segment.sprayer_rate = 0 * Units['kg/s']
 
     segment.aerosol_mass_initial = 7000. * Units.kg  # mass to be sprayed in this segment
 
@@ -330,18 +328,18 @@ def base(analyses):
     segment.state.unknowns.wind_angle = ones_row(1) * 5.0 * Units.deg
 
     # connect vehicle configuration
-    segment.analyses.extend( analyses.cruise )
+    segment.analyses.extend(analyses.cruise)
 
     # define segment attributes
-    segment.atmosphere     = atmosphere
-    segment.planet         = planet
+    segment.atmosphere = atmosphere
+    segment.planet = planet
     # segment.battery_energy = 10 #Charge the battery to start
 
 
-    segment.altitude_start = 19.5  * Units.km
-    segment.altitude_end   = 20.5 * Units.km
-    segment.air_speed      = 190.0 * Units['m/s']
-    segment.throttle     = 0.85
+    segment.altitude_start = 19.5 * Units.km
+    segment.altitude_end = 20.5 * Units.km
+    segment.air_speed = 190.0 * Units['m/s']
+    segment.throttle = 0.85
 
     # segment.process.iterate.conditions.weights = update_weights_sprayer
     # segment.sprayer_rate = 0 * Units['kg/s']
@@ -355,7 +353,7 @@ def base(analyses):
     # ------------------------------------------------------------------
 
     segment = Segments.Cruise.Constant_Speed_Constant_Altitude(base_segment)
-    segment.tag = "cruise_2_3"
+    segment.tag = "cruise_final"
 
     # connect vehicle configuration
     segment.analyses.extend(analyses.cruise)
@@ -384,7 +382,7 @@ def base(analyses):
     # ------------------------------------------------------------------
 
     segment = Segments.Descent.Constant_Speed_Constant_Rate(base_segment)
-    segment.tag = "descent_1"
+    segment.tag = "final_outgoing"
 
     # connect vehicle configuration
     segment.analyses.extend(analyses.cruise)
@@ -408,7 +406,7 @@ def base(analyses):
     # ------------------------------------------------------------------
 
     segment = Segments.Cruise.Constant_Speed_Constant_Altitude(base_segment)
-    segment.tag = "cruise_final"
+    segment.tag = "cruise_outgoing"
 
     # connect vehicle configuration
     segment.analyses.extend(analyses.cruise)
