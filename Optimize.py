@@ -70,21 +70,21 @@ def setup():
 
     # wing weight 70 tonnes -> 40 tonnes
 
-    #A=13 48 tonnes from 70
+    #A=13 48 tonnes from 70 - > 35 tonnes for a composite strutted wing?
 
     problem.inputs = np.array([
         # Variable inputs
         ['wing_area', 700, (400., 750.), 500., Units.meter ** 2],
-        ['MTOW', 215e3, (170000., 250000.), 200000., Units.kg],
+        ['MTOW', 205e3, (170000., 250000.), 200000., Units.kg],
         ['alt_outgoing_cruise', 13.14, (8., 15.), 13., Units.km],
-        ['design_thrust', 115e3, (80e3, 120e3), 100e3, Units.N],
+        ['design_thrust', 110e3, (80e3, 120e3), 100e3, Units.N],
         ['outgoing_cruise_speed', 191., (150, 220), 200, Units['m/s']],
         ['spray_cruise_speed', 210., (150, 220), 200, Units['m/s']],
         # climb throttle as input?
 
         # "Set" inputs
-        ['AR', 15, (15, 15), 15, Units.less],
-        ['payload', 25e3, (20e3, 40e3), 40e3, Units.kg],
+        ['AR', 13, (13, 15), 15, Units.less],
+        ['payload', 35e3, (20e3, 40e3), 40e3, Units.kg],
         # speeds???
     ])
     # opt results: [700.0000000000755, 180623.48270764505, 13.147354544329831, 93680.83722141015, 193.90945445747235, 200.00000000005906, 15.00000022353205]
