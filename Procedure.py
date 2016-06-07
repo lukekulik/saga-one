@@ -644,10 +644,10 @@ def post_process(nexus):
     # print output_array[-1]
 
     # print vehicle.weight_breakdown
-    np.save(output_folder + "output_array.npy", output_array)
-    np.save(output_folder + "output_indices.npy", output_indices)
-    np.save(output_folder + "output_array_segments.npy", output_array_segments)
-    np.save(output_folder + "output_segment_indices.npy", output_segment_indices)
+    # np.save(output_folder + "output_array.npy", output_array)
+    # np.save(output_folder + "output_indices.npy", output_indices)
+    # np.save(output_folder + "output_array_segments.npy", output_array_segments)
+    # np.save(output_folder + "output_segment_indices.npy", output_segment_indices)
 
     for value in unscaled_inputs:
         problem_inputs.append(value)
