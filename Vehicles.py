@@ -105,7 +105,7 @@ def base_setup():
     fuselage.lengths.aft_space = 0.
     fuselage.width = 2
 
-    fuselage.heights.maximum = 5.7
+    fuselage.heights.maximum = 5.47
     fuselage.heights.at_quarter_length = 1.4
     fuselage.heights.at_three_quarters_length = 1.4
     fuselage.heights.at_wing_root_quarter_chord = 1.4
