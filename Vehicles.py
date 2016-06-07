@@ -369,7 +369,7 @@ def configs_setup(vehicle):
     config.tag = 'cruise'
 
     config.maximum_lift_coefficient = 1.4
-    # config.propulsors.turbofan.generator.power_draw = 0.5e6 / config.propulsors.turbofan.number_of_engines # MW per engine
+    config.propulsors.turbofan.generator.power_draw = 0.5e6 / config.propulsors.turbofan.number_of_engines # MW per engine
 
     configs.append(config)
 
@@ -381,7 +381,7 @@ def configs_setup(vehicle):
     config.tag = 'cruise_spraying'
 
     config.maximum_lift_coefficient = 1.4
-    # config.propulsors.turbofan.generator.power_draw = 2.5e6 / config.propulsors.turbofan.number_of_engines  # MW per engine
+    config.propulsors.turbofan.generator.power_draw = 2.5e6 / config.propulsors.turbofan.number_of_engines  # MW per engine
 
     configs.append(config)
 

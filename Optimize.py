@@ -11,6 +11,7 @@ from SUAVE.Core import Units, Data
 import numpy as np
 import Vehicles
 import Analyses
+import Mission_backwards2_leaf
 import Mission_backwards2
 import Procedure
 import Plot_Mission
@@ -67,19 +68,23 @@ def setup():
     # num_engine = 4  # move to main -> how to guarantee these parameters when not optimized for??? - selected at the top and entered in inputs from there?
     # bypass = 6
 
+    # wing weight 70 tonnes -> 40 tonnes
+
+    #A=13 48 tonnes from 70
+
     problem.inputs = np.array([
         # Variable inputs
         ['wing_area', 700, (400., 750.), 500., Units.meter ** 2],
-        ['MTOW', 220e3, (170000., 250000.), 200000., Units.kg],
+        ['MTOW', 215e3, (170000., 250000.), 200000., Units.kg],
         ['alt_outgoing_cruise', 13.14, (8., 15.), 13., Units.km],
-        ['design_thrust', 120e3, (80e3, 120e3), 100e3, Units.N],
+        ['design_thrust', 115e3, (80e3, 120e3), 100e3, Units.N],
         ['outgoing_cruise_speed', 191., (150, 220), 200, Units['m/s']],
         ['spray_cruise_speed', 210., (150, 220), 200, Units['m/s']],
         # climb throttle as input?
 
         # "Set" inputs
         ['AR', 15, (15, 15), 15, Units.less],
-        ['payload', 30e3, (20e3, 40e3), 40e3, Units.kg],
+        ['payload', 25e3, (20e3, 40e3), 40e3, Units.kg],
         # speeds???
     ])
     # opt results: [700.0000000000755, 180623.48270764505, 13.147354544329831, 93680.83722141015, 193.90945445747235, 200.00000000005906, 15.00000022353205]
@@ -147,6 +152,7 @@ def setup():
         ['landing_field_length', '<', 2500., 1e-1, Units.m],
         ['MTOW_delta', '<', '1', 4, Units.kg],
         ['MTOW_delta', '>', '-1', 4, Units.kg],  # tricky to predict the effects of MTOW constraints
+        ['clmax','<',1.1,0.1,Units.less]
 
     ])
 
@@ -191,6 +197,8 @@ def setup():
 
         ['mission_range', 'summary.mission_range'],
 
+        ['clmax','summary.clmax'],
+
         # ['aerosol_released', '=', 40000., 50., Units.kg], #FIXME
 
 
@@ -225,20 +233,7 @@ def setup():
         ['wing_sweep', 'vehicle_configurations.*.wings.main_wing.sweep'],
         ['oew', 'summary.op_empty'],
         ['Nothing', 'summary.nothing'],
-        ['c1_airspeed', 'missions.base.segments.climb_1.air_speed'],
-        ['c1_rate', 'missions.base.segments.climb_1.climb_rate'],
 
-        ['c2_airspeed', 'missions.base.segments.climb_2.air_speed'],
-        ['c2_rate', 'missions.base.segments.climb_2.climb_rate'],
-
-        ['c3_airspeed', 'missions.base.segments.climb_3.air_speed'],
-        ['c3_rate', 'missions.base.segments.climb_3.climb_rate'],
-
-        ['c4_airspeed', 'missions.base.segments.climb_4.air_speed'],
-        ['c4_rate', 'missions.base.segments.climb_4.climb_rate'],
-
-        ['c5_airspeed', 'missions.base.segments.climb_5.air_speed'],
-        ['c5_rate', 'missions.base.segments.climb_5.climb_rate']
     ]
 
     # -------------------------------------------------------------------
