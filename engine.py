@@ -107,12 +107,8 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
 
     generator = Generator()
     generator.tag = 'generator'
-    generator.power_draw = 0e6 / gt_engine.number_of_engines  # it's constant which is wrong FIXME
+    generator.power_draw = 1 / gt_engine.number_of_engines
     gt_engine.generator = generator
-
-    #        #computing the core mass flow
-    # mdot_core        = mdhc*np.sqrt(Tref/total_temperature_reference)*(total_pressure_reference/Pref)
-
 
     # Define OPR
     OPR = fan.pressure_ratio * high_pressure_compressor.pressure_ratio * low_pressure_compressor.pressure_ratio
