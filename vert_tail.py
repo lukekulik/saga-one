@@ -1,8 +1,10 @@
-def vert_tail(Sv,c_ver,taper_v,tc_vt,Av,sweep_vt,lh,MTOW):
+import  numpy as np
+def vert_tail(Sv,Bver,c_ver,taper_v,tc_vt,Av,sweep_vt,lh,MTOW):
     Svt = Sv/0.3048**2
     Hhor = 0. #Change if tail is above fuselage!
     Nz = 2.5*1.5
     c_ver_tip = c_ver*taper_v
+    sweep_vt=sweep_vt*np.pi/180 #rad
     Lt = lh/0.3048
     Kz = Lt
     Hv = Bver/0.3048

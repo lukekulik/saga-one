@@ -18,7 +18,7 @@ from SUAVE.Methods.Weights.Correlations.Tube_Wing.tail_horizontal import tail_ho
 from SUAVE.Methods.Weights.Correlations.Tube_Wing.tail_vertical import tail_vertical
 from wing_main import wing_main
 from SUAVE.Methods.Weights.Correlations import Propulsion as Propulsion
-import warn
+# import warn
 
 
 # ----------------------------------------------------------------------
@@ -190,11 +190,12 @@ def empty(vehicle):
         A_v = vehicle.wings['vertical_stabilizer'].aspect_ratio
         t_c_v = vehicle.wings['vertical_stabilizer'].thickness_to_chord
         sweep_v = vehicle.wings['vertical_stabilizer'].sweep
+        print 'Sweep_V =',sweep_v
         taper_v = vehicle.wings['vertical_stabilizer'].taper
         c_r_v = vehicle.wings['vertical_stabilizer'].chords.root
         t_tail = vehicle.wings['vertical_stabilizer'].t_tail
         output_3 = tail_vertical(S_v, Nult, b_v, TOW, t_c_v, sweep_v, S_gross_w, t_tail)
-        wt_tail_vertical = vert_tail(S_v,c_r_v,taper_v,t_c_v,A_v,sweep_v,l_w2h,TOW)
+        wt_tail_vertical = vert_tail(S_v,b_v,c_r_v,taper_v,t_c_v,A_v,sweep_v,l_w2h,TOW)
         vehicle.wings['vertical_stabilizer'].mass_properties.mass = wt_tail_vertical
         #vehicle.wings['vertical_stabilizer'].mass_properties.mass = output_3.wt_tail_vertical + output_3.wt_rudder
 
