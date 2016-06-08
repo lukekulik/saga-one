@@ -10,13 +10,15 @@ import SUAVE
 from SUAVE.Core import Units, Data
 from tube import tube
 from landing_gear import landing_gear
+from hor_tail import hor_tail
+from vert_tail import vert_tail
 from SUAVE.Methods.Weights.Correlations.Tube_Wing.payload import payload
 from SUAVE.Methods.Weights.Correlations.Tube_Wing.systems import systems
 from SUAVE.Methods.Weights.Correlations.Tube_Wing.tail_horizontal import tail_horizontal
 from SUAVE.Methods.Weights.Correlations.Tube_Wing.tail_vertical import tail_vertical
 from wing_main import wing_main
 from SUAVE.Methods.Weights.Correlations import Propulsion as Propulsion
-import warnings
+import warn
 
 
 # ----------------------------------------------------------------------
@@ -157,16 +159,22 @@ def empty(vehicle):
     else:
         S_h = vehicle.wings['horizontal_stabilizer'].areas.reference
         b_h = vehicle.wings['horizontal_stabilizer'].spans.projected
+        A_h = vehicle.wings['horizontal_stabilizer'].aspect_ratio
         sweep_h = vehicle.wings['horizontal_stabilizer'].sweep
         mac_h = vehicle.wings['horizontal_stabilizer'].chords.mean_aerodynamic
+        c_r_h = vehicle.wings['horizontal_stabilizer'].chords.root
         t_c_h = vehicle.wings['horizontal_stabilizer'].thickness_to_chord
+        taper_h = vehicle.wings['horizontal_stabilizer'].taper
         h_tail_exposed = vehicle.wings['horizontal_stabilizer'].areas.exposed / vehicle.wings[
             'horizontal_stabilizer'].areas.wetted
         l_w2h = vehicle.wings['horizontal_stabilizer'].origin[0] + \
                 vehicle.wings['horizontal_stabilizer'].aerodynamic_center[0] - vehicle.wings['main_wing'].origin[0] - \
                 vehicle.wings['main_wing'].aerodynamic_center[
                     0]  # Need to check this is the length of the horizontal tail moment arm
-        wt_tail_horizontal = tail_horizontal(b_h, sweep_h, Nult, S_h, TOW, mac_w, mac_h, l_w2h, t_c_h, h_tail_exposed)
+        #wt_tail_horizontal = tail_horizontal(b_h, sweep_h, Nult, S_h, TOW, mac_w, mac_h, l_w2h, t_c_h, h_tail_exposed)
+        print 'lh = ',l_w2h
+        Sel=0.15*S_h
+        wt_tail_horizontal = hor_tail(c_r_h,taper_h,l_w2h,Sel,S_h,A_h,b_h,sweep_h,TOW,Nult)
         vehicle.wings['horizontal_stabilizer'].mass_properties.mass = wt_tail_horizontal
 
     if not vehicle.wings.has_key('vertical_stabilizer'):
@@ -179,11 +187,16 @@ def empty(vehicle):
     else:
         S_v = vehicle.wings['vertical_stabilizer'].areas.reference
         b_v = vehicle.wings['vertical_stabilizer'].spans.projected
+        A_v = vehicle.wings['vertical_stabilizer'].aspect_ratio
         t_c_v = vehicle.wings['vertical_stabilizer'].thickness_to_chord
         sweep_v = vehicle.wings['vertical_stabilizer'].sweep
+        taper_v = vehicle.wings['vertical_stabilizer'].taper
+        c_r_v = vehicle.wings['vertical_stabilizer'].chords.root
         t_tail = vehicle.wings['vertical_stabilizer'].t_tail
         output_3 = tail_vertical(S_v, Nult, b_v, TOW, t_c_v, sweep_v, S_gross_w, t_tail)
-        vehicle.wings['vertical_stabilizer'].mass_properties.mass = output_3.wt_tail_vertical + output_3.wt_rudder
+        wt_tail_vertical = vert_tail(S_v,c_r_v,taper_v,t_c_v,A_v,sweep_v,l_w2h,TOW)
+        vehicle.wings['vertical_stabilizer'].mass_properties.mass = wt_tail_vertical
+        #vehicle.wings['vertical_stabilizer'].mass_properties.mass = output_3.wt_tail_vertical + output_3.wt_rudder
 
     # Calculating Empty Weight of Aircraft
     wt_landing_gear, gear = landing_gear(TOW, d_eng, d_fus, V_descent)
