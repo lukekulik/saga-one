@@ -69,7 +69,9 @@ def tube(S_fus, diff_p_fus, w_fus, h_fus, l_nose, l_center,l_tail, l_fus, Nlim, 
     d_gf = 0.5*(w_gf+h_gf)*(63-3*R_gf**4)/(64-16*R_gf**2)
     l1 = 0.5*d_gf+0.05
     l2 = l1
+    print 'h_g = ', h_gear
     l_gf = (h_gear-l2)+l1 + l2#m
+    print 'l_gf = ', l_gf
     Sw_gf = 0.75*np.pi*l1*d_gf + np.pi*d_gf*(h_gear-l2) + 0.72*np.pi*l2
     #k1_gf = l1/l_gf
    #k2_gf = l2/l_gf
@@ -103,6 +105,7 @@ def tube(S_fus, diff_p_fus, w_fus, h_fus, l_nose, l_center,l_tail, l_fus, Nlim, 
     A_side = 0.5*h_fus*l_nose*1.05 + h_fus*l_center + 0.2*l_tail*(h_fus+0.6*h_fus)/2 + 0.8*l_tail*(0.6*h_fus+1.1*t_hor)/2
     A_top = 0.5*w_fus*l_nose*1.05 + w_fus*l_center + 0.2*l_tail*(w_fus+0.6*w_fus)/2 + 0.8*l_tail*(0.6*w_fus+1.1*t_ver)/2
     Sw_fus = k_ar*(A_side+A_top)/2. + Sw_gf
+    print 'Sw_fus = ', Sw_fus
     W_fus = 0.92*0.9*0.328*Klg*(MTOW*2.20462262 *Nlim)**0.5*(l_fus/0.3048)**0.25*(Sw_fus/(0.3048**2))**0.302*(l_fus/d_fus)**0.1*0.45359237#kg
     print 'W_fus = ', W_fus,'kg'
     fuselage_weight = W_fus
