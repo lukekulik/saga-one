@@ -39,8 +39,8 @@ def landing_gear(TOW, d_eng, h_fus, V_descent, landing_gear_wt_factor=0.04):
     d_nacelle = 1.15 * d_eng
     h_pyl = 0.4  # m
     h_wing_gear = d_nacelle + h_pyl + 1.35
-    print 'h_wing_gear = ', h_wing_gear, 'm'
-    print 'h_fus = ',h_fus, 'm'
+    #print 'h_wing_gear = ', h_wing_gear, 'm'
+    #print 'h_fus = ',h_fus, 'm'
     if h_wing_gear > (h_fus-t_root)+1.5: #1.5 treated as minimum landing gear height
         h_gear = h_wing_gear - (h_fus - t_root)
         print 'h_gear = ', h_gear, 'm'
@@ -55,7 +55,7 @@ def landing_gear(TOW, d_eng, h_fus, V_descent, landing_gear_wt_factor=0.04):
     #print 'W_maingear = ', W_maingear
     W_nosegear = 0.032 * (MLW / 0.45359237) ** 0.646 * Nl ** 0.2 * (
                                                                    h_nosegear * 39.3700787) ** 0.5 * Nnw ** 0.45 * 0.45359237  # kg
-    W_gear = 1.1*(W_maingear + W_nosegear)
+    W_gear = 1.2*(W_maingear + W_nosegear)
     weight = W_gear
-    print 'W_gear = ',W_gear, 'kg'
+    #print 'W_gear = ',W_gear, 'kg'
     return weight,W_maingear,h_gear

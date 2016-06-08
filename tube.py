@@ -69,9 +69,7 @@ def tube(S_fus, diff_p_fus, w_fus, h_fus, l_nose, l_center,l_tail, l_fus, Nlim, 
     d_gf = 0.5*(w_gf+h_gf)*(63-3*R_gf**4)/(64-16*R_gf**2)
     l1 = 0.5*d_gf+0.05
     l2 = l1
-    print 'h_g = ', h_gear
     l_gf = (h_gear-l2)+l1 + l2#m
-    print 'l_gf = ', l_gf
     Sw_gf = 0.75*np.pi*l1*d_gf + np.pi*d_gf*(h_gear-l2) + 0.72*np.pi*l2
     #k1_gf = l1/l_gf
    #k2_gf = l2/l_gf

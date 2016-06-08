@@ -12,6 +12,8 @@ from tube import tube
 from landing_gear import landing_gear
 from hor_tail import hor_tail
 from vert_tail import vert_tail
+from ClassIIsys import classIIsys
+from ClassIIsys import propgroup
 from SUAVE.Methods.Weights.Correlations.Tube_Wing.payload import payload
 from SUAVE.Methods.Weights.Correlations.Tube_Wing.systems import systems
 from SUAVE.Methods.Weights.Correlations.Tube_Wing.tail_horizontal import tail_horizontal
@@ -190,9 +192,9 @@ def empty(vehicle):
         A_v = vehicle.wings['vertical_stabilizer'].aspect_ratio
         t_c_v = vehicle.wings['vertical_stabilizer'].thickness_to_chord
         sweep_v = vehicle.wings['vertical_stabilizer'].sweep
-        print 'Sweep_V =',sweep_v
         taper_v = vehicle.wings['vertical_stabilizer'].taper
         c_r_v = vehicle.wings['vertical_stabilizer'].chords.root
+        mac_v = vehicle.wings['vertical_stabilizer'].chords.mean_aerodynamic
         t_tail = vehicle.wings['vertical_stabilizer'].t_tail
         output_3 = tail_vertical(S_v, Nult, b_v, TOW, t_c_v, sweep_v, S_gross_w, t_tail)
         wt_tail_vertical = vert_tail(S_v,b_v,c_r_v,taper_v,t_c_v,A_v,sweep_v,l_w2h,TOW)
@@ -200,15 +202,30 @@ def empty(vehicle):
         #vehicle.wings['vertical_stabilizer'].mass_properties.mass = output_3.wt_tail_vertical + output_3.wt_rudder
 
     # Calculating Empty Weight of Aircraft
-    wt_landing_gear, gear,h_gear = landing_gear(TOW, d_eng, d_fus, V_descent)
+    wt_landing_gear, gear,h_gear = landing_gear(TOW, d_eng, h_fus, V_descent)
     l_nose = vehicle.fuselages['fuselage'].lengths.nose
     l_center = vehicle.fuselages['fuselage'].lengths.cabin
     l_tail = vehicle.fuselages['fuselage'].lengths.tail
+    S_cstot = 0.22*mac_w*0.6*b*1.5 + 0.3*mac_v*0.9*b_v + 0.2*mac_h*0.9*b_h #1.5 factor is because of assumed spoilers on wings
+    print 'S_cstot = ', S_cstot, 'm^2'
+    Iy_SI = 1230140.7646609414 #kgm^2
+    Vmax = 240 #m/s
     wt_fuselage = tube(S_fus, diff_p_fus, w_fus, h_fus,l_nose,l_center,l_tail, l_fus, Nlim, wt_zf, wt_wing, wt_propulsion, wing_c_r, TOW, h_gear)
-    output_2 = systems(num_seats, ctrl_type, S_h, S_v, S_gross_w, ac_type)
+    #output_2 = systems(num_seats, ctrl_type, S_h, S_v, S_gross_w, ac_type)
+    OEW = 109000 #kg #FIXME
+    V_fuel = 69000/820 #m^3 #FIXME
+    wt_engine_jet = 9000 #kg
+    output_sys = classIIsys(num_eng,wt_engine_jet ,V_fuel, Iy_SI,S_cstot,l_fus,OEW,TOW,Vmax,b)
 
+    l_eng = 7 #m
+    output_prop = propgroup(num_eng,wt_engine_jet,d_eng,l_eng,output_sys.w_fuelsys,output_sys.w_starter,Nult,Vmax)
+    print 'W_prop = ', output_prop.w_propulsion
+    print 'W_nacelle_group = ',output_prop.w_nacelle
+    #print 'W_pylon = ', output_prop.w_pylon
+    print 'W_fuelsys = ', output_prop.w_fuelsys
+    wt_propulsion = output_prop.w_propulsion
     # Calculate the equipment empty weight of the aircraft
-    wt_empty = (wt_wing + wt_fuselage + wt_landing_gear + wt_propulsion + output_2.wt_systems + \
+    wt_empty = (wt_wing + wt_fuselage + wt_landing_gear + wt_propulsion + output_sys.w_system + \
                 wt_tail_horizontal + output_3.wt_tail_vertical + output_3.wt_rudder)
     vehicle.fuselages['fuselage'].mass_properties.mass = wt_fuselage
 
@@ -221,17 +238,17 @@ def empty(vehicle):
     output.horizontal_tail = wt_tail_horizontal
     output.vertical_tail = output_3.wt_tail_vertical
     output.rudder = output_3.wt_rudder
-    output.systems = output_2.wt_systems
+    output.systems = output_sys.w_system
     output.systems_breakdown = Data()
-    output.systems_breakdown.control_systems = output_2.wt_flt_ctrl
-    output.systems_breakdown.apu = output_2.wt_apu
-    output.systems_breakdown.hydraulics = output_2.wt_hyd_pnu
-    output.systems_breakdown.instruments = output_2.wt_instruments
-    output.systems_breakdown.avionics = output_2.wt_avionics
-    output.systems_breakdown.optionals = output_2.wt_opitems
-    output.systems_breakdown.electrical = output_2.wt_elec
-    output.systems_breakdown.air_conditioner = output_2.wt_ac
-    output.systems_breakdown.furnish = output_2.wt_furnish
+    output.systems_breakdown.control_systems = output_sys.w_flightcontrol
+    output.systems_breakdown.apu = output_sys.w_apu
+    output.systems_breakdown.hydraulics = output_sys.w_hydraullics
+    #output.systems_breakdown.instruments = output_sys.wt_instruments
+    output.systems_breakdown.avionics = output_sys.w_avionics
+    #output.systems_breakdown.optionals = output_sys.wt_opitems
+    output.systems_breakdown.electrical = output_sys.w_electrical
+    output.systems_breakdown.air_conditioner = output_sys.w_env
+    #output.systems_breakdown.furnish = output_2.wt_furnish
 
     # define weights components
 
@@ -244,12 +261,12 @@ def empty(vehicle):
     control_systems = SUAVE.Components.Physical_Component()
     electrical_systems = SUAVE.Components.Physical_Component()
     passengers = SUAVE.Components.Physical_Component()
-    furnishings = SUAVE.Components.Physical_Component()
+    #furnishings = SUAVE.Components.Physical_Component()
     air_conditioner = SUAVE.Components.Physical_Component()
     fuel = SUAVE.Components.Physical_Component()
     apu = SUAVE.Components.Physical_Component()
     hydraulics = SUAVE.Components.Physical_Component()
-    optionals = SUAVE.Components.Physical_Component()
+    #optionals = SUAVE.Components.Physical_Component()
     rudder = SUAVE.Components.Physical_Component()
     avionics = SUAVE.Components.Energy.Peripherals.Avionics()
 
@@ -258,27 +275,27 @@ def empty(vehicle):
     control_systems.mass_properties.mass = output.systems_breakdown.control_systems
     electrical_systems.mass_properties.mass = output.systems_breakdown.electrical
     passengers.mass_properties.mass = output.pax + output.bag
-    furnishings.mass_properties.mass = output.systems_breakdown.furnish
-    avionics.mass_properties.mass = output.systems_breakdown.avionics \
-                                    + output.systems_breakdown.instruments
+    #furnishings.mass_properties.mass = output.systems_breakdown.furnish
+    avionics.mass_properties.mass = output.systems_breakdown.avionics# \
+                                    #+ output.systems_breakdown.instruments
     air_conditioner.mass_properties.mass = output.systems_breakdown.air_conditioner
     fuel.mass_properties.mass = output.fuel
     apu.mass_properties.mass = output.systems_breakdown.apu
     hydraulics.mass_properties.mass = output.systems_breakdown.hydraulics
-    optionals.mass_properties.mass = output.systems_breakdown.optionals
+    #optionals.mass_properties.mass = output.systems_breakdown.optionals
     rudder.mass_properties.mass = output.rudder
 
     # assign components to vehicle
     vehicle.control_systems = control_systems
     vehicle.electrical_systems = electrical_systems
     vehicle.avionics = avionics
-    vehicle.furnishings = furnishings
+    #vehicle.furnishings = furnishings
     vehicle.passenger_weights = passengers
     vehicle.air_conditioner = air_conditioner
     vehicle.fuel = fuel
     vehicle.apu = apu
     vehicle.hydraulics = hydraulics
-    vehicle.optionals = optionals
+    #vehicle.optionals = optionals
     vehicle.landing_gear = landing_gear_component
     vehicle.wings['vertical_stabilizer'].rudder = rudder
 

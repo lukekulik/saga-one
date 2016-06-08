@@ -3,7 +3,6 @@ def hor_tail(c_hor,taper_h,lh,Sel,Sh,Ah,Bhor,sweep_ht,MTOW,Nz):
     Kuht = 1. #1.143 for all moving tail
     Sht = Sh/(0.3048**2)
     c_hor_tip = c_hor*taper_h
-    sweep_ht = sweep_ht*np.pi/180 #rad
     Fw = 0.6 #Change! Fuselage width at hor.tail intersection
     Ky = 0.3*lh/0.3048
     Lt = lh/0.3048
