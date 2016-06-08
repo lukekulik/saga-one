@@ -57,7 +57,7 @@
         <entry key="cached-property" value="1.3.0" />
         <entry key="casuarius" value="1.1" />
         <entry key="cdecimal" value="2.3" />
-        <entry key="certifi" value="2015.9.6.2" />
+        <entry key="certifi" value="2016.2.28" />
         <entry key="cffi" value="1.6.0" />
         <entry key="chaco" value="4.5.0" />
         <entry key="chalmers" value="0.8.0" />
@@ -91,7 +91,7 @@
         <entry key="cornice" value="1.2.1" />
         <entry key="coverage" value="4.1" />
         <entry key="cryptacular" value="1.4.1" />
-        <entry key="cryptography" value="1.3.2" />
+        <entry key="cryptography" value="1.4" />
         <entry key="cssselect" value="0.9.1" />
         <entry key="csvkit" value="0.9.1" />
         <entry key="cubes" value="1.0.1" />
@@ -281,7 +281,7 @@
         <entry key="node-webkit" value="0.10.1" />
         <entry key="nodejs" value="4.4.1" />
         <entry key="nose" value="1.3.7" />
-        <entry key="notebook" value="4.2.0" />
+        <entry key="notebook" value="4.2.1" />
         <entry key="nsis" value="2.46" />
         <entry key="numba" value="0.26.0" />
         <entry key="numbapro" value="0.23.1" />
@@ -386,7 +386,7 @@
         <entry key="qt" value="4.8.7" />
         <entry key="qtawesome" value="0.3.3" />
         <entry key="qtconsole" value="4.2.1" />
-        <entry key="qtpy" value="1.0.1" />
+        <entry key="qtpy" value="1.0.2" />
         <entry key="quandl" value="2.8.9" />
         <entry key="queuelib" value="1.4.2" />
         <entry key="rasterio" value="0.25.0" />
@@ -448,7 +448,7 @@
         <entry key="traitlets" value="4.2.1" />
         <entry key="traits" value="4.5.0" />
         <entry key="traitsui" value="4.5.1" />
-        <entry key="transaction" value="1.4.4" />
+        <entry key="transaction" value="1.6.0" />
         <entry key="translationstring" value="1.3" />
         <entry key="trollius" value="2.1" />
         <entry key="twisted" value="16.2.0" />
@@ -1154,6 +1154,7 @@
             <list>
               <option value="14.05.14" />
               <option value="2015.9.6.2" />
+              <option value="2016.2.28" />
             </list>
           </value>
         </entry>
@@ -1632,6 +1633,7 @@
               <option value="1.0.1" />
               <option value="0.8.2" />
               <option value="1.3.2" />
+              <option value="1.4" />
             </list>
           </value>
         </entry>
@@ -3509,6 +3511,7 @@
               <option value="4.1.0" />
               <option value="4.2.0" />
               <option value="4.0.5" />
+              <option value="4.2.1" />
             </list>
           </value>
         </entry>
@@ -4655,6 +4658,7 @@
             <list>
               <option value="1.0" />
               <option value="1.0.1" />
+              <option value="1.0.2" />
             </list>
           </value>
         </entry>
@@ -5345,6 +5349,7 @@
           <value>
             <list>
               <option value="1.4.4" />
+              <option value="1.6.0" />
             </list>
           </value>
         </entry>
@@ -5408,6 +5413,7 @@
           <value>
             <list>
               <option value="0.4.17" />
+              <option value="0.04.19" />
             </list>
           </value>
         </entry>
@@ -5791,6 +5797,6 @@
     <option name="CONDA_CHANNELS">
       <set />
     </option>
-    <option name="LAST_TIME_CHECKED" value="1465283675254" />
+    <option name="LAST_TIME_CHECKED" value="1465392390992" />
   </component>
 </application>
