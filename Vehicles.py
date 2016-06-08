@@ -56,8 +56,8 @@ def base_setup():
     # mass properties
     vehicle.mass_properties.max_takeoff = 0  # selected in Optimize.py
     vehicle.mass_properties.takeoff = 0  # selected in Optimize.py
-    vehicle.mass_properties.max_payload = 40000. * Units.kg  # selected in Optimize.py
-    vehicle.mass_properties.payload = 40000. * Units.kg  # selected in Optimize.py
+    vehicle.mass_properties.max_payload = 0. * Units.kg  # selected in Optimize.py
+    vehicle.mass_properties.payload = 0. * Units.kg  # selected in Optimize.py
 
     # vehicle.mass_properties.operating_empty           = 65000.   # kg
 
@@ -185,7 +185,7 @@ def base_setup():
 
     # wing.airfoil = airfoils["sc3"]
 
-    wing.span_efficiency = 0.75
+    wing.span_efficiency = 0.95
     wing.areas.reference = 0  # selected in Optimize.py
 
     wing.sweep = 0.0 * Units.deg
@@ -210,9 +210,9 @@ def base_setup():
     wing.symmetric = True
 
     wing.high_lift = True
-    wing.high_mach = True
+    wing.high_mach = False
     wing.flaps.type = "double_slotted"
-    wing.flaps.chord = 1.0  # FIXME
+    wing.flaps.chord = 0.0  # FIXME
 
     wing.dynamic_pressure_ratio = 1.0
 
@@ -378,9 +378,21 @@ def configs_setup(vehicle):
     config.tag = 'cruise'
 
     config.maximum_lift_coefficient = 1.4
+    config.propulsors.turbofan.generator.power_draw = 0.5e6 / config.propulsors.turbofan.number_of_engines # MW per engine
 
     configs.append(config)
 
+    # ------------------------------------------------------------------
+    #   Cruise (spraying) Configuration
+    # ------------------------------------------------------------------
+    # changes
+    config = SUAVE.Components.Configs.Config(base_config)
+    config.tag = 'cruise_spraying'
+
+    config.maximum_lift_coefficient = 1.4
+    config.propulsors.turbofan.generator.power_draw = 2.5e6 / config.propulsors.turbofan.number_of_engines  # MW per engine
+
+    configs.append(config)
 
     # ------------------------------------------------------------------
     #   Takeoff Configuration

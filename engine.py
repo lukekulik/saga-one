@@ -4,7 +4,7 @@ import Turbine_saga
 from SUAVE.Methods.Propulsion.turbofan_sizing import turbofan_sizing
 from SUAVE.Methods.Geometry.Two_Dimensional.Cross_Section.Propulsion import compute_turbofan_geometry
 from Generator import Generator
-
+from Jet_JP7 import Jet_JP7
 
 def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total):
     # initialize the gas turbine network
@@ -14,7 +14,7 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
     gt_engine.number_of_engines = num_engine
     gt_engine.bypass_ratio = bypass
     # gt_engine.engine_length = 5.2
-    gt_engine.nacelle_diameter = 3.
+    gt_engine.nacelle_diameter = 3.5
 
     # set the working fluid for the network
     working_fluid = SUAVE.Attributes.Gases.Air
@@ -40,7 +40,7 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
     low_pressure_compressor = SUAVE.Components.Energy.Converters.Compressor()
     low_pressure_compressor.tag = 'lpc'
     low_pressure_compressor.polytropic_efficiency = 0.90
-    low_pressure_compressor.pressure_ratio = 1.46
+    low_pressure_compressor.pressure_ratio = 1.5
     # add low pressure compressor to the network
     gt_engine.low_pressure_compressor = low_pressure_compressor
 
@@ -48,7 +48,7 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
     high_pressure_compressor = SUAVE.Components.Energy.Converters.Compressor()
     high_pressure_compressor.tag = 'hpc'
     high_pressure_compressor.polytropic_efficiency = 0.90  # FIXME
-    high_pressure_compressor.pressure_ratio = 17.
+    high_pressure_compressor.pressure_ratio = 14
     # add the high pressure compressor to the network
     gt_engine.high_pressure_compressor = high_pressure_compressor
 
@@ -71,11 +71,12 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
     # Component 6 :combustor
     combustor = SUAVE.Components.Energy.Converters.Combustor()
     combustor.tag = 'Comb'
-    combustor.efficiency = 0.99
+    combustor.efficiency = 0.995
     combustor.alphac = 1.0
     combustor.turbine_inlet_temperature = 1450
     combustor.pressure_ratio = 0.96
-    combustor.fuel_data = SUAVE.Attributes.Propellants.Jet_A()
+    combustor.fuel_data = Jet_JP7()
+    # combustor.fuel_data = SUAVE.Attributes.Propellants.Jet_A()
     # add the combustor to the network
     gt_engine.combustor = combustor
 
@@ -99,7 +100,7 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
     fan = SUAVE.Components.Energy.Converters.Fan()
     fan.tag = 'fan'
     fan.polytropic_efficiency = 0.89
-    fan.pressure_ratio = 1.45
+    fan.pressure_ratio = 1.5
     # add the fan to the network
     gt_engine.fan = fan
 

@@ -75,7 +75,7 @@ def setup():
     problem.inputs = np.array([
         # Variable inputs
         ['wing_area', 700, (400., 750.), 500., Units.meter ** 2],
-        ['MTOW', 205e3, (170000., 250000.), 200000., Units.kg],
+        ['MTOW', 207e3, (170000., 250000.), 200000., Units.kg],
         ['alt_outgoing_cruise', 13.14, (8., 15.), 13., Units.km],
         ['design_thrust', 110e3, (80e3, 120e3), 100e3, Units.N],
         ['outgoing_cruise_speed', 191., (150, 220), 200, Units['m/s']],

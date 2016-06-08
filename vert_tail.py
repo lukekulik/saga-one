@@ -1,4 +1,4 @@
-import  numpy as np
+import numpy as np
 def vert_tail(Sv,Bver,c_ver,taper_v,tc_vt,Av,sweep_vt,lh,MTOW):
     Svt = Sv/0.3048**2
     Hhor = 0. #Change if tail is above fuselage!

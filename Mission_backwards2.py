@@ -402,7 +402,7 @@ def base(analyses):
     # segment.battery_energy = 10 #Charge the battery to start
 
 
-    segment.altitude_end = 20 * Units.km
+    segment.altitude_end = 19.5 * Units.km
     segment.air_speed = climb_air_speed * Units['m/s']
     segment.throttle = climb_throttle
 
