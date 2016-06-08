@@ -43,11 +43,11 @@ def landing_gear(TOW, d_eng, h_fus, V_descent, landing_gear_wt_factor=0.04):
     #print 'h_fus = ',h_fus, 'm'
     if h_wing_gear > (h_fus-t_root)+1.5: #1.5 treated as minimum landing gear height
         h_gear = h_wing_gear - (h_fus - t_root)
-        print 'h_gear = ', h_gear, 'm'
+        #print 'h_gear = ', h_gear, 'm'
     else:
         h_gear = 1.5
-        print 'h_gear = ',h_gear, 'm'
-        print 'Fuselage height can be decreased'
+        #print 'h_gear = ',h_gear, 'm'
+        #print 'Fuselage height can be decreased'
     h_nosegear = h_gear
     W_maingear = 0.0106 * (MLW / 0.45359237) ** 0.888 * Nl ** 0.25 * (
                                                                      h_gear * 39.3700787) ** 0.4 * Nmw ** 0.321 * Nmss ** (

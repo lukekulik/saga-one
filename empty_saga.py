@@ -174,7 +174,6 @@ def empty(vehicle):
                 vehicle.wings['main_wing'].aerodynamic_center[
                     0]  # Need to check this is the length of the horizontal tail moment arm
         #wt_tail_horizontal = tail_horizontal(b_h, sweep_h, Nult, S_h, TOW, mac_w, mac_h, l_w2h, t_c_h, h_tail_exposed)
-        print 'lh = ',l_w2h
         Sel=0.15*S_h
         wt_tail_horizontal = hor_tail(c_r_h,taper_h,l_w2h,Sel,S_h,A_h,b_h,sweep_h,TOW,Nult)
         vehicle.wings['horizontal_stabilizer'].mass_properties.mass = wt_tail_horizontal
@@ -207,7 +206,6 @@ def empty(vehicle):
     l_center = vehicle.fuselages['fuselage'].lengths.cabin
     l_tail = vehicle.fuselages['fuselage'].lengths.tail
     S_cstot = 0.22*mac_w*0.6*b*1.5 + 0.3*mac_v*0.9*b_v + 0.2*mac_h*0.9*b_h #1.5 factor is because of assumed spoilers on wings
-    print 'S_cstot = ', S_cstot, 'm^2'
     Iy_SI = 1230140.7646609414 #kgm^2
     Vmax = 240 #m/s
     wt_fuselage = tube(S_fus, diff_p_fus, w_fus, h_fus,l_nose,l_center,l_tail, l_fus, Nlim, wt_zf, wt_wing, wt_propulsion, wing_c_r, TOW, h_gear)
@@ -219,10 +217,6 @@ def empty(vehicle):
 
     l_eng = 7 #m
     output_prop = propgroup(num_eng,wt_engine_jet,d_eng,l_eng,output_sys.w_fuelsys,output_sys.w_starter,Nult,Vmax)
-    print 'W_prop = ', output_prop.w_propulsion
-    print 'W_nacelle_group = ',output_prop.w_nacelle
-    #print 'W_pylon = ', output_prop.w_pylon
-    print 'W_fuelsys = ', output_prop.w_fuelsys
     wt_propulsion = output_prop.w_propulsion
     # Calculate the equipment empty weight of the aircraft
     wt_empty = (wt_wing + wt_fuselage + wt_landing_gear + wt_propulsion + output_sys.w_system + \

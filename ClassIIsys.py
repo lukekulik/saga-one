@@ -30,7 +30,7 @@ def classIIsys(Nen,W_eng,V_fuel, Iy_SI,S_cstot,L_fus,OEW,MTOW,Vmax,b):
     #cg_fc = 0.85*c_root
     W_hyd = 0.2673* Nf* (Lf + Bw)**0.937* 0.45359237 #kg
     W_hyd_tor = 0.015*OEW + 272 #kg
-    print 'W_hyd_tor = ', W_hyd_tor, 'kg'
+    #print 'W_hyd_tor = ', W_hyd_tor, 'kg'
     W_hyd = W_hyd_tor
     #cg_hyd = 0.5*c_root
     W_el = 7.291*Rkva**0.782* La**0.346* Ngen**0.1*0.45359237 #kg
