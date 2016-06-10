@@ -15,7 +15,7 @@ def classIIsys(Nen,W_eng,V_fuel, Iy_SI,S_cstot,L_fus,OEW,MTOW,Vmax,b):
     Lf = L_fus/0.3048 #ft
     Bw = b/0.3048 #ft
     Rkva = 2000. # system electical rating [kVA] --> coming form Iris
-    Ngen = Nen+1.
+    Ngen = 10.
     La = 0.15*b/0.3048
     Vp = 0. #this is for self-sealing fuel tanks
     Nt = 6. #number of tanks
