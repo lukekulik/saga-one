@@ -444,6 +444,7 @@ def post_process(nexus):
         # print i
         results.base.segments[i].conditions.weights.fuel_burn[:, 0] += \
             results.base.segments[i - 1].conditions.weights.fuel_burn[-1]
+        
         results.base.segments[i].conditions.weights.spray[:, 0] += \
             results.base.segments[i - 1].conditions.weights.spray[-1]
 
@@ -639,7 +640,12 @@ def post_process(nexus):
                       "c_r_v",
                       "S_wet"
                       ]
+    fuel_burn_sec = np.zeros(1)
+    for i in range(1, len(results.base.segments)):
+        fuel_burn_sec = np.hstack((fuel_burn_sec,results.base.segments[i - 1].conditions.weights.fuel_burn[-1]))
 
+    wing_loading = (operating_empty + summary.base_mission_fuelburn - fuel_burn_sec)*9.81/vehicle.wings.main_wing.areas.reference
+    # print wing_loading
     # print output_array[output_indexes.index("c_r_v")]
     # print output_array[-1]
 
@@ -648,6 +654,7 @@ def post_process(nexus):
     # np.save(output_folder + "output_indices.npy", output_indices)
     # np.save(output_folder + "output_array_segments.npy", output_array_segments)
     # np.save(output_folder + "output_segment_indices.npy", output_segment_indices)
+    # np.save(output_folder + "wing_loading.npy", wing_loading)
 
     for value in unscaled_inputs:
         problem_inputs.append(value)
