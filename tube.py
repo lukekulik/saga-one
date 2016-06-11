@@ -94,7 +94,7 @@ def tube(S_fus, diff_p_fus, w_fus, h_fus, l_nose, l_center,l_tail, l_fus, Nlim, 
     tc_ver = 0.08
     c_root_h = 3.58 #m
     c_root_v = 2.9 #m
-    t_hor = tc_hor*c_root_h*1.5 #m
+    t_hor = tc_hor*c_root_h*1.5 #m - increase thickness to accomodate tail
     print 't_hor = ', t_hor, 'm'
     t_ver = tc_ver*c_root_v*1.5 #m
     print 't_ver = ', t_ver, 'm'
