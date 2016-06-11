@@ -77,12 +77,12 @@ def setup():
     procedure.missions.design_mission = design_mission
 
     # # Noise evaluation
-    procedure.noise = Process()
-    procedure.noise.sideline_init = noise_sideline_init
-    procedure.noise.takeoff_init = noise_takeoff_init
-    procedure.noise.noise_sideline = noise_sideline
-    procedure.noise.noise_flyover = noise_flyover
-    procedure.noise.noise_approach = noise_approach
+    # procedure.noise = Process()
+    # procedure.noise.sideline_init = noise_sideline_init
+    # procedure.noise.takeoff_init = noise_takeoff_init
+    # procedure.noise.noise_sideline = noise_sideline
+    # procedure.noise.noise_flyover = noise_flyover
+    # procedure.noise.noise_approach = noise_approach
 
     # post process the results
     procedure.post_process = post_process
@@ -372,7 +372,7 @@ def simple_sizing(nexus):
     freestream = atmosphere.compute_values(altitude)
     freestream0 = atmosphere.compute_values(6000. * Units.ft)  # cabin altitude
 
-    diff_pressure = np.max(freestream0.pressure - freestream.pressure, 0)
+    diff_pressure = 0
     fuselage = base.fuselages['fuselage']
     fuselage.differential_pressure = diff_pressure
 
@@ -390,7 +390,7 @@ def simple_sizing(nexus):
 
 
     for config in configs:
-        config.wings.horizontal_stabilizer.areas.reference = (26.0 / 92.0) * config.wings.main_wing.areas.reference
+        # config.wings.horizontal_stabilizer.areas.reference = (26.0 / 92.0) * config.wings.main_wing.areas.reference
 
         for wing in config.wings:
             wing = SUAVE.Methods.Geometry.Two_Dimensional.Planform.wing_planform(wing)
@@ -598,7 +598,7 @@ def post_process(nexus):
 
     # Fuel margin and base fuel calculations
 
-    vehicle.mass_properties.operating_empty += 10e3  # FIXME hardcoded wing mass correction # area scaling?
+    vehicle.mass_properties.operating_empty += 6e3  # FIXME hardcoded wing mass correction # area scaling?
 
     operating_empty = vehicle.mass_properties.operating_empty
     payload = vehicle.mass_properties.payload  # TODO fuel margin makes little sense when ejecting aerosol
@@ -828,6 +828,7 @@ def post_process(nexus):
     # print output_array[-1]
 
     # print vehicle.weight_breakdown
+    np.save(output_folder + "wing_loading.npy", wing_loading)
     np.save(output_folder + "output_array.npy", output_array)
     np.save(output_folder + "output_indices.npy", output_indices)
     np.save(output_folder + "output_array_segments.npy", output_array_segments)
