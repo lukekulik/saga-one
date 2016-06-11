@@ -95,9 +95,9 @@ def tube(S_fus, diff_p_fus, w_fus, h_fus, l_nose, l_center,l_tail, l_fus, Nlim, 
     c_root_h = 3.58 #m
     c_root_v = 2.9 #m
     t_hor = tc_hor*c_root_h*1.5 #m - increase thickness to accomodate tail
-    print 't_hor = ', t_hor, 'm'
+    #print 't_hor = ', t_hor, 'm'
     t_ver = tc_ver*c_root_v*1.5 #m
-    print 't_ver = ', t_ver, 'm'
+    #print 't_ver = ', t_ver, 'm'
 
     #Sw_fus = (0.5*np.pi*d_fus**2)*(1+(l_fus/d_fus)*(k1*(fe1-2)+k2*(fe2-2)+2)) + Sw_gf #m^2 -- Southhammpton method
     #Sw_fus = 0.75*np.pi*d_fus*l_nose + np.pi*d_fus*l_center + 0.72*np.pi*d_fus*l_tail + Sw_gf # -- Stamford method

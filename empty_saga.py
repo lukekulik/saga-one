@@ -144,6 +144,7 @@ def empty(vehicle):
         sweep_w = vehicle.wings['main_wing'].sweep
         mac_w = vehicle.wings['main_wing'].chords.mean_aerodynamic
         wing_c_r = vehicle.wings['main_wing'].chords.root
+        #print 'c_root =',wing_c_r
         wt_wing = wing_main(S_gross_w, b, lambda_w, t_c_w, sweep_w, Nult, TOW, wt_zf)
         vehicle.wings['main_wing'].mass_properties.mass = wt_wing
 
@@ -166,6 +167,7 @@ def empty(vehicle):
         mac_h = vehicle.wings['horizontal_stabilizer'].chords.mean_aerodynamic
         c_r_h = vehicle.wings['horizontal_stabilizer'].chords.root
         t_c_h = vehicle.wings['horizontal_stabilizer'].thickness_to_chord
+        #print 'c_r_h =',c_r_h
         taper_h = vehicle.wings['horizontal_stabilizer'].taper
         h_tail_exposed = vehicle.wings['horizontal_stabilizer'].areas.exposed / vehicle.wings[
             'horizontal_stabilizer'].areas.wetted
@@ -198,6 +200,9 @@ def empty(vehicle):
         output_3 = tail_vertical(S_v, Nult, b_v, TOW, t_c_v, sweep_v, S_gross_w, t_tail)
         wt_tail_vertical = vert_tail(S_v,b_v,c_r_v,taper_v,t_c_v,A_v,sweep_v,l_w2h,TOW)
         vehicle.wings['vertical_stabilizer'].mass_properties.mass = wt_tail_vertical
+        #print 'b_v =',b_v
+        #print 'c_r_v =',c_r_v
+        #print 'c_t_v =',c_r_v*taper_v
         #vehicle.wings['vertical_stabilizer'].mass_properties.mass = output_3.wt_tail_vertical + output_3.wt_rudder
 
     # Calculating Empty Weight of Aircraft

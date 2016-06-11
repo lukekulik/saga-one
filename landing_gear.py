@@ -55,6 +55,7 @@ def landing_gear(TOW, d_eng, h_fus, V_descent, landing_gear_wt_factor=0.04):
     #print 'W_maingear = ', W_maingear
     W_nosegear = 0.032 * (MLW / 0.45359237) ** 0.646 * Nl ** 0.2 * (
                                                                    h_nosegear * 39.3700787) ** 0.5 * Nnw ** 0.45 * 0.45359237  # kg
+    #print 'W_nosegear = ', W_nosegear
     W_gear = 1.2*(W_maingear + W_nosegear)
     weight = W_gear
     #print 'W_gear = ',W_gear, 'kg'

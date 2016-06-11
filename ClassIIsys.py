@@ -86,9 +86,13 @@ def propgroup(Nen,W_eng,d_eng,l_eng,W_fuelsys,W_starter,Nz,Vmax):
     W_propulsion = W_eng*Nen + W_nacelle + W_fuelsys+W_starter
     output1 = Data()
     output1.w_nacelle = W_nacelle
+    #print 'W_nac = ',W_nacelle
     output1.w_starter = W_starter
+    #print 'W_start =',W_starter
     output1.w_propulsion = W_propulsion
     output1.w_fuelsys = W_fuelsys
+    #print  'W_fuelsys =', W_fuelsys
     output1.w_engines = Nen*W_eng
+    #print 'W_engines =', Nen*W_eng
     output1.w_pylon = Nen*W_pylon
     return output1

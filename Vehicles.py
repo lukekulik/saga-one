@@ -240,15 +240,17 @@ def base_setup():
     wing.span_efficiency = 0.9
 
     wing.chords.root = 3.030
-    wing.chords.tip = 0.883
+    wing.chords.tip = 0.883 #FIXME
     wing.chords.mean_aerodynamic = 2.3840
 
     wing.areas.reference = 130
     wing.areas.wetted = 2.0 * wing.areas.reference
     wing.areas.exposed = 0.8 * wing.areas.wetted
     wing.areas.affected = 0.6 * wing.areas.reference
-
     wing.spans.projected = np.sqrt(wing.aspect_ratio * wing.areas.reference)
+
+    wing.chords.root = 0.5*wing.areas.reference/(0.5*wing.spans.projected*0.5*(1+wing.taper))
+    wing.chords.tip = wing.taper*wing.chords.root
 
     wing.twists.root = 2.0 * Units.degrees
     wing.twists.tip = 2.0 * Units.degrees
@@ -277,8 +279,7 @@ def base_setup():
     wing.taper = 0.4
     wing.span_efficiency = 0.9
 
-    wing.chords.root = 4.70
-    wing.chords.tip = 1.45
+
     wing.chords.mean_aerodynamic = 3.36
 
     wing.areas.reference = 50.0  #
@@ -288,6 +289,9 @@ def base_setup():
     wing.areas.wetted = 2.0 * wing.areas.reference
     wing.areas.exposed = 0.8 * wing.areas.wetted
     wing.areas.affected = 0.6 * wing.areas.reference
+
+    wing.chords.root = wing.areas.reference/(wing.spans.projected*0.5*(1+wing.taper))
+    wing.chords.tip = 1.45
 
     wing.twists.root = 0.0 * Units.degrees
     wing.twists.tip = 0.0 * Units.degrees

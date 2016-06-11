@@ -1,6 +1,9 @@
 import numpy as np
 def hor_tail(c_hor,taper_h,lh,Sel,Sh,Ah,Bhor,sweep_ht,MTOW,Nz):
     Kuht = 1. #1.143 for all moving tail
+   #print 'c_hor =', c_hor
+   #print 'c_tip =',c_hor*taper_h
+   #print 'b_h =', np.sqrt(Ah*Sh)
     Sht = Sh/(0.3048**2)
     c_hor_tip = c_hor*taper_h
     Fw = 0.6 #Change! Fuselage width at hor.tail intersection
