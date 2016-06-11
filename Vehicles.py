@@ -211,10 +211,17 @@ def base_setup():
 
     wing.high_lift = True
     wing.high_mach = False
-    wing.flaps.type = "double_slotted"
+    wing.flaps.type = "single_sloted"
     wing.flaps.chord = 0.0  # FIXME
 
     wing.dynamic_pressure_ratio = 1.0
+
+    wing.flaps.chord_dimensional = 0
+    wing.flaps.flap_chord_start = 0
+    wing.flaps.flap_chord_end = 0
+    wing.flaps.area = 0
+
+    # SUAVE.Methods.Geometry.Two_Dimensional.Planform.wing_planform(wing)
 
     # add to vehicle
     vehicle.append_component(wing)
@@ -296,6 +303,32 @@ def base_setup():
     # add to vehicle
     vehicle.append_component(wing)
 
+    # ------------------------------------------------------------------
+    #   Landing gear
+    # ------------------------------------------------------------------
+
+    # vehicle.landing_gear = Data()
+    # vehicle.landing_gear.main_tire_diameter = 1.12000 * Units.m
+    # vehicle.landing_gear.nose_tire_diameter = 0.6858 * Units.m
+    # vehicle.landing_gear.main_strut_length = 1.8 * Units.m
+    # vehicle.landing_gear.nose_strut_length = 1.3 * Units.m
+    # vehicle.landing_gear.main_units = 2     #number of main landing gear units
+    # vehicle.landing_gear.nose_units = 1     #number of nose landing gear
+    # vehicle.landing_gear.main_wheels = 2    #number of wheels on the main landing gear
+    # vehicle.landing_gear.nose_wheels = 2    #number of wheels on the nose landing gear
+
+    landing_gear = SUAVE.Components.Landing_Gear.Landing_Gear()
+    landing_gear.tag = "main_landing_gear"
+    landing_gear.main_tire_diameter = 1.35 * Units.m
+    landing_gear.nose_tire_diameter = 0.9 * Units.m
+    landing_gear.main_strut_length = 1.6 * Units.m
+    landing_gear.nose_strut_length = 1.6 * Units.m
+    landing_gear.main_units = 2  # number of main landing gear units
+    landing_gear.nose_units = 1  # number of nose landing gear
+    landing_gear.main_wheels = 4  # number of wheels on the main landing gear
+    landing_gear.nose_wheels = 2  # number of wheels on the nose landing gear
+    vehicle.landing_gear = landing_gear
+
 
 
     # ------------------------------------------------------------------
@@ -312,8 +345,8 @@ def base_setup():
     vehicle.append_component(gt_engine)
 
     # now add weights objects
-    landing_gear = SUAVE.Components.Landing_Gear.Landing_Gear()
-    vehicle.landing_gear = landing_gear
+    # landing_gear = SUAVE.Components.Landing_Gear.Landing_Gear()
+    # vehicle.landing_gear = landing_gear
 
     control_systems = SUAVE.Components.Physical_Component()
     vehicle.control_systems = control_systems
@@ -407,6 +440,12 @@ def configs_setup(vehicle):
     config.V2_VS_ratio = 1.21
     config.maximum_lift_coefficient = 2.2
 
+    config.landing_gear.gear_condition    = 'up'
+
+    config.propulsors[0].fan.rotation     = 3470. #N1 speed
+    config.propulsors[0].fan_nozzle.noise_speed  = 315. #FIXME - unvertified nums
+    config.propulsors[0].core_nozzle.noise_speed = 415.
+
     configs.append(config)
 
     # ------------------------------------------------------------------
@@ -421,6 +460,30 @@ def configs_setup(vehicle):
 
     config.Vref_VS_ratio = 1.23
     config.maximum_lift_coefficient = 2.2
+
+    config.propulsors[0].fan.rotation = 2030.  # N1 speed
+    config.propulsors[0].fan_nozzle.noise_speed = 109.3
+    config.propulsors[0].core_nozzle.noise_speed = 92.
+
+    config.landing_gear.gear_condition    = 'down'
+
+    configs.append(config)
+
+    # ------------------------------------------------------------------
+    #   Takeoff Configuration
+    # ------------------------------------------------------------------
+    config = SUAVE.Components.Configs.Config(base_config)
+    config.tag = 'cutback'
+    config.wings['main_wing'].flaps.angle = 20. * Units.deg
+    config.wings['main_wing'].slats.angle = 20. * Units.deg
+    config.max_lift_coefficient_factor    = 1. #0.95
+    #Noise input for the landing gear
+    config.landing_gear.gear_condition    = 'up'
+    config.output_filename                = 'Cutback_'
+
+    config.propulsors.turbofan.fan.rotation     = 2780. #N1 speed
+    config.propulsors.turbofan.fan_nozzle.noise_speed  = 210.
+    config.propulsors.turbofan.core_nozzle.noise_speed = 360.
 
     configs.append(config)
 
