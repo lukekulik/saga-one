@@ -20,7 +20,7 @@ import pylab as plt
 def plot_mission(results, show=True, line_style='bo-'):
     axis_font = {'fontname': 'Arial', 'size': '14'}
     folder = "output/graphs/"
-    file_format = ".jpg"
+    file_format = ".png"
 
     # ------------------------------------------------------------------
     #   Aerodynamics 
@@ -83,7 +83,7 @@ def plot_mission(results, show=True, line_style='bo-'):
         axes.set_ylabel('AOA + body angle (deg)', axis_font)
         axes.grid(True)
 
-    plt.savefig(folder + "fig1" + file_format)
+    plt.savefig(folder + "fig1" + file_format, bbox_inches='tight')
 
     # ------------------------------------------------------------------
     #   Aerodynamics 2
@@ -106,29 +106,30 @@ def plot_mission(results, show=True, line_style='bo-'):
             axes.plot(time, cdp, 'ko-', label='CD parasite')
             axes.plot(time, cdi, 'bo-', label='CD induced')
             axes.plot(time, cdc, 'go-', label='CD compressibility')
-            axes.plot(time, cdm, 'yo-', label='CD miscellaneous')
+            # axes.plot(time, cdm, 'yo-', label='CD miscellaneous')
             axes.plot(time, cd, 'ro-', label='CD total')
             if i == 0:
-                axes.legend(loc='upper center')
+                axes.legend(loc='upper left')
         else:
             axes.plot(time, cdp, line_style)
             axes.plot(time, cdi, line_style)
             axes.plot(time, cdc, line_style)
-            axes.plot(time, cdm, line_style)
+            # axes.plot(time, cdm, line_style)
             axes.plot(time, cd, line_style)
 
     axes.set_xlabel('Time (min)')
-    axes.set_ylabel('CD')
+    axes.set_ylabel('$C_D$')
     axes.grid(True)
 
-    plt.savefig(folder + "fig2" + file_format)
+    plt.savefig(folder + "fig2" + file_format, bbox_inches='tight')
 
     # ------------------------------------------------------------------
     #   Altitude, vehicle weight
     # ------------------------------------------------------------------
 
     fig = plt.figure("Altitude, Weight", figsize=(8, 10))
-    for segment in results.base.segments.values():
+    i=0
+    for i, segment in enumerate(results.base.segments.values()):
         time = segment.conditions.frames.inertial.time[:, 0] / Units.min
         CLift = segment.conditions.aerodynamics.lift_coefficient[:, 0]
         CDrag = segment.conditions.aerodynamics.drag_coefficient[:, 0]
@@ -155,11 +156,13 @@ def plot_mission(results, show=True, line_style='bo-'):
         axes.grid(True)
 
         axes = fig.add_subplot(3, 1, 2)
-        axes.plot(time, mass, 'ro-')
-        axes.plot(time, fuel_burn, line_style)
-        axes.plot(time, sprayed_weight, 'go-')
+        axes.plot(time, mass, 'ro-', label='Aircraft mass')
+        axes.plot(time, fuel_burn, line_style, label='Fuel burn')
+        axes.plot(time, sprayed_weight, 'go-', label='Aerosol released')
         axes.set_ylabel('Weight (kg)', axis_font)
         axes.grid(True)
+        if i==0:
+            legend = axes.legend(loc='upper right', shadow=False)
 
         axes = fig.add_subplot(3, 1, 3)
         axes.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
@@ -168,7 +171,8 @@ def plot_mission(results, show=True, line_style='bo-'):
         axes.grid(True)
 
         axes.set_xlabel('Time (min)')
-    plt.savefig(folder + "fig3" + file_format)
+
+    plt.savefig(folder + "fig3" + file_format, bbox_inches='tight')
 
     fig = plt.figure("Misc", figsize=(8, 10))
     for segment in results.base.segments.values():
@@ -179,6 +183,8 @@ def plot_mission(results, show=True, line_style='bo-'):
         velocity = segment.conditions.freestream.velocity[:, 0]
         Drag = -segment.conditions.frames.wind.drag_force_vector[:, 0]
         Thrust = segment.conditions.frames.body.thrust_force_vector[:, 0]
+
+        # print Thrust
         spray_rate = segment.conditions.weights.sprayer[:, 0]
         spray_rate_meter = segment.conditions.weights.sprayer[:, 0] / velocity
 
@@ -220,7 +226,7 @@ def plot_mission(results, show=True, line_style='bo-'):
 
         axes.set_xlabel('Time (min)')
 
-    plt.savefig(folder + "fig4" + file_format)
+    plt.savefig(folder + "fig4" + file_format, bbox_inches='tight')
 
     fig = plt.figure("Velocities and accelerations", figsize=(8, 10))
     for segment in results.base.segments.values():
@@ -318,7 +324,7 @@ def plot_mission(results, show=True, line_style='bo-'):
 
         axes.set_xlabel('Time (min)')
 
-    plt.savefig(folder + "fig5" + file_format)
+    plt.savefig(folder + "fig5" + file_format, bbox_inches='tight')
 
     # aerosol disperion rate plot
 

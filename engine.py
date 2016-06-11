@@ -96,6 +96,7 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
     # add the fan nozzle to the network
     gt_engine.fan_nozzle = fan_nozzle
 
+
     # Component 9 : fan
     fan = SUAVE.Components.Energy.Converters.Fan()
     fan.tag = 'fan'
@@ -110,6 +111,16 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
     generator.tag = 'generator'
     generator.power_draw = 1 / gt_engine.number_of_engines
     gt_engine.generator = generator
+
+    # Engine setup for noise module
+    gt_engine.core_nozzle_diameter = 1.2
+    gt_engine.fan_nozzle_diameter = 3.5
+    gt_engine.engine_height = 1.35  # Engine centerline heigh above the ground plane
+    gt_engine.exa = 1  # distance from fan face to fan exit/ fan diameter)
+    gt_engine.plug_diameter = 0.1  # dimater of the engine plug
+    gt_engine.geometry_xe = 1.  # Geometry information for the installation effects function
+    gt_engine.geometry_ye = 1.  # Geometry information for the installation effects function
+    gt_engine.geometry_Ce = 2.  # Geometry information for the installation effects function
 
     # Define OPR
     OPR = fan.pressure_ratio * high_pressure_compressor.pressure_ratio * low_pressure_compressor.pressure_ratio
