@@ -749,7 +749,7 @@ def post_process(nexus):
         gt_engine.nacelle_diameter,
 
         summary.base_mission_fuelburn,
-        zero_fuel_weight + summary.base_mission_fuelburn,
+        vehicle.mass_properties.max_takeoff,
         operating_empty,
         design_landing_weight,
         vehicle.weight_breakdown.wing,
