@@ -36,7 +36,7 @@ def main():
 
     print 'constraints=', problem.all_constraints()
 
-    Plot_Mission.plot_mission(problem.results, show=True)
+    Plot_Mission.plot_mission(problem.results, show=False)
 
     return
 
@@ -57,8 +57,8 @@ def setup():
     problem.inputs = np.array([
         # Variable inputs
         ['wing_area', 700., (650., 705.), 500., Units.meter ** 2],
-        ['MTOW', 202e3, (195000., 210000.), 200000., Units.kg],
-        ['alt_outgoing_cruise', 13.14, (11., 14.), 13., Units.km],
+        ['MTOW', 207e3, (195000., 210000.), 200000., Units.kg],
+        ['alt_outgoing_cruise', 13.14, (11., 14.), 13., Units.km],  #explain the physics behing the optimizer
         ['design_thrust', 110e3, (100e3, 120e3), 100e3, Units.N],
         ['outgoing_cruise_speed', 191., (180, 212), 200, Units['m/s']],
         ['spray_cruise_speed', 210., (190, 212), 200, Units['m/s']],
@@ -66,7 +66,7 @@ def setup():
 
         # "Set" inputs
         ['AR', 13., (13, 15), 15, Units.less],
-        ['payload', 30e3, (30e3, 35e3), 30e3, Units.kg],
+        ['payload', 30e3, (30e3, 40e3), 30e3, Units.kg],
         # speeds???
     ])
 

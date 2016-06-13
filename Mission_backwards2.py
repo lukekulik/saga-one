@@ -63,7 +63,7 @@ def base(analyses):
     base_segment.process.iterate.conditions.weights = update_weights_sprayer
     # ADD A RANGE HERE?
 
-    atmosphere = SUAVE.Attributes.Atmospheres.Earth.US_Standard_1976()
+    atmosphere = SUAVE.Attributes.Atmospheres.Earth.US_Standard_1976(temperature_deviation=0.0)
     planet = SUAVE.Attributes.Planets.Earth()
 
     climb_throttle = 0.925  # Constant throttle for all climb segments
