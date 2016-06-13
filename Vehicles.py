@@ -204,7 +204,7 @@ def base_setup():
     wing.twists.root = 2.0 * Units.degrees
     wing.twists.tip = 0.0 * Units.degrees
 
-    wing.origin = [13.2, 0, 0]  # Need to fix
+    wing.origin = [9.25, fuselage.heights.maximum, 0]  # Need to fix
     # wing.aerodynamic_center      = [3,0,0] # Need to fix  ---> MUST INCLUDE A SIZING CALL, TO GENERATE PLANFORM
 
     wing.vertical = False
@@ -298,6 +298,46 @@ def base_setup():
     wing.twists.tip = 0.0 * Units.degrees
 
     wing.origin = [29.5, 0, 0]
+    # wing.aerodynamic_center      = [3,0,0] # Need to fix  ---> MUST INCLUDE A SIZING CALL, TO GENERATE PLANFORM
+
+    wing.vertical = True
+    wing.symmetric = False
+
+    wing.dynamic_pressure_ratio = 1.0
+
+    # add to vehicle
+    vehicle.append_component(wing)
+
+    # ------------------------------------------------------------------
+    #   Strut
+    # ------------------------------------------------------------------
+
+    wing = SUAVE.Components.Wings.Wing()
+    wing.tag = 'strut'
+
+    wing.aspect_ratio = 1.7  #
+    wing.sweep = 0. * Units.deg
+    wing.thickness_to_chord = 0.1
+    wing.taper = 1.
+    wing.span_efficiency = 0.9
+
+    wing.chords.mean_aerodynamic = 3.36
+
+    wing.areas.reference = 50.0  #
+
+    wing.spans.projected = np.sqrt(wing.aspect_ratio * wing.areas.reference)
+
+    wing.areas.wetted = 2.0 * wing.areas.reference
+    wing.areas.exposed = 0.8 * wing.areas.wetted
+    wing.areas.affected = 0.6 * wing.areas.reference
+
+    wing.chords.root = 1.
+    wing.chords.tip = 1.45
+
+    wing.twists.root = 0.0 * Units.degrees
+    wing.twists.tip = 0.0 * Units.degrees
+
+    wing.origin = [13.2, 0, 0]
     # wing.aerodynamic_center      = [3,0,0] # Need to fix  ---> MUST INCLUDE A SIZING CALL, TO GENERATE PLANFORM
 
     wing.vertical = True

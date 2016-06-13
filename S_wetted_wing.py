@@ -80,6 +80,5 @@ def S_wet_fus(d_fus,h_fus,w_fus,l_nose,l_tail,l_center,l_fus):
     A_side = 0.5*h_fus*l_nose*1.05 + h_fus*l_center + 0.2*l_tail*(h_fus+0.6*h_fus)/2 + 0.8*l_tail*(0.6*h_fus+1.1*t_hor)/2 #m^2
     A_top = 0.5*w_fus*l_nose*1.05 + w_fus*l_center + 0.2*l_tail*(w_fus+0.6*w_fus)/2 + 0.8*l_tail*(0.6*w_fus+1.1*t_ver)/2 #m^2
     S_wet_fus = k_ar*(A_side+A_top)/2. + Sw_gf #m^2
-
     #S_wet_fus = (0.5*np.pi*d_fus**2)*(1+(l_fus/d_fus)*(k1*(fe1-2)+k2*(fe2-2)+2)) + Sw_gf #m^2
     return S_wet_fus

@@ -699,7 +699,9 @@ def post_process(nexus):
     cw = vehicle.wings.main_wing.chords.mean_aerodynamic
     b = vehicle.wings.main_wing.spans.projected
     Sh = vehicle.wings.horizontal_stabilizer.areas.reference
+
     Sv = vehicle.wings.vertical_stabilizer.areas.reference
+
     lh = vehicle.wings.horizontal_stabilizer.origin[0] + vehicle.wings.horizontal_stabilizer.aerodynamic_center[0] - \
          vehicle.mass_properties.center_of_gravity[0]
     lv = vehicle.wings.vertical_stabilizer.origin[0] + vehicle.wings.vertical_stabilizer.aerodynamic_center[0] - \
@@ -730,6 +732,11 @@ def post_process(nexus):
 
     # print         vehicle.wings.main_wing.areas.wetted + vehicle.wings.horizontal_stabilizer.areas.wetted +\
     #    vehicle.wings.vertical_stabilizer.areas.wetted + vehicle.fuselages.fuselage.areas.wetted
+
+    print vehicle.fuselages.fuselage.heights.maximum
+    print vehicle.fuselages.fuselage.width
+    print vehicle.fuselages.fuselage.effective_diameter
+    print np.pi*vehicle.fuselages.fuselage.width*vehicle.fuselages.fuselage.heights.maximum
 
     output_array = np.array([
         vehicle.wings.main_wing.aspect_ratio,
