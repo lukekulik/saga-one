@@ -108,8 +108,8 @@ def print_mission_breakdown(results,filename='mission_breakdown.dat'):
     fid.write(' Total Time  (hh:mm) ........ '+ time.strftime('    %H:%M', time.gmtime(TotalTime))+'\n')
     # Print timestamp
     fid.write(2*'\n'+ 43*'-'+ '\n' + datetime.datetime.now().strftime(" %A, %d. %B %Y %I:%M:%S %p"))
-    
-    fid.close
+
+    fid.close()
 
     #done! 
     return

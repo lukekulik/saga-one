@@ -8,10 +8,11 @@
 # ----------------------------------------------------------------------    
 
 import SUAVE
-from SUAVE.Core import Units, Data
 import numpy as np
-from engine import engine_caluclations
+from SUAVE.Core import Units
+
 from S_wetted_wing import S_wet_w, S_wet_fus
+from engine import engine_caluclations
 
 
 # ----------------------------------------------------------------------
@@ -26,9 +27,6 @@ def setup():
 
 
 def base_setup():
-
-
-
     # ------------------------------------------------------------------
     #   Initialize the Vehicle
     # ------------------------------------------------------------------
@@ -40,14 +38,12 @@ def base_setup():
 
     twin = "OFF"
     vehicle.thrust_total = 0e3 * Units.N  # defined in Optimize.py
-    num_engine = 4 # move to main -> how to guarantee these parameters when not optimized for??? - selected at the top and entered in inputs from there?
+    num_engine = 4  # move to main -> how to guarantee these parameters when not optimized for??? - selected at the top and entered in inputs from there?
     bypass = 7.5
 
     # design sizing conditions
     altitude = 19. * Units.km
     mach_number = 0.68
-
-
 
     # ------------------------------------------------------------------
     #   Vehicle-level Properties
@@ -70,7 +66,7 @@ def base_setup():
     # vehicle.mass_properties.moments_of_inertia.tensor = [[10 ** 5, 0, 0], [0, 10 ** 6, 0, ],
     #                                                      [0, 0, 10 ** 7]]  # Not Correct
 
-# envelope properties
+    # envelope properties
     vehicle.envelope.ultimate_load = 3.75
     vehicle.envelope.limit_load = 2.5
 
@@ -79,9 +75,6 @@ def base_setup():
     vehicle.passengers = 0
     vehicle.systems.control = "fully powered"
     vehicle.systems.accessories = "long-range"
-
-
-
 
     # ------------------------------------------------------------------
     #  Fuselage (Right)
@@ -99,8 +92,8 @@ def base_setup():
 
     fuselage.lengths.nose = 5.0
     fuselage.lengths.cabin = 10
-    fuselage.lengths.tail = 20.79-(0.65*fuselage.lengths.cabin)+0.8*7.48
-    #print 'l_tail = ', fuselage.lengths.tail
+    fuselage.lengths.tail = 20.79 - (0.65 * fuselage.lengths.cabin) + 0.8 * 7.48
+    # print 'l_tail = ', fuselage.lengths.tail
     fuselage.lengths.total = fuselage.lengths.nose + fuselage.lengths.cabin + fuselage.lengths.tail
     fuselage.lengths.fore_space = 0.
     fuselage.lengths.aft_space = 0.
@@ -111,13 +104,15 @@ def base_setup():
     fuselage.heights.at_three_quarters_length = 1.4
     fuselage.heights.at_wing_root_quarter_chord = 1.4
 
-    R = (fuselage.heights.maximum - fuselage.width)/(fuselage.heights.maximum + fuselage.width)
-    fuselage.effective_diameter = 0.5*(fuselage.heights.maximum + fuselage.width)*(63-3*R**4)/(64-16*R**2)
+    R = (fuselage.heights.maximum - fuselage.width) / (fuselage.heights.maximum + fuselage.width)
+    fuselage.effective_diameter = 0.5 * (fuselage.heights.maximum + fuselage.width) * (63 - 3 * R ** 4) / (
+        64 - 16 * R ** 2)
 
     fuselage.areas.side_projected = 8.
-    fuselage.areas.wetted = S_wet_fus(fuselage.effective_diameter,fuselage.heights.maximum,fuselage.width,fuselage.lengths.nose,fuselage.lengths.cabin,fuselage.lengths.tail,fuselage.lengths.total)
+    fuselage.areas.wetted = S_wet_fus(fuselage.effective_diameter, fuselage.heights.maximum, fuselage.width,
+                                      fuselage.lengths.nose, fuselage.lengths.cabin, fuselage.lengths.tail,
+                                      fuselage.lengths.total)
     fuselage.areas.front_projected = 0.78
-
 
     fuselage.differential_pressure = 0 * Units.pascal  # Maximum differential pressure
 
@@ -157,20 +152,12 @@ def base_setup():
         fuselage.areas.wetted = 21.05
         fuselage.areas.front_projected = 0.78
 
-        fuselage.effective_diameter = np.sqrt(fuselage.width*fuselage.heights.maximum)
+        fuselage.effective_diameter = np.sqrt(fuselage.width * fuselage.heights.maximum)
 
         fuselage.differential_pressure = 0 * Units.pascal  # Maximum differential pressure
 
         # add to vehicle
         vehicle.append_component(fuselage)
-
-    # # ------------------------------------------------------------------
-    # #  Airfoil
-    # # ------------------------------------------------------------------
-    #
-    # airfoil = SUAVE.Components.Wings.Airfoils.Airfoil()
-    # airfoils = SUAVE.Components.Wings.Airfoils.load_airfoils(
-    #     "/Users/lkulik/Dropbox/Shared/DSE Conceptual Design/suave_saga/")
 
     # ------------------------------------------------------------------
     #   Main Wing
@@ -180,38 +167,42 @@ def base_setup():
     wing.tag = 'main_wing'
     wing.aspect_ratio = 0  # selected in Optimize.py
     wing.taper = 0.5
-    wing.spans.projected = np.sqrt(wing.aspect_ratio * wing.areas.reference)
-
-    wing.chords.root = 2*wing.spans.projected/(wing.aspect_ratio*(1+wing.taper))
-
-    # wing.airfoil = airfoils["sc3"]
 
     wing.span_efficiency = 0.95
-    wing.areas.reference = 0  # selected in Optimize.py
+    wing.areas.reference = 0.  # selected in Optimize.py
 
     wing.sweep = 0.0 * Units.deg
 
     wing.thickness_to_chord = 0.12
 
-    wing.chords.tip = wing.chords.root*wing.taper
-    wing.chords.mean_aerodynamic = 2.* wing.chords.root/3.*(1+wing.taper+wing.taper**2)/(1+wing.taper)
+    wing.spans.projected = np.sqrt(wing.aspect_ratio * wing.areas.reference)
 
-    wing.areas.wetted = S_wet_w("sc3.dat",wing.taper,wing.areas.reference,wing.spans.projected\
-            ,wing.chords.root,100,fuselage.effective_diameter,fuselage.origin[1],twin) #2.0 * wing.areas.reference
+    wing.chords.root = 2 * wing.spans.projected / (wing.aspect_ratio * (1 + wing.taper))
+
+    wing.chords.tip = wing.chords.root * wing.taper
+    wing.chords.mean_aerodynamic = 2. * wing.chords.root / 3. * (1 + wing.taper + wing.taper ** 2) / (1 + wing.taper)
+
+    wing.areas.wetted = S_wet_w("sc3.dat", wing.taper, wing.areas.reference, wing.spans.projected, wing.chords.root, 100, fuselage.effective_diameter, fuselage.origin[1],
+                                twin)  # 2.0 * wing.areas.reference
     wing.areas.exposed = 0.8 * wing.areas.wetted
     wing.areas.affected = 0.6 * wing.areas.reference
 
     wing.twists.root = 2.0 * Units.degrees
     wing.twists.tip = 0.0 * Units.degrees
 
-    wing.origin = [13.2, 0, 0]  # Need to fix
+    wing.origin = [9.25, fuselage.heights.maximum, 0]  # Need to fix
     # wing.aerodynamic_center      = [3,0,0] # Need to fix  ---> MUST INCLUDE A SIZING CALL, TO GENERATE PLANFORM
 
     wing.vertical = False
     wing.symmetric = True
 
-    wing.high_lift = True
+    wing.high_lift = False
     wing.high_mach = False
+    wing.vortex_lift = True
+
+    wing.transition_x_upper = 0.2
+    wing.transition_x_lower = 0.25
+
     wing.flaps.type = "single_sloted"
     wing.flaps.chord = 0.0  # FIXME
 
@@ -221,8 +212,6 @@ def base_setup():
     wing.flaps.flap_chord_start = 0
     wing.flaps.flap_chord_end = 0
     wing.flaps.area = 0
-
-    # SUAVE.Methods.Geometry.Two_Dimensional.Planform.wing_planform(wing)
 
     # add to vehicle
     vehicle.append_component(wing)
@@ -241,7 +230,7 @@ def base_setup():
     wing.span_efficiency = 0.9
 
     wing.chords.root = 3.030
-    wing.chords.tip = 0.883 #FIXME
+    wing.chords.tip = 0.883  # FIXME
     wing.chords.mean_aerodynamic = 2.3840
 
     wing.areas.reference = 130
@@ -250,8 +239,8 @@ def base_setup():
     wing.areas.affected = 0.6 * wing.areas.reference
     wing.spans.projected = np.sqrt(wing.aspect_ratio * wing.areas.reference)
 
-    wing.chords.root = 0.5*wing.areas.reference/(0.5*wing.spans.projected*0.5*(1+wing.taper))
-    wing.chords.tip = wing.taper*wing.chords.root
+    wing.chords.root = 0.5 * wing.areas.reference / (0.5 * wing.spans.projected * 0.5 * (1 + wing.taper))
+    wing.chords.tip = wing.taper * wing.chords.root
 
     wing.twists.root = 2.0 * Units.degrees
     wing.twists.tip = 2.0 * Units.degrees
@@ -280,6 +269,45 @@ def base_setup():
     wing.taper = 0.4
     wing.span_efficiency = 0.9
 
+    wing.chords.mean_aerodynamic = 3.36
+
+    wing.areas.reference = 50.0  #
+
+    wing.spans.projected = np.sqrt(wing.aspect_ratio * wing.areas.reference)
+
+    wing.areas.wetted = 2.0 * wing.areas.reference
+    wing.areas.exposed = 0.8 * wing.areas.wetted
+    wing.areas.affected = 0.6 * wing.areas.reference
+
+    wing.chords.root = wing.areas.reference / (wing.spans.projected * 0.5 * (1 + wing.taper))
+    wing.chords.tip = 1.45
+
+    wing.twists.root = 0.0 * Units.degrees
+    wing.twists.tip = 0.0 * Units.degrees
+
+    wing.origin = [29.5, 0, 0]
+    # wing.aerodynamic_center      = [3,0,0] # Need to fix  ---> MUST INCLUDE A SIZING CALL, TO GENERATE PLANFORM
+
+    wing.vertical = True
+    wing.symmetric = False
+
+    wing.dynamic_pressure_ratio = 1.0
+
+    # add to vehicle
+    vehicle.append_component(wing)
+
+    # ------------------------------------------------------------------
+    #   Strut
+    # ------------------------------------------------------------------
+
+    wing = SUAVE.Components.Wings.Wing()
+    wing.tag = 'strut'
+
+    wing.aspect_ratio = 1.7  #
+    wing.sweep = 0. * Units.deg
+    wing.thickness_to_chord = 0.1
+    wing.taper = 1.
+    wing.span_efficiency = 0.9
 
     wing.chords.mean_aerodynamic = 3.36
 
@@ -291,13 +319,13 @@ def base_setup():
     wing.areas.exposed = 0.8 * wing.areas.wetted
     wing.areas.affected = 0.6 * wing.areas.reference
 
-    wing.chords.root = wing.areas.reference/(wing.spans.projected*0.5*(1+wing.taper))
+    wing.chords.root = 1.
     wing.chords.tip = 1.45
 
     wing.twists.root = 0.0 * Units.degrees
     wing.twists.tip = 0.0 * Units.degrees
 
-    wing.origin = [29.5, 0, 0]
+    wing.origin = [13.2, 0, 0]
     # wing.aerodynamic_center      = [3,0,0] # Need to fix  ---> MUST INCLUDE A SIZING CALL, TO GENERATE PLANFORM
 
     wing.vertical = True
@@ -333,8 +361,6 @@ def base_setup():
     landing_gear.main_wheels = 4  # number of wheels on the main landing gear
     landing_gear.nose_wheels = 2  # number of wheels on the nose landing gear
     vehicle.landing_gear = landing_gear
-
-
 
     # ------------------------------------------------------------------
     #  Turbofan Network
@@ -416,7 +442,7 @@ def configs_setup(vehicle):
     config.tag = 'cruise'
 
     config.maximum_lift_coefficient = 1.4
-    config.propulsors.turbofan.generator.power_draw = 0.5e6 / config.propulsors.turbofan.number_of_engines # MW per engine
+    config.propulsors.turbofan.generator.power_draw = 0.5e6 / config.propulsors.turbofan.number_of_engines  # MW per engine
 
     configs.append(config)
 
@@ -445,10 +471,10 @@ def configs_setup(vehicle):
     config.V2_VS_ratio = 1.21
     config.maximum_lift_coefficient = 2.2
 
-    config.landing_gear.gear_condition    = 'up'
+    config.landing_gear.gear_condition = 'up'
 
-    config.propulsors[0].fan.rotation     = 3470. #N1 speed
-    config.propulsors[0].fan_nozzle.noise_speed  = 315. #FIXME - unvertified nums
+    config.propulsors[0].fan.rotation = 3470.  # N1 speed
+    config.propulsors[0].fan_nozzle.noise_speed = 315.  # FIXME - unvertified nums
     config.propulsors[0].core_nozzle.noise_speed = 415.
 
     configs.append(config)
@@ -470,7 +496,7 @@ def configs_setup(vehicle):
     config.propulsors[0].fan_nozzle.noise_speed = 109.3
     config.propulsors[0].core_nozzle.noise_speed = 92.
 
-    config.landing_gear.gear_condition    = 'down'
+    config.landing_gear.gear_condition = 'down'
 
     configs.append(config)
 
@@ -481,13 +507,13 @@ def configs_setup(vehicle):
     config.tag = 'cutback'
     config.wings['main_wing'].flaps.angle = 20. * Units.deg
     config.wings['main_wing'].slats.angle = 20. * Units.deg
-    config.max_lift_coefficient_factor    = 1. #0.95
-    #Noise input for the landing gear
-    config.landing_gear.gear_condition    = 'up'
-    config.output_filename                = 'Cutback_'
+    config.max_lift_coefficient_factor = 1.  # 0.95
+    # Noise input for the landing gear
+    config.landing_gear.gear_condition = 'up'
+    config.output_filename = 'Cutback_'
 
-    config.propulsors.turbofan.fan.rotation     = 2780. #N1 speed
-    config.propulsors.turbofan.fan_nozzle.noise_speed  = 210.
+    config.propulsors.turbofan.fan.rotation = 2780.  # N1 speed
+    config.propulsors.turbofan.fan_nozzle.noise_speed = 210.
     config.propulsors.turbofan.core_nozzle.noise_speed = 360.
 
     configs.append(config)

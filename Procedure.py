@@ -8,32 +8,27 @@
 # ----------------------------------------------------------------------    
 
 import SUAVE
-from SUAVE.Core import Units, Data
 import numpy as np
-import copy
 from SUAVE.Analyses.Process import Process
-from SUAVE.Methods.Propulsion.turbofan_sizing import turbofan_sizing
-from SUAVE.Methods.Geometry.Two_Dimensional.Cross_Section.Propulsion.compute_turbofan_geometry import \
-    compute_turbofan_geometry
-from SUAVE.Methods.Center_of_Gravity.compute_component_centers_of_gravity import compute_component_centers_of_gravity
-from SUAVE.Methods.Center_of_Gravity.compute_aircraft_center_of_gravity import compute_aircraft_center_of_gravity
-from SUAVE.Methods.Aerodynamics.Fidelity_Zero.Lift.compute_max_lift_coeff import compute_max_lift_coeff
-from SUAVE.Methods.Performance import estimate_take_off_field_length
-from SUAVE.Methods.Performance import estimate_landing_field_length
-from SUAVE.Methods.Flight_Dynamics.Dynamic_Stability.Full_Linearized_Equations.longitudinal import longitudinal
+from SUAVE.Core import Units, Data
 from SUAVE.Input_Output.Results import print_parasite_drag, \
     print_compress_drag, \
     print_weight_breakdown
+from SUAVE.Methods.Aerodynamics.Fidelity_Zero.Lift.compute_max_lift_coeff import compute_max_lift_coeff
+from SUAVE.Methods.Center_of_Gravity.compute_aircraft_center_of_gravity import compute_aircraft_center_of_gravity
+from SUAVE.Methods.Center_of_Gravity.compute_component_centers_of_gravity import compute_component_centers_of_gravity
+from SUAVE.Methods.Geometry.Two_Dimensional.Cross_Section.Propulsion.compute_turbofan_geometry import \
+    compute_turbofan_geometry
+from SUAVE.Methods.Noise.Fidelity_One.Airframe import noise_airframe_Fink
+from SUAVE.Methods.Noise.Fidelity_One.Engine import noise_SAE
+from SUAVE.Methods.Performance import estimate_landing_field_length
+from SUAVE.Methods.Performance import estimate_take_off_field_length
+from SUAVE.Methods.Propulsion.turbofan_sizing import turbofan_sizing
+
 from print_engine_data import print_engine_data
 from print_mission_breakdown import print_mission_breakdown
 
-from SUAVE.Methods.Noise.Fidelity_One.Airframe import noise_airframe_Fink
-from SUAVE.Methods.Noise.Fidelity_One.Engine import noise_SAE
-
-from SUAVE.Methods.Noise.Fidelity_One.Noise_Tools import pnl_noise
-from SUAVE.Methods.Noise.Fidelity_One.Noise_Tools import noise_tone_correction
-from SUAVE.Methods.Noise.Fidelity_One.Noise_Tools import epnl_noise
-from SUAVE.Methods.Noise.Fidelity_One.Noise_Tools import noise_certification_limits
+numpy_export = False
 
 
 def pretty_print(d, indent=0):  # recursive printer
@@ -135,8 +130,7 @@ def find_target_range(nexus, mission):
         aerosol_sum += segment.aerosol_mass_initial
 
     for segment in segments:
-        segment.aerosol_mass_initial = segment.aerosol_mass_initial * (payload / aerosol_sum) # scaling to account for possible changed payload
-
+        segment.aerosol_mass_initial *= payload / aerosol_sum  # scaling to account for possible changed payload
 
     # segments.aerosol_mass_initial
 
@@ -335,7 +329,7 @@ def compute_noise(config, analyses, noise_segment):
 
     engine_noise = noise_SAE(turbofan, noise_segment, config, analyses, print_output, outputfile_engine)
 
-    noise_sum = 10. * np.log10(10 ** (airframe_noise[0] / 10) + (engine_flag) * 10 ** (engine_noise[0] / 10))
+    noise_sum = 10. * np.log10(10 ** (airframe_noise[0] / 10) + engine_flag * 10 ** (engine_noise[0] / 10))
 
     return noise_sum
 
@@ -346,7 +340,7 @@ def compute_noise(config, analyses, noise_segment):
 def design_mission(nexus):
     mission = nexus.missions.base
     mission.design_range = 7000. * Units['km']
-    find_target_range(nexus,mission)
+    find_target_range(nexus, mission)
 
     results = nexus.results
     results.base = mission.evaluate()
@@ -365,7 +359,7 @@ def simple_sizing(nexus):
     # find conditions
     air_speed = nexus.missions.base.segments['cruise_2'].air_speed
 
-    altitude = 18.5 * Units.km  # nexus.missions.base.segments['climb_8'].altitude_end #FIXME
+    altitude = 19 * Units.km  # nexus.missions.base.segments['climb_8'].altitude_end #FIXME
 
     atmosphere = SUAVE.Analyses.Atmospheric.US_Standard_1976()
 
@@ -401,7 +395,7 @@ def simple_sizing(nexus):
         fuselage = config.fuselages['fuselage']
         fuselage.differential_pressure = diff_pressure
 
-        print config.tag
+        # print config.tag
         # print mach_number, altitude
         # print config.propulsors.turbofan
         turbofan_sizing(config.propulsors['turbofan'], mach_number, altitude)
@@ -611,17 +605,15 @@ def post_process(nexus):
     clmax = 0
     for segment in results.base.segments.values():
         cl = np.max(segment.conditions.aerodynamics.lift_coefficient[:, 0])
-        if cl>clmax:
-            clmax=cl
+        if cl > clmax:
+            clmax = cl
 
     summary.clmax = clmax
-
 
     for i in range(1, len(results.base.segments)):  # make fuel burn and sprayer continuous
         # print i
         results.base.segments[i].conditions.weights.fuel_burn[:, 0] += \
             results.base.segments[i - 1].conditions.weights.fuel_burn[-1]
-
 
         results.base.segments[i].conditions.weights.spray[:, 0] += \
             results.base.segments[i - 1].conditions.weights.spray[-1]
@@ -731,6 +723,8 @@ def post_process(nexus):
     # print         vehicle.wings.main_wing.areas.wetted + vehicle.wings.horizontal_stabilizer.areas.wetted +\
     #    vehicle.wings.vertical_stabilizer.areas.wetted + vehicle.fuselages.fuselage.areas.wetted
 
+    SUAVE.Input_Output.D3JS.save_tree(vehicle, output_folder + 'tree.json')
+
     output_array = np.array([
         vehicle.wings.main_wing.aspect_ratio,
         vehicle.wings.main_wing.areas.reference,
@@ -751,11 +745,11 @@ def post_process(nexus):
 
         gt_engine.number_of_engines,
         gt_engine.mass_properties.mass / gt_engine.number_of_engines,  # PER ENGINE
-        gt_engine.mass_properties.mass / 1.6 / gt_engine.number_of_engines,  # PER ENGINE DRY WEIGHT
+        9000,  # PER ENGINE DRY WEIGHT
         gt_engine.nacelle_diameter,
 
         summary.base_mission_fuelburn,
-        zero_fuel_weight + summary.base_mission_fuelburn,
+        vehicle.mass_properties.max_takeoff,
         operating_empty,
         design_landing_weight,
         vehicle.weight_breakdown.wing,
@@ -820,19 +814,22 @@ def post_process(nexus):
                       ]
     fuel_burn_sec = np.zeros(1)
     for i in range(1, len(results.base.segments)):
-        fuel_burn_sec = np.hstack((fuel_burn_sec,results.base.segments[i - 1].conditions.weights.fuel_burn[-1]))
+        fuel_burn_sec = np.hstack((fuel_burn_sec, results.base.segments[i - 1].conditions.weights.fuel_burn[-1]))
 
-    wing_loading = (operating_empty + summary.base_mission_fuelburn - fuel_burn_sec)*9.81/vehicle.wings.main_wing.areas.reference
+    wing_loading = (
+                       operating_empty + summary.base_mission_fuelburn - fuel_burn_sec) * 9.81 / vehicle.wings.main_wing.areas.reference
     # print wing_loading
     # print output_array[output_indexes.index("c_r_v")]
     # print output_array[-1]
 
     # print vehicle.weight_breakdown
-    np.save(output_folder + "wing_loading.npy", wing_loading)
-    np.save(output_folder + "output_array.npy", output_array)
-    np.save(output_folder + "output_indices.npy", output_indices)
-    np.save(output_folder + "output_array_segments.npy", output_array_segments)
-    np.save(output_folder + "output_segment_indices.npy", output_segment_indices)
+
+    if numpy_export:
+        np.save(output_folder + "wing_loading.npy", wing_loading)
+        np.save(output_folder + "output_array.npy", output_array)
+        np.save(output_folder + "output_indices.npy", output_indices)
+        np.save(output_folder + "output_array_segments.npy", output_array_segments)
+        np.save(output_folder + "output_segment_indices.npy", output_segment_indices)
 
     for value in unscaled_inputs:
         problem_inputs.append(value)

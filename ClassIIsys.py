@@ -1,8 +1,9 @@
-from SUAVE.Core import Units, Data
 import numpy as np
+from SUAVE.Core import Data
+
 
 def classIIsys(Nen,W_eng,V_fuel, Iy_SI,S_cstot,L_fus,OEW,MTOW,Vmax,b):
-    '----------Raymer and Roskam Stuff---------------------'
+    """----------Raymer and Roskam Stuff---------------------"""
     Wen = W_eng/0.45359237 #lb
     Vt = V_fuel*264.172052#gallons
     Vi = V_fuel*2 #lbs

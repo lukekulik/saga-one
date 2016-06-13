@@ -44,24 +44,24 @@ for jNode in range(mNode-1):
         jPoint = jNode*nNode + iNode + 1
         kPoint = (jNode + 1)*nNode + iNode
         Mesh_File.write( "%s \t %s \t %s \t %s \t %s\n" % (KindElem, iPoint, jPoint, kPoint, iElem) )
-        iElem = iElem + 1
+        iElem += 1
         iPoint = jNode*nNode + (iNode + 1)
         jPoint = (jNode + 1)*nNode + (iNode + 1)
         kPoint = (jNode + 1)*nNode + iNode
         Mesh_File.write( "%s \t %s \t %s \t %s \t %s\n" % (KindElem, iPoint, jPoint, kPoint, iElem) )
-        iElem = iElem + 1
+        iElem += 1
 
 # Compute the number of nodes and write the node coordinates
-nPoint = (nNode)*(mNode)
+nPoint = nNode * mNode
 Mesh_File.write( "%\n" )
 Mesh_File.write( "% Node coordinates\n" )
 Mesh_File.write( "%\n" )
-Mesh_File.write( "NPOIN= %s\n" % ((nNode)*(mNode)) )
+Mesh_File.write( "NPOIN= %s\n" % (nNode * mNode))
 iPoint = 0
 for jNode in range(mNode):
     for iNode in range(nNode):
         Mesh_File.write( "%15.14f \t %15.14f \t %s\n" % (float(iNode)/float(nNode-1), float(jNode)/float(mNode-1), iPoint) )
-        iPoint = iPoint + 1
+        iPoint += 1
 
 # Write the header information for the boundary markers
 Mesh_File.write( "%\n" )

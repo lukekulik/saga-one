@@ -7,10 +7,8 @@
 #   Imports
 # ----------------------------------------------------------------------    
 
-import SUAVE
-from SUAVE.Core import Units, Data
-import numpy as np
 import pylab as plt
+from SUAVE.Core import Units
 
 
 # ----------------------------------------------------------------------
