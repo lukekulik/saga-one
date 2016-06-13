@@ -62,6 +62,10 @@ class Turbine(Energy_Component):
 
         if hasattr(self.inputs, 'generator'):
             generator_work = self.inputs.generator.work_done
+            if not (generator_work.shape == compressor_work.shape):
+                if np.all(generator_work==generator_work[0]):
+                    generator_work=generator_work[0] #FIXME ugly hack to make optimizer work
+            # print compressor_work.shape == generator_work.shape
         else:
             generator_work = 0
 
@@ -70,6 +74,7 @@ class Turbine(Energy_Component):
         etapolt = self.polytropic_efficiency
 
         # method to compute turbine properties
+        # if generator_work!=0:
 
         # Using the work done by the compressors/fan and the fuel to air ratio to compute the energy drop across the turbine
         deltah_ht = -1 / (1 + f) * 1 / eta_mech * (compressor_work + generator_work + alpha * fan_work)

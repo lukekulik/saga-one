@@ -35,6 +35,7 @@ from SUAVE.Methods.Noise.Fidelity_One.Noise_Tools import noise_tone_correction
 from SUAVE.Methods.Noise.Fidelity_One.Noise_Tools import epnl_noise
 from SUAVE.Methods.Noise.Fidelity_One.Noise_Tools import noise_certification_limits
 
+numpy_export = False
 
 def pretty_print(d, indent=0):  # recursive printer
     for key in d.keys():
@@ -365,7 +366,7 @@ def simple_sizing(nexus):
     # find conditions
     air_speed = nexus.missions.base.segments['cruise_2'].air_speed
 
-    altitude = 18.5 * Units.km  # nexus.missions.base.segments['climb_8'].altitude_end #FIXME
+    altitude = 19 * Units.km  # nexus.missions.base.segments['climb_8'].altitude_end #FIXME
 
     atmosphere = SUAVE.Analyses.Atmospheric.US_Standard_1976()
 
@@ -401,7 +402,7 @@ def simple_sizing(nexus):
         fuselage = config.fuselages['fuselage']
         fuselage.differential_pressure = diff_pressure
 
-        print config.tag
+        # print config.tag
         # print mach_number, altitude
         # print config.propulsors.turbofan
         turbofan_sizing(config.propulsors['turbofan'], mach_number, altitude)
@@ -699,9 +700,7 @@ def post_process(nexus):
     cw = vehicle.wings.main_wing.chords.mean_aerodynamic
     b = vehicle.wings.main_wing.spans.projected
     Sh = vehicle.wings.horizontal_stabilizer.areas.reference
-
     Sv = vehicle.wings.vertical_stabilizer.areas.reference
-
     lh = vehicle.wings.horizontal_stabilizer.origin[0] + vehicle.wings.horizontal_stabilizer.aerodynamic_center[0] - \
          vehicle.mass_properties.center_of_gravity[0]
     lv = vehicle.wings.vertical_stabilizer.origin[0] + vehicle.wings.vertical_stabilizer.aerodynamic_center[0] - \
@@ -733,10 +732,8 @@ def post_process(nexus):
     # print         vehicle.wings.main_wing.areas.wetted + vehicle.wings.horizontal_stabilizer.areas.wetted +\
     #    vehicle.wings.vertical_stabilizer.areas.wetted + vehicle.fuselages.fuselage.areas.wetted
 
-    print vehicle.fuselages.fuselage.heights.maximum
-    print vehicle.fuselages.fuselage.width
-    print vehicle.fuselages.fuselage.effective_diameter
-    print np.pi*vehicle.fuselages.fuselage.width*vehicle.fuselages.fuselage.heights.maximum
+    SUAVE.Input_Output.D3JS.save_tree(vehicle, output_folder+'tree.json')
+
 
     output_array = np.array([
         vehicle.wings.main_wing.aspect_ratio,
@@ -758,7 +755,7 @@ def post_process(nexus):
 
         gt_engine.number_of_engines,
         gt_engine.mass_properties.mass / gt_engine.number_of_engines,  # PER ENGINE
-        gt_engine.mass_properties.mass / 1.6 / gt_engine.number_of_engines,  # PER ENGINE DRY WEIGHT
+        9000,  # PER ENGINE DRY WEIGHT
         gt_engine.nacelle_diameter,
 
         summary.base_mission_fuelburn,
@@ -835,11 +832,13 @@ def post_process(nexus):
     # print output_array[-1]
 
     # print vehicle.weight_breakdown
-    np.save(output_folder + "wing_loading.npy", wing_loading)
-    np.save(output_folder + "output_array.npy", output_array)
-    np.save(output_folder + "output_indices.npy", output_indices)
-    np.save(output_folder + "output_array_segments.npy", output_array_segments)
-    np.save(output_folder + "output_segment_indices.npy", output_segment_indices)
+
+    if numpy_export:
+        np.save(output_folder + "wing_loading.npy", wing_loading)
+        np.save(output_folder + "output_array.npy", output_array)
+        np.save(output_folder + "output_indices.npy", output_indices)
+        np.save(output_folder + "output_array_segments.npy", output_array_segments)
+        np.save(output_folder + "output_segment_indices.npy", output_segment_indices)
 
     for value in unscaled_inputs:
         problem_inputs.append(value)

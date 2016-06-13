@@ -164,13 +164,6 @@ def base_setup():
         # add to vehicle
         vehicle.append_component(fuselage)
 
-    # # ------------------------------------------------------------------
-    # #  Airfoil
-    # # ------------------------------------------------------------------
-    #
-    # airfoil = SUAVE.Components.Wings.Airfoils.Airfoil()
-    # airfoils = SUAVE.Components.Wings.Airfoils.load_airfoils(
-    #     "/Users/lkulik/Dropbox/Shared/DSE Conceptual Design/suave_saga/")
 
     # ------------------------------------------------------------------
     #   Main Wing
@@ -180,21 +173,22 @@ def base_setup():
     wing.tag = 'main_wing'
     wing.aspect_ratio = 0  # selected in Optimize.py
     wing.taper = 0.5
-    wing.spans.projected = np.sqrt(wing.aspect_ratio * wing.areas.reference)
-
-    wing.chords.root = 2*wing.spans.projected/(wing.aspect_ratio*(1+wing.taper))
-
-    # wing.airfoil = airfoils["sc3"]
 
     wing.span_efficiency = 0.95
-    wing.areas.reference = 0  # selected in Optimize.py
+    wing.areas.reference = 0.  # selected in Optimize.py
 
     wing.sweep = 0.0 * Units.deg
 
     wing.thickness_to_chord = 0.12
 
+    wing.spans.projected = np.sqrt(wing.aspect_ratio * wing.areas.reference)
+
+    wing.chords.root = 2 * wing.spans.projected / (wing.aspect_ratio * (1 + wing.taper))
+
     wing.chords.tip = wing.chords.root*wing.taper
     wing.chords.mean_aerodynamic = 2.* wing.chords.root/3.*(1+wing.taper+wing.taper**2)/(1+wing.taper)
+
+
 
     wing.areas.wetted = S_wet_w("sc3.dat",wing.taper,wing.areas.reference,wing.spans.projected\
             ,wing.chords.root,100,fuselage.effective_diameter,fuselage.origin[1],twin) #2.0 * wing.areas.reference
@@ -210,8 +204,14 @@ def base_setup():
     wing.vertical = False
     wing.symmetric = True
 
-    wing.high_lift = True
+
+    wing.high_lift = False
     wing.high_mach = False
+    wing.vortex_lift = True
+
+    wing.transition_x_upper = 0.2
+    wing.transition_x_lower = 0.25
+
     wing.flaps.type = "single_sloted"
     wing.flaps.chord = 0.0  # FIXME
 
@@ -222,7 +222,6 @@ def base_setup():
     wing.flaps.flap_chord_end = 0
     wing.flaps.area = 0
 
-    # SUAVE.Methods.Geometry.Two_Dimensional.Planform.wing_planform(wing)
 
     # add to vehicle
     vehicle.append_component(wing)

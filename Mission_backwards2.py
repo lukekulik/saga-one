@@ -464,9 +464,9 @@ def base(analyses):
     segment.atmosphere = atmosphere
     segment.planet = planet
 
-    segment.altitude_end = 19.2 * Units.km
-    segment.air_speed = 200. * Units['m/s']
-    segment.descent_rate = 500. * Units['ft/min']
+    segment.altitude_end = 18 * Units.km
+    segment.air_speed = 210. * Units['m/s']
+    segment.descent_rate = 1000. * Units['ft/min']
     segment.aerosol_mass_initial = 0 * Units.kg  # mass to be sprayed in this segment
     # segment.process.iterate.conditions.weights = update_weights_sprayer
     segment.sprayer_rate = 0 * Units['kg/s']
@@ -489,7 +489,7 @@ def base(analyses):
     segment.planet = planet
 
     segment.altitude_end = 3.657 * Units.km
-    segment.air_speed = 180. * Units['m/s']
+    segment.air_speed = 200. * Units['m/s']
     segment.descent_rate = 6.6 * Units['m/s']
 
     segment.aerosol_mass_initial = 0 * Units.kg  # mass to be sprayed in this segment
@@ -621,7 +621,7 @@ def base(analyses):
     segment.sprayer_rate = 0 * Units['kg/s']
 
     segment.mach_end = 0.24
-    segment.mach_start = 0.3
+    segment.mach_start = 0.4
 
     # append to mission
     mission.append_segment(segment)

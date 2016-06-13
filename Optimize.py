@@ -25,23 +25,16 @@ import SUAVE.Optimization.Package_Setups.pyopt_setup as pyopt_setup
 # ----------------------------------------------------------------------
 
 
-# give proper output to backwork it
-# newest config:
-# S:700, vc:700, ret_h: 19.2, ret_vc = 750, A=15
-# MTOW: 170T, thrust: 115kN
-#  fuel burn:  [ 41769.08023241]
-
-# AVL Analysis on or off
-AVL_analysis = False
+AVL_analysis = False  # AVL Analysis switch
 
 
 def main():
     print "SUAVE initialized...\n"
     problem = setup()  # "problem" is a nexus
 
-    output = problem.objective()  # uncomment this line when using the default inputs
+    # output = problem.objective()  # uncomment this line when using the default inputs
     # variable_sweep(problem)  # uncomment this to view some contours of the problem
-    # output = scipy_setup.SciPy_Solve(problem, solver='SLSQP') # uncomment this to optimize the values
+    output = scipy_setup.SciPy_Solve(problem, solver='SLSQP') # uncomment this to optimize the values
 
     print 'constraints=', problem.all_constraints()
 
@@ -74,54 +67,20 @@ def setup():
 
     problem.inputs = np.array([
         # Variable inputs
-        ['wing_area', 700, (400., 750.), 500., Units.meter ** 2],
-        ['MTOW', 207e3, (170000., 250000.), 200000., Units.kg],
-        ['alt_outgoing_cruise', 13.14, (8., 15.), 13., Units.km],
-        ['design_thrust', 110e3, (80e3, 120e3), 100e3, Units.N],
-        ['outgoing_cruise_speed', 191., (150, 220), 200, Units['m/s']],
-        ['spray_cruise_speed', 210., (150, 220), 200, Units['m/s']],
+        ['wing_area', 700., (650., 705.), 500., Units.meter ** 2],
+        ['MTOW', 207e3, (195000., 210000.), 200000., Units.kg],
+        ['alt_outgoing_cruise', 13.14, (11., 14.), 13., Units.km],
+        ['design_thrust', 110e3, (100e3, 120e3), 100e3, Units.N],
+        ['outgoing_cruise_speed', 191., (180, 212), 200, Units['m/s']],
+        ['spray_cruise_speed', 210., (190, 212), 200, Units['m/s']],
         # climb throttle as input?
 
         # "Set" inputs
-        ['AR', 13, (13, 15), 15, Units.less],
-        ['payload', 30e3, (20e3, 40e3), 40e3, Units.kg],
+        ['AR', 13., (13, 15), 15, Units.less],
+        ['payload', 30e3, (30e3, 35e3), 30e3, Units.kg],
         # speeds???
     ])
-    # opt results: [700.0000000000755, 180623.48270764505, 13.147354544329831, 93680.83722141015, 193.90945445747235, 200.00000000005906, 15.00000022353205]
 
-    #   [ tag, initial, (lb,ub) , scaling , units ]
-    # problem.inputs = np.array([
-    # ['wing_area', 700, (400., 600.), 500., Units.meter ** 2],  # was 480 before -> constrained by tip deflection not strength!
-    # ['MTOW', 180000., (160000.,160000.), 160000., Units.kg],
-    # ['cruise_speed', 700., (600., 900.), 500., Units['km/h']],  # 756
-    # ['return_cruise_alt', 19.2, (8., 20.), 10, Units.km],
-    # ['AR',15,(10,15),10,Units.less], # wing area, vs MTOW fuel weight for different
-    # ['return_cruise_speed', 750., (600., 760.), 500., Units['km/h']],
-
-    # ['cruise_altitude',19,(19,19),19,Units.km],
-    # ['wing_sweep', 0, (0,0),5,Units.less],
-
-    # [ 'cruise_altitude'              ,  19.5    , (   19.5   ,    21.   ) ,   10.  , Units.km],
-    # [ 'c1_airspeed'              ,  90    , (   50   ,    250.   ) ,   100.  , Units['m/s']],
-    # [ 'c1_rate'              ,  15    , (   1   ,    25.   ) ,   10.  , Units['m/s']],
-    #
-    # [ 'c2_airspeed'              ,  110    , (   50   ,    250.   ) ,   100.  , Units['m/s']],
-    # [ 'c2_rate'              ,  11    , (   1   ,    25.   ) ,   10.  , Units['m/s']],
-    #
-    # [ 'c3_airspeed'              ,  120    , (   50   ,    250.   ) ,   100.  , Units['m/s']],
-    # [ 'c3_rate'              ,  8    , (   1   ,    25.   ) ,   10.  , Units['m/s']],
-    #
-    # [ 'c4_airspeed'              ,  150    , (   50   ,    250.   ) ,   100.  , Units['m/s']],
-    # [ 'c4_rate'              ,  6    , (   1   ,    25.   ) ,   10.  , Units['m/s']],
-    #
-    # [ 'c5_airspeed'              ,  200    , (   50   ,    250.   ) ,   100.  , Units['m/s']],
-    # [ 'c5_rate'              ,  4    , (   1   ,    25.   ) ,   10.  , Units['m/s']]
-
-    # segment.altitude_end   = 3 * Units.km
-    #     segment.air_speed      = 118.0 * Units['m/s']
-    #     segment.climb_rate     = 15. * Units['m/s']
-
-    # ])
 
     # -------------------------------------------------------------------
     # Objective
@@ -130,29 +89,25 @@ def setup():
     # throw an error if the user isn't specific about wildcards
     # [ tag, scaling, units ]
     problem.objective = np.array([
-        # [ 'Nothing', 1, Units.kg ]
-        # ['max_throttle', .8 ,Units.less],
-        ['fuel_burn', 45000., Units.kg]
+        ['fuel_burn', 40000., Units.kg]
     ])
 
     # -------------------------------------------------------------------
     # Constraints
     # -------------------------------------------------------------------
 
-    # stuctural weight below some threshold
     # [ tag, sense, edge, scaling, units ]
     problem.constraints = np.array([
 
         # ['min_throttle', '>', 0., 1e-2, Units.less],
         ['max_throttle', '<', 1., 1e-2, Units.less],
         ['main_mission_time', '<', 11.1, 1, Units.h],
-        # ['aerosol_released', '=', 40000., 50., Units.kg ],
-        ['design_range_fuel_margin', '>', 0.05, 1E-1, Units.less],
-        ['take_off_field_length', '<', 2500., 1e-1, Units.m],
-        ['landing_field_length', '<', 2500., 1e-1, Units.m],
-        ['MTOW_delta', '<', '1', 4, Units.kg],
-        ['MTOW_delta', '>', '-1', 4, Units.kg],  # tricky to predict the effects of MTOW constraints
-        ['clmax','<',1.1,0.1,Units.less]
+        ['design_range_fuel_margin', '>', 0.1, 1E-1, Units.less],
+        # ['take_off_field_length', '<', 2500., 1e-1, Units.m],
+        # ['landing_field_length', '<', 2500., 1e-1, Units.m],
+        ['clmax', '<', 1.1, 0.1, Units.less]
+        #main mission range
+
 
     ])
 
@@ -198,9 +153,6 @@ def setup():
         ['mission_range', 'summary.mission_range'],
 
         ['clmax','summary.clmax'],
-
-        # ['aerosol_released', '=', 40000., 50., Units.kg], #FIXME
-
 
 
 
