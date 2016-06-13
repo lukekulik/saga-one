@@ -8,13 +8,11 @@
 # ----------------------------------------------------------------------
 
 # suave imports
-import SUAVE
 
 # package imports
 import numpy as np
-
-from SUAVE.Core import Data, Results
 from SUAVE.Components.Propulsors.Propulsor import Propulsor
+from SUAVE.Core import Data, Results
 
 
 # ----------------------------------------------------------------------

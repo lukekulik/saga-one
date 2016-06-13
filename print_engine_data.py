@@ -3,12 +3,11 @@
 # ----------------------------------------------------------------------
 #  Imports
 # ----------------------------------------------------------------------
-import numpy as np
-import SUAVE
-from SUAVE.Core import Units, Data
-
-import time  # importing library
 import datetime  # importing library
+
+import SUAVE
+import numpy as np
+from SUAVE.Core import Units, Data
 
 
 # ----------------------------------------------------------------------
@@ -110,7 +109,7 @@ def print_engine_data(vehicle, filename='engine_data.dat'):
             fid.write('\n')
 
     # close file
-    fid.close
+    fid.close()
     # Print timestamp
     fid.write('\n\n' + 50 * '-' + '\n' + datetime.datetime.now().strftime(" %A, %d. %B %Y %I:%M:%S %p"))
 

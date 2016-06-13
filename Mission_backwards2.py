@@ -347,7 +347,7 @@ def base(analyses):
 
 
     segment.altitude_end = 19 * Units.km
-    segment.air_speed = (climb_air_speed ) * Units['m/s']
+    segment.air_speed = climb_air_speed * Units['m/s']
     segment.throttle = climb_throttle
 
     # segment.process.iterate.conditions.weights = update_weights_sprayer

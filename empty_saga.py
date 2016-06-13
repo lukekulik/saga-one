@@ -6,21 +6,21 @@
 # ----------------------------------------------------------------------
 #  Imports
 # ----------------------------------------------------------------------
+import warnings
+
 import SUAVE
-from SUAVE.Core import Units, Data
-from tube import tube
-from landing_gear import landing_gear
-from hor_tail import hor_tail
-from vert_tail import vert_tail
+from SUAVE.Core import Data
+from SUAVE.Methods.Weights.Correlations import Propulsion as Propulsion
+from SUAVE.Methods.Weights.Correlations.Tube_Wing.payload import payload
+from SUAVE.Methods.Weights.Correlations.Tube_Wing.tail_vertical import tail_vertical
+
 from ClassIIsys import classIIsys
 from ClassIIsys import propgroup
-from SUAVE.Methods.Weights.Correlations.Tube_Wing.payload import payload
-from SUAVE.Methods.Weights.Correlations.Tube_Wing.systems import systems
-from SUAVE.Methods.Weights.Correlations.Tube_Wing.tail_horizontal import tail_horizontal
-from SUAVE.Methods.Weights.Correlations.Tube_Wing.tail_vertical import tail_vertical
+from hor_tail import hor_tail
+from landing_gear import landing_gear
+from tube import tube
+from vert_tail import vert_tail
 from wing_main import wing_main
-from SUAVE.Methods.Weights.Correlations import Propulsion as Propulsion
-import warnings
 
 
 # ----------------------------------------------------------------------
@@ -224,7 +224,7 @@ def empty(vehicle):
     output_prop = propgroup(num_eng,wt_engine_jet,d_eng,l_eng,output_sys.w_fuelsys,output_sys.w_starter,Nult,Vmax)
     wt_propulsion = output_prop.w_propulsion
     # Calculate the equipment empty weight of the aircraft
-    wt_empty = (wt_wing + wt_fuselage + wt_landing_gear + wt_propulsion + output_sys.w_system + \
+    wt_empty = (wt_wing + wt_fuselage + wt_landing_gear + wt_propulsion + output_sys.w_system +
                 wt_tail_horizontal + output_3.wt_tail_vertical + output_3.wt_rudder)
     vehicle.fuselages['fuselage'].mass_properties.mass = wt_fuselage
 

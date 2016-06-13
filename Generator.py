@@ -8,9 +8,8 @@
 # ----------------------------------------------------------------------
 
 # suave imports
-import SUAVE
-from SUAVE.Components.Energy.Energy_Component import Energy_Component
 import numpy as np
+from SUAVE.Components.Energy.Energy_Component import Energy_Component
 
 
 # ----------------------------------------------------------------------

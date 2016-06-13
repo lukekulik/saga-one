@@ -8,10 +8,9 @@
 # ----------------------------------------------------------------------    
 
 import SUAVE
-import numpy as np
-from SUAVE.Core import Units
-from empty_saga import empty
+
 from Optimize import AVL_analysis
+from empty_saga import empty
 
 
 # ----------------------------------------------------------------------
@@ -62,7 +61,7 @@ def base(vehicle):
 
     # ------------------------------------------------------------------
     #  Aerodynamics Analysis
-    if AVL_analysis == False:  # Run zero-fidelity method
+    if not AVL_analysis:  # Run zero-fidelity method
         aerodynamics = SUAVE.Analyses.Aerodynamics.Fidelity_Zero()
         aerodynamics.geometry = vehicle
 

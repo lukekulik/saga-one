@@ -6,19 +6,17 @@
 #   Imports
 # ----------------------------------------------------------------------    
 
-import SUAVE
-from SUAVE.Core import Units, Data
-import numpy as np
-import Vehicles
-import Analyses
-import Mission_backwards2_leaf
-import Mission_backwards2
-import Procedure
-import Plot_Mission
-import matplotlib.pyplot as plt
-from SUAVE.Optimization import Nexus, carpet_plot
 import SUAVE.Optimization.Package_Setups.scipy_setup as scipy_setup
-import SUAVE.Optimization.Package_Setups.pyopt_setup as pyopt_setup
+import matplotlib.pyplot as plt
+import numpy as np
+from SUAVE.Core import Units, Data
+from SUAVE.Optimization import Nexus, carpet_plot
+
+import Analyses
+import Mission_backwards2
+import Plot_Mission
+import Procedure
+import Vehicles
 
 # ----------------------------------------------------------------------
 #   Run the whole thing
@@ -32,9 +30,9 @@ def main():
     print "SUAVE initialized...\n"
     problem = setup()  # "problem" is a nexus
 
-    # output = problem.objective()  # uncomment this line when using the default inputs
+    output = problem.objective()  # uncomment this line when using the default inputs
     # variable_sweep(problem)  # uncomment this to view some contours of the problem
-    output = scipy_setup.SciPy_Solve(problem, solver='SLSQP') # uncomment this to optimize the values
+    # output = scipy_setup.SciPy_Solve(problem, solver='SLSQP')  # uncomment this to optimize the values
 
     print 'constraints=', problem.all_constraints()
 
@@ -56,15 +54,6 @@ def setup():
     # Inputs
     # -------------------------------------------------------------------
 
-    # twin = "OFF"
-    # thrust_total = 115000 * Units.N  # Newtons 111
-    # num_engine = 4  # move to main -> how to guarantee these parameters when not optimized for??? - selected at the top and entered in inputs from there?
-    # bypass = 6
-
-    # wing weight 70 tonnes -> 40 tonnes
-
-    #A=13 48 tonnes from 70 - > 35 tonnes for a composite strutted wing?
-
     problem.inputs = np.array([
         # Variable inputs
         ['wing_area', 700., (650., 705.), 500., Units.meter ** 2],
@@ -80,7 +69,6 @@ def setup():
         ['payload', 30e3, (30e3, 35e3), 30e3, Units.kg],
         # speeds???
     ])
-
 
     # -------------------------------------------------------------------
     # Objective
@@ -106,8 +94,7 @@ def setup():
         # ['take_off_field_length', '<', 2500., 1e-1, Units.m],
         # ['landing_field_length', '<', 2500., 1e-1, Units.m],
         ['clmax', '<', 1.1, 0.1, Units.less]
-        #main mission range
-
+        # main mission range
 
     ])
 
@@ -152,14 +139,7 @@ def setup():
 
         ['mission_range', 'summary.mission_range'],
 
-        ['clmax','summary.clmax'],
-
-
-
-
-
-
-
+        ['clmax', 'summary.clmax'],
 
         ['design_range_fuel_margin', 'summary.max_zero_fuel_margin'],
 
