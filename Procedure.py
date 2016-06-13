@@ -756,6 +756,10 @@ def post_process(nexus):
         vehicle.weight_breakdown.fuselage,
         vehicle.weight_breakdown.landing_gear,
         payload,
+        vehicle.weight_breakdown.horizontal_tail,
+        vehicle.weight_breakdown.vertical_tail,
+        vehicle.weight_breakdown.systems,
+        vehicle.weight_breakdown.rudder,
 
         820.,  # Fuel density
 
@@ -803,6 +807,10 @@ def post_process(nexus):
                       "m_fus",
                       "m_landing_gear",
                       "m_payload",
+                      "m_htail",
+                      "m_vtail",
+                      "m_systems",
+                      "m_rudder",
                       "rho_fuel",
                       "sweep_h",
                       "b_h",
@@ -844,6 +852,8 @@ def post_process(nexus):
 
     file_out.write('\n')
     file_out.close()
+
+    #print vehicle.weight_breakdown.wing
 
     print_weight_breakdown(nexus.vehicle_configurations.base, filename=output_folder + 'weight_breakdown.dat')
     #

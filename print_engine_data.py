@@ -108,10 +108,12 @@ def print_engine_data(vehicle, filename='engine_data.dat'):
             fid.write('|')
             fid.write('\n')
 
-    # close file
-    fid.close()
+
     # Print timestamp
     fid.write('\n\n' + 50 * '-' + '\n' + datetime.datetime.now().strftime(" %A, %d. %B %Y %I:%M:%S %p"))
+
+    # close file
+    fid.close()
 
     # done!
     return
