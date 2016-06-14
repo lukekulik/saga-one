@@ -704,19 +704,26 @@ def post_process(nexus):
     problem_inputs = []
 
     # SEGMENTS: need to loop it and add all segments
-    output_array_segments = np.zeros(4).reshape(4, 1)
+    output_array_segments = np.zeros(6).reshape(6, 1)
     for i in range(1, len(results.base.segments)):
         # print results.base.segments[i].conditions.aerodynamics.lift_coefficient[:, 0]
         # print results.base.segments[i].conditions.aerodynamics.angle_of_attack[:, 0] / Units.deg
         # print results.base.segments[i].conditions.freestream.dynamic_viscosity[:,0]
-        # print results.base.segments[i].conditions.freestream.density[:,0]
+        # print results.base.segments[i].conditions.freestream.density[:,0].shape
+        # print results.base.segments[i].conditions.freestream.mach_number[:, 0].shape
+        # print results.base.segments[i].conditions.freestream.reynolds_number[:, 0]
         output_array_i = np.vstack((results.base.segments[i].conditions.aerodynamics.lift_coefficient[:, 0],
                                     results.base.segments[i].conditions.aerodynamics.angle_of_attack[:, 0] / Units.deg,
                                     results.base.segments[i].conditions.freestream.dynamic_viscosity[:, 0],
-                                    results.base.segments[i].conditions.freestream.density[:, 0]))
+                                    results.base.segments[i].conditions.freestream.density[:, 0],
+                                    results.base.segments[i].conditions.freestream.mach_number[:, 0],
+                                    results.base.segments[i].conditions.freestream.reynolds_number[:, 0]))
         output_array_segments = np.hstack((output_array_segments, output_array_i))
 
-    output_segment_indices = ["CL", "alpha", "dynamic_visc", "air_density"]
+    output_segment_indices = ["CL", "alpha", "dynamic_visc", "air_density", "mach", "reynolds_number"]
+
+    C_L_des = np.average(output_array_segments[0,112:176]) #Average CL over the spraying cruise
+    # print C_L_des
 
     # print output_array_segments[segment_output_indexes.index("CL")]
 
@@ -863,8 +870,8 @@ def post_process(nexus):
     # # print parasite drag data into file
     # # define reference condition for parasite drag
     ref_condition = Data()
-    ref_condition.mach_number = 0.7  # FIXME
-    ref_condition.reynolds_number = 7e6  # FIXME
+    ref_condition.mach_number = 0.71  # FIXME
+    ref_condition.reynolds_number = 9e6  # FIXME
     Analyses = Data()
     Analyses.configs = nexus.analyses
 
