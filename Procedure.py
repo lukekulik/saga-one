@@ -705,7 +705,7 @@ def post_process(nexus):
 
     # SEGMENTS: need to loop it and add all segments
     output_array_segments = np.zeros(6).reshape(6, 1)
-    for i in range(1, len(results.base.segments)):
+    for i in range(0, len(results.base.segments)):
         # print results.base.segments[i].conditions.aerodynamics.lift_coefficient[:, 0]
         # print results.base.segments[i].conditions.aerodynamics.angle_of_attack[:, 0] / Units.deg
         # print results.base.segments[i].conditions.freestream.dynamic_viscosity[:,0]

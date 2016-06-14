@@ -30,13 +30,13 @@ def main():
     print "SUAVE initialized...\n"
     problem = setup()  # "problem" is a nexus
 
-    # output = problem.objective()  # uncomment this line when using the default inputs
+    output = problem.objective()  # uncomment this line when using the default inputs
     # variable_sweep(problem)  # uncomment this to view some contours of the problem
-    output = scipy_setup.SciPy_Solve(problem, solver='SLSQP')  # uncomment this to optimize the values
+    # output = scipy_setup.SciPy_Solve(problem, solver='SLSQP')  # uncomment this to optimize the values
 
     print 'constraints=', problem.all_constraints()
 
-    Plot_Mission.plot_mission(problem.results, show=False)
+    Plot_Mission.plot_mission(problem.results, show=True)
 
     return
 
