@@ -119,7 +119,7 @@ def base(vehicle):
 
     # ------------------------------------------------------------------
     #  Atmosphere Analysis
-    atmosphere = SUAVE.Analyses.Atmospheric.US_Standard_1976(temperature_deviation=0.0)
+    atmosphere = SUAVE.Analyses.Atmospheric.US_Standard_1976(temperature_deviation=30.0)
     atmosphere.features.planet = planet.features
     analyses.append(atmosphere)
 

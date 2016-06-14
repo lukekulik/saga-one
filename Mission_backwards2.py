@@ -49,7 +49,7 @@ def base(analyses):
 
     # airport
     airport = SUAVE.Attributes.Airports.Airport()
-    airport.altitude = 0.0 * Units.ft
+    airport.altitude = 0.0 * Units.km
     airport.delta_isa = 0.0
     airport.atmosphere = SUAVE.Analyses.Atmospheric.US_Standard_1976
 

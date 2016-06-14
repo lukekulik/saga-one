@@ -29,7 +29,7 @@ def print_engine_data(vehicle, filename='engine_data.dat'):
 
     """
 
-    d_isa_vec = [0, 10]
+    d_isa_vec = [0, 25]
     speed_vec = np.linspace(0, 450, 10) * Units.knots
     speed_vec[0] = 1.
     hp_vec = np.linspace(0, 66000, 11) * Units.ft
