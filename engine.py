@@ -75,7 +75,7 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
     combustor.alphac = 1.0
     combustor.turbine_inlet_temperature = 1450
     combustor.pressure_ratio = 0.96
-    combustor.fuel_data = Jet_JP7()
+    combustor.fuel_data = SUAVE.Attributes.Propellants.Jet_A()
     # combustor.fuel_data = SUAVE.Attributes.Propellants.Jet_A()
     # add the combustor to the network
     gt_engine.combustor = combustor

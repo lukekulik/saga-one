@@ -310,7 +310,7 @@ def base(analyses):
     segment.planet = planet
 
     segment.air_speed = 210. * Units['m/s']
-    segment.distance = 1000 * Units.km
+    segment.distance = 1075 * Units.km
 
     # segment.conditions.weights.vehicle_mass_rate = 2 * Units['kg/s']
 
@@ -353,7 +353,7 @@ def base(analyses):
     # segment.process.iterate.conditions.weights = update_weights_sprayer
     # segment.sprayer_rate = 0 * Units['kg/s']
 
-    segment.aerosol_mass_initial = 1450. * Units.kg  # mass to be sprayed in this segment
+    segment.aerosol_mass_initial = 750. * Units.kg  # mass to be sprayed in this segment
 
     # add to mission
     mission.append_segment(segment)
@@ -373,7 +373,7 @@ def base(analyses):
     segment.planet = planet
 
     segment.air_speed = 210. * Units['m/s']
-    segment.distance = 1150 * Units.km
+    segment.distance = 1225 * Units.km
 
     # segment.conditions.weights.vehicle_mass_rate = 2 * Units['kg/s']
 
@@ -416,7 +416,7 @@ def base(analyses):
 
     # segment.process.iterate.conditions.weights = update_weights_sprayer
     # segment.sprayer_rate = 0 * Units['kg/s']
-    segment.aerosol_mass_initial = 800. * Units.kg  # mass to be sprayed in this segment
+    segment.aerosol_mass_initial = 400. * Units.kg  # mass to be sprayed in this segment
 
     # add to misison
     mission.append_segment(segment)
@@ -436,12 +436,12 @@ def base(analyses):
     segment.planet = planet
 
     segment.air_speed = 210. * Units['m/s']
-    segment.distance = 900 * Units.km
+    segment.distance = 1000 * Units.km
 
     # segment.conditions.weights.vehicle_mass_rate = 2 * Units['kg/s']
 
     # segment.process.iterate.conditions.weights = update_weights_sprayer
-    segment.aerosol_mass_initial = 11000 * Units.kg  # mass to be sprayed in this segment
+    segment.aerosol_mass_initial = 11800 * Units.kg  # mass to be sprayed in this segment
 
     # segment.sprayer_rate = aerosol_mass_initial / (segment.distance / segment.air_speed ) #* Units['kg/s'] #1.2121 * Units['kg/s']
     # print segment.sprayer_rate # delegate rate to a method which will calculate live rate?

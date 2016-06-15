@@ -36,7 +36,7 @@ def main():
 
     print 'constraints=', problem.all_constraints()
 
-    Plot_Mission.plot_mission(problem.results, show=True)
+    Plot_Mission.plot_mission(problem.results, show=False)
 
     return
 
@@ -66,7 +66,7 @@ def setup():
 
         # "Set" inputs
         ['AR', 13., (13., 15.), 15, Units.less], # aerosol resleased per kg of fuel ratio max?
-        ['payload', 30e3, (30e3, 40e3), 30e3, Units.kg],
+        ['payload', 35e3, (35e3, 35e3), 30e3, Units.kg],
         # speeds???
     ])
 
