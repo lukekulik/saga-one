@@ -92,7 +92,7 @@ def base_setup():
 
     fuselage.lengths.nose = 5.0
     fuselage.lengths.cabin = 10
-    fuselage.lengths.tail = 20.79 - (0.65 * fuselage.lengths.cabin) + 0.8 * 7.48
+    fuselage.lengths.tail = 20.79 - (0.75 * 7.61) + 0.8 * 7.48
     # print 'l_tail = ', fuselage.lengths.tail
     fuselage.lengths.total = fuselage.lengths.nose + fuselage.lengths.cabin + fuselage.lengths.tail
     fuselage.lengths.fore_space = 0.
@@ -265,11 +265,11 @@ def base_setup():
 
     wing.aspect_ratio = 1.7  #
     wing.sweep = 30 * Units.deg
-    wing.thickness_to_chord = 0.11
-    wing.taper = 0.4
+    wing.thickness_to_chord = 0.10
+    wing.taper = 0.2
     wing.span_efficiency = 0.9
 
-    wing.chords.mean_aerodynamic = 3.36
+    wing.chords.mean_aerodynamic = 4.98
 
     wing.areas.reference = 50.0  #
 
