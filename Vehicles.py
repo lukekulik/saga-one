@@ -303,7 +303,7 @@ def base_setup():
     wing = SUAVE.Components.Wings.Wing()
     wing.tag = 'strut'
 
-    wing.aspect_ratio = 1.7  #
+    wing.aspect_ratio = 29.13  #So high
     wing.sweep = 0. * Units.deg
     wing.thickness_to_chord = 0.1
     wing.taper = 1.
@@ -311,25 +311,25 @@ def base_setup():
 
     wing.chords.mean_aerodynamic = 3.36
 
-    wing.areas.reference = 50.0  #
+    wing.areas.reference = 2.*28.2927  #
 
     wing.spans.projected = np.sqrt(wing.aspect_ratio * wing.areas.reference)
 
     wing.areas.wetted = 2.0 * wing.areas.reference
-    wing.areas.exposed = 0.8 * wing.areas.wetted
+    wing.areas.exposed = 1.0 * wing.areas.wetted
     wing.areas.affected = 0.6 * wing.areas.reference
 
-    wing.chords.root = 1.
-    wing.chords.tip = 1.45
+    wing.chords.root = 1.393728
+    wing.chords.tip = 1.393728
 
-    wing.twists.root = 0.0 * Units.degrees
-    wing.twists.tip = 0.0 * Units.degrees
+    wing.twists.root = -3. * Units.degrees
+    wing.twists.tip = -3. * Units.degrees
 
     wing.origin = [13.2, 0, 0]
     # wing.aerodynamic_center      = [3,0,0] # Need to fix  ---> MUST INCLUDE A SIZING CALL, TO GENERATE PLANFORM
 
-    wing.vertical = True
-    wing.symmetric = False
+    wing.vertical = False
+    wing.symmetric = True
 
     wing.dynamic_pressure_ratio = 1.0
 
@@ -339,7 +339,7 @@ def base_setup():
     # ------------------------------------------------------------------
     #   Landing gear
     # ------------------------------------------------------------------
-
+    #
     # vehicle.landing_gear = Data()
     # vehicle.landing_gear.main_tire_diameter = 1.12000 * Units.m
     # vehicle.landing_gear.nose_tire_diameter = 0.6858 * Units.m
