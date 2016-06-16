@@ -56,17 +56,17 @@ def setup():
 
     problem.inputs = np.array([
         # Variable inputs
-        ['wing_area', 700., (650., 705.), 500., Units.meter ** 2],
-        ['MTOW', 207e3, (195000., 210000.), 200000., Units.kg],
-        ['alt_outgoing_cruise', 13.14, (11., 14.), 13., Units.km],
+        ['wing_area', 700., (650., 705.), 500., Units.meter**2],
+        ['MTOW', 207e3, (195e3, 210e3), 200e3, Units.kg],
+        ['alt_outgoing_cruise', 13.14, (11., 14.), 13., Units.km],  #explain the physics behing the optimizer
         ['design_thrust', 110e3, (100e3, 120e3), 100e3, Units.N],
-        ['outgoing_cruise_speed', 191., (180, 212), 200, Units['m/s']],
-        ['spray_cruise_speed', 210., (190, 212), 200, Units['m/s']],
+        ['outgoing_cruise_speed', 191., (180., 212.), 200, Units['m/s']],
+        ['spray_cruise_speed', 210., (205., 212.), 200, Units['m/s']],
         # climb throttle as input?
 
         # "Set" inputs
-        ['AR', 13., (13, 15), 15, Units.less],
-        ['payload', 30e3, (30e3, 35e3), 30e3, Units.kg],
+        ['AR', 13., (13., 15.), 15, Units.less], # aerosol resleased per kg of fuel ratio max?
+        ['payload', 35e3, (35e3, 35e3), 30e3, Units.kg],
         # speeds???
     ])
 
@@ -87,13 +87,13 @@ def setup():
     # [ tag, sense, edge, scaling, units ]
     problem.constraints = np.array([
 
-        # ['min_throttle', '>', 0., 1e-2, Units.less],
-        ['max_throttle', '<', 1., 1e-2, Units.less],
-        ['main_mission_time', '<', 11.1, 1, Units.h],
+        # ['min_throttle', '>', 0., 1e-1, Units.less],
+        ['max_throttle', '<', 1., 1, Units.less],
+        # ['main_mission_time', '<', 11.1, 10, Units.h],
         ['design_range_fuel_margin', '>', 0.1, 1E-1, Units.less],
-        # ['take_off_field_length', '<', 2500., 1e-1, Units.m],
-        # ['landing_field_length', '<', 2500., 1e-1, Units.m],
-        ['clmax', '<', 1.1, 0.1, Units.less]
+        # ['take_off_field_length', '<', 2500., 2500, Units.m],
+        # ['landing_field_length', '<', 2500., 2500, Units.m],
+        ['clmax', '<', 1.1, 1, Units.less]
         # main mission range
 
     ])
@@ -121,8 +121,6 @@ def setup():
 
         ['outgoing_cruise_speed', 'missions.base.segments.cruise_outgoing.air_speed'],
 
-        # thrust_total
-        # 1000.0
 
         ['AR', 'vehicle_configurations.*.wings.main_wing.aspect_ratio'],
 

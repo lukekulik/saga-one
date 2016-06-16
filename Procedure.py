@@ -592,7 +592,7 @@ def post_process(nexus):
 
     # Fuel margin and base fuel calculations
 
-    vehicle.mass_properties.operating_empty += 6e3  # FIXME hardcoded wing mass correction # area scaling?
+    vehicle.mass_properties.operating_empty += 0e3  # FIXME hardcoded wing mass correction # area scaling?
 
     operating_empty = vehicle.mass_properties.operating_empty
     payload = vehicle.mass_properties.payload  # TODO fuel margin makes little sense when ejecting aerosol
@@ -704,19 +704,26 @@ def post_process(nexus):
     problem_inputs = []
 
     # SEGMENTS: need to loop it and add all segments
-    output_array_segments = np.zeros(4).reshape(4, 1)
-    for i in range(1, len(results.base.segments)):
+    output_array_segments = np.zeros(6).reshape(6, 1)
+    for i in range(0, len(results.base.segments)):
         # print results.base.segments[i].conditions.aerodynamics.lift_coefficient[:, 0]
         # print results.base.segments[i].conditions.aerodynamics.angle_of_attack[:, 0] / Units.deg
         # print results.base.segments[i].conditions.freestream.dynamic_viscosity[:,0]
-        # print results.base.segments[i].conditions.freestream.density[:,0]
+        # print results.base.segments[i].conditions.freestream.density[:,0].shape
+        # print results.base.segments[i].conditions.freestream.mach_number[:, 0].shape
+        # print results.base.segments[i].conditions.freestream.reynolds_number[:, 0]
         output_array_i = np.vstack((results.base.segments[i].conditions.aerodynamics.lift_coefficient[:, 0],
                                     results.base.segments[i].conditions.aerodynamics.angle_of_attack[:, 0] / Units.deg,
                                     results.base.segments[i].conditions.freestream.dynamic_viscosity[:, 0],
-                                    results.base.segments[i].conditions.freestream.density[:, 0]))
+                                    results.base.segments[i].conditions.freestream.density[:, 0],
+                                    results.base.segments[i].conditions.freestream.mach_number[:, 0],
+                                    results.base.segments[i].conditions.freestream.reynolds_number[:, 0]))
         output_array_segments = np.hstack((output_array_segments, output_array_i))
 
-    output_segment_indices = ["CL", "alpha", "dynamic_visc", "air_density"]
+    output_segment_indices = ["CL", "alpha", "dynamic_visc", "air_density", "mach", "reynolds_number"]
+
+    C_L_des = np.average(output_array_segments[0,112:176]) #Average CL over the spraying cruise
+    # print C_L_des
 
     # print output_array_segments[segment_output_indexes.index("CL")]
 
@@ -756,6 +763,10 @@ def post_process(nexus):
         vehicle.weight_breakdown.fuselage,
         vehicle.weight_breakdown.landing_gear,
         payload,
+        vehicle.weight_breakdown.horizontal_tail,
+        vehicle.weight_breakdown.vertical_tail,
+        vehicle.weight_breakdown.systems,
+        vehicle.weight_breakdown.rudder,
 
         820.,  # Fuel density
 
@@ -803,6 +814,10 @@ def post_process(nexus):
                       "m_fus",
                       "m_landing_gear",
                       "m_payload",
+                      "m_htail",
+                      "m_vtail",
+                      "m_systems",
+                      "m_rudder",
                       "rho_fuel",
                       "sweep_h",
                       "b_h",
@@ -845,6 +860,8 @@ def post_process(nexus):
     file_out.write('\n')
     file_out.close()
 
+    #print vehicle.weight_breakdown.wing
+
     print_weight_breakdown(nexus.vehicle_configurations.base, filename=output_folder + 'weight_breakdown.dat')
     #
     # # print engine data into file
@@ -853,8 +870,8 @@ def post_process(nexus):
     # # print parasite drag data into file
     # # define reference condition for parasite drag
     ref_condition = Data()
-    ref_condition.mach_number = 0.7  # FIXME
-    ref_condition.reynolds_number = 7e6  # FIXME
+    ref_condition.mach_number = 0.71  # FIXME
+    ref_condition.reynolds_number = 9e6  # FIXME
     Analyses = Data()
     Analyses.configs = nexus.analyses
 
