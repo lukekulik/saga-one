@@ -63,7 +63,7 @@ def tube(S_fus, diff_p_fus, w_fus, h_fus, l_nose, l_center,l_tail, l_fus, Nlim, 
     fuselage_weight = ((1.051+0.102*I_f) * area)  * Units.lb # Convert from lbs to kg
 
     h_gf = 2*2.5 #m - factor of 2 because there are two bays
-    w_gf = 1.75#m
+    w_gf = 1.750#m
     #d_gf = np.sqrt(h_gf*w_gf)
     R_gf = (h_gf-w_gf)/(h_gf+w_gf)
     d_gf = 0.5*(w_gf+h_gf)*(63-3*R_gf**4)/(64-16*R_gf**2)
