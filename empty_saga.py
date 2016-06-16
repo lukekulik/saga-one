@@ -102,7 +102,7 @@ def empty(vehicle):
     num_seats = vehicle.fuselages['fuselage'].number_coach_seats
     ctrl_type = vehicle.systems.control
     ac_type = vehicle.systems.accessories
-    V_descent = 80
+    V_descent = 80.
     d_fus = vehicle.fuselages['fuselage'].effective_diameter
 
     propulsor_name = vehicle.propulsors.keys()[0]  # obtain the key for the propulsor for assignment purposes

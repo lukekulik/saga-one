@@ -29,7 +29,7 @@ def print_engine_data(vehicle, filename='engine_data.dat'):
 
     """
 
-    d_isa_vec = [0, 10]
+    d_isa_vec = [0, 25]
     speed_vec = np.linspace(0, 450, 10) * Units.knots
     speed_vec[0] = 1.
     hp_vec = np.linspace(0, 66000, 11) * Units.ft
@@ -108,11 +108,11 @@ def print_engine_data(vehicle, filename='engine_data.dat'):
             fid.write('|')
             fid.write('\n')
 
-    # close file
-    fid.close()
+
     # Print timestamp
     fid.write('\n\n' + 50 * '-' + '\n' + datetime.datetime.now().strftime(" %A, %d. %B %Y %I:%M:%S %p"))
-
+    # close file
+    fid.close()
     # done!
     return
 

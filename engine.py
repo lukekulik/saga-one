@@ -75,7 +75,7 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
     combustor.alphac = 1.0
     combustor.turbine_inlet_temperature = 1450
     combustor.pressure_ratio = 0.96
-    combustor.fuel_data = Jet_JP7()
+    combustor.fuel_data = SUAVE.Attributes.Propellants.Jet_A()
     # combustor.fuel_data = SUAVE.Attributes.Propellants.Jet_A()
     # add the combustor to the network
     gt_engine.combustor = combustor
@@ -113,8 +113,8 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
     gt_engine.generator = generator
 
     # Engine setup for noise module
-    gt_engine.core_nozzle_diameter = 1.2
-    gt_engine.fan_nozzle_diameter = 3.5
+    gt_engine.core_nozzle_diameter = 0.92
+    gt_engine.fan_nozzle_diameter = 1.659
     gt_engine.engine_height = 1.35  # Engine centerline heigh above the ground plane
     gt_engine.exa = 1  # distance from fan face to fan exit/ fan diameter)
     gt_engine.plug_diameter = 0.1  # dimater of the engine plug
