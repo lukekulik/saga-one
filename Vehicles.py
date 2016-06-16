@@ -91,9 +91,9 @@ def base_setup():
     fuselage.fineness.tail = 2.5
 
     fuselage.lengths.nose = 7.0
-    fuselage.lengths.cabin = 10
+    fuselage.lengths.cabin = 9.771
     fuselage.lengths.tail = 29.79 - (0.75 * 7.61) + 0.90 * 7.48
-    # print 'l_tail = ', fuselage.lengths.tail
+    #print 'l_tail = ', fuselage.lengths.tail
     fuselage.lengths.total = fuselage.lengths.nose + fuselage.lengths.cabin + fuselage.lengths.tail
     fuselage.lengths.fore_space = 0.
     fuselage.lengths.aft_space = 0.
