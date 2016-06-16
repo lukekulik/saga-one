@@ -207,6 +207,7 @@ def empty(vehicle):
 
     # Calculating Empty Weight of Aircraft
     wt_landing_gear, gear,h_gear = landing_gear(TOW, d_eng, h_fus, V_descent)
+    #print 'h_gear =', h_gear
     l_nose = vehicle.fuselages['fuselage'].lengths.nose
     l_center = vehicle.fuselages['fuselage'].lengths.cabin
     l_tail = vehicle.fuselages['fuselage'].lengths.tail
