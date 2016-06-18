@@ -18,12 +18,12 @@ from SUAVE.Core import Units
 def plot_mission(results, show=True, line_style='bo-'):
     axis_font = {'fontname': 'Arial', 'size': '14'}
     folder = "output/graphs/"
-    file_format = ".png"
+    file_format = ".eps"
 
     # ------------------------------------------------------------------
     #   Aerodynamics 
     # ------------------------------------------------------------------
-    fig = plt.figure("Aerodynamic Coefficients", figsize=(8, 10))
+    fig = plt.figure("Aerodynamic Coefficients", figsize=(8, 9))
     for segment in results.base.segments.values():
         time = segment.conditions.frames.inertial.time[:, 0] / Units.min
         CLift = segment.conditions.aerodynamics.lift_coefficient[:, 0]
@@ -56,7 +56,7 @@ def plot_mission(results, show=True, line_style='bo-'):
 
         l_d = CLift / CDrag
 
-        axes = fig.add_subplot(4, 1, 1)
+        axes = fig.add_subplot(3, 1, 1)
         axes.plot(time, CLift, line_style)
         # axes.plot(time,cl_inviscid,'ro-')
         # axes.plot(time, cl_compressible, 'ro-')
@@ -64,21 +64,16 @@ def plot_mission(results, show=True, line_style='bo-'):
         axes.set_ylabel('Lift Coefficient', axis_font)
         axes.grid(True)
 
-        axes = fig.add_subplot(4, 1, 2)
+        axes = fig.add_subplot(3, 1, 2)
         axes.plot(time, l_d, line_style)
         axes.set_ylabel('L/D', axis_font)
         axes.grid(True)
 
-        axes = fig.add_subplot(4, 1, 3)
-        axes.plot(time, eta, line_style)
-        axes.set_ylabel('Throttle (%)', axis_font)
-        axes.grid(True)
-
-        axes = fig.add_subplot(4, 1, 4)
+        axes = fig.add_subplot(3, 1, 3)
         axes.plot(time, aoa, line_style)
-        axes.plot(time, body_angle, 'ro-')
+        # axes.plot(time, body_angle, 'ro-')
         axes.set_xlabel('Time (min)', axis_font)
-        axes.set_ylabel('AOA + body angle (deg)', axis_font)
+        axes.set_ylabel('Angle of attack (deg)', axis_font)
         axes.grid(True)
 
     plt.savefig(folder + "fig1" + file_format, bbox_inches='tight')
@@ -86,7 +81,7 @@ def plot_mission(results, show=True, line_style='bo-'):
     # ------------------------------------------------------------------
     #   Aerodynamics 2
     # ------------------------------------------------------------------
-    fig = plt.figure("Drag Components", figsize=(8, 10))
+    fig = plt.figure("Drag Components", figsize=(8, 9))
     axes = plt.gca()
     for i, segment in enumerate(results.base.segments.values()):
 
@@ -103,8 +98,8 @@ def plot_mission(results, show=True, line_style='bo-'):
         if line_style == 'bo-':
             axes.plot(time, cdp, 'ko-', label='CD parasite')
             axes.plot(time, cdi, 'bo-', label='CD induced')
-            axes.plot(time, cdc, 'go-', label='CD compressibility')
-            # axes.plot(time, cdm, 'yo-', label='CD miscellaneous')
+            axes.plot(time, cdc, 'go-', label='CD mach')
+            axes.plot(time, cdm, 'yo-', label='CD misc.')
             axes.plot(time, cd, 'ro-', label='CD total')
             if i == 0:
                 axes.legend(loc='upper left')
@@ -125,7 +120,7 @@ def plot_mission(results, show=True, line_style='bo-'):
     #   Altitude, vehicle weight
     # ------------------------------------------------------------------
 
-    fig = plt.figure("Altitude, Weight", figsize=(8, 10))
+    fig = plt.figure("Altitude, Weight and Throttle", figsize=(8, 10))
     i=0
     for i, segment in enumerate(results.base.segments.values()):
         time = segment.conditions.frames.inertial.time[:, 0] / Units.min
@@ -142,30 +137,38 @@ def plot_mission(results, show=True, line_style='bo-'):
         # spray_rate = segment.sprayer_rate
         thrust = segment.conditions.frames.body.thrust_force_vector[:, 0]
         sfc = mdot / thrust
+        eta = segment.conditions.propulsion.throttle[:, 0]
 
         # if segment.conditions.
 
         fuel_burn = segment.conditions.weights.fuel_burn[:, 0]
         sprayed_weight = segment.conditions.weights.spray[:, 0]
 
-        axes = fig.add_subplot(3, 1, 1)
+        axes = fig.add_subplot(4, 1, 1)
         axes.plot(time, altitude, line_style)
         axes.set_ylabel('Altitude (m)', axis_font)
+        axes.minorticks_on()
         axes.grid(True)
 
-        axes = fig.add_subplot(3, 1, 2)
+        axes = fig.add_subplot(4, 1, 2)
         axes.plot(time, mass, 'ro-', label='Aircraft mass')
         axes.plot(time, fuel_burn, line_style, label='Fuel burn')
         axes.plot(time, sprayed_weight, 'go-', label='Aerosol released')
+        axes.minorticks_on()
         axes.set_ylabel('Weight (kg)', axis_font)
         axes.grid(True)
         if i==0:
             legend = axes.legend(loc='upper right', shadow=False)
 
-        axes = fig.add_subplot(3, 1, 3)
+        axes = fig.add_subplot(4, 1, 3)
         axes.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
         axes.plot(time, sfc, line_style)
         axes.set_ylabel('Specific fuel consumption (kg/Ns)', axis_font)
+        axes.grid(True)
+
+        axes = fig.add_subplot(4, 1, 4)
+        axes.plot(time, eta, line_style)
+        axes.set_ylabel('Throttle (%)', axis_font)
         axes.grid(True)
 
         axes.set_xlabel('Time (min)')
