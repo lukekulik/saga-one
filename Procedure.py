@@ -995,7 +995,7 @@ def post_process(nexus):
     print_compress_drag(nexus.vehicle_configurations.cruise, Analyses, filename=output_folder + 'compress_drag.dat')
 
     # print mission breakdown
-    # print_mission_breakdown(nexus.results.base,
-    #                         filename=output_folder + 'mission_breakdown.dat')  # FIXME fuel weight adds aerosol = wrong!!!!!
+    print_mission_breakdown(nexus.results.base,
+                            filename=output_folder + 'mission_breakdown.dat')  # FIXME fuel weight adds aerosol = wrong!!!!!
 
     return nexus
