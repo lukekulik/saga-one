@@ -558,7 +558,7 @@ def base(analyses):
     segment.planet = planet
 
     segment.altitude_start = 0.0 * Units.km
-    segment.altitude_end = 5 * Units.km
+    segment.altitude_end = 11 * Units.km
     segment.air_speed = 108.0 * Units['m/s']
     segment.climb_rate = 3000. * Units['ft/min']
 
@@ -578,8 +578,8 @@ def base(analyses):
 
     segment.analyses.extend(analyses.cruise)
 
-    segment.mach = 0.3
-    segment.distance = 295.0 * Units.km  # 1000km for the most critical case
+    segment.mach = 0.5
+    segment.distance = 158.0 * Units.km  # 1000km for the most critical case
 
     segment.aerosol_mass_initial = 0 * Units.kg  # mass to be sprayed in this segment
 

@@ -64,7 +64,7 @@ def setup():
         ['spray_cruise_speed', 210., (205., 212.), 200, Units['m/s']],
 
         ['cruise1_distance', 1050., (1000., 1200.), 1075., Units.km],
-        ['cruise2_distance', 1203., (1000., 1300.), 1225., Units.km],
+        ['cruise2_distance', 1194., (1000., 1300.), 1225., Units.km],
         ['cruise3_distance', 1001., (900., 1200.), 1000., Units.km],
 
         ['cruise_outgoing_distance', 3393., (3200., 3500.),3300., Units.km],
@@ -72,7 +72,7 @@ def setup():
 
         # "Set" inputs
         ['AR', 13., (12., 14.), 13., Units.less], # aerosol released per kg of fuel ratio max?
-        ['payload', 40e3, (35e3, 35e3), 30e3, Units.kg],
+        ['payload', 35e3, (35e3, 35e3), 30e3, Units.kg],
         # speeds???
     ])
 
