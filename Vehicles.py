@@ -223,8 +223,8 @@ def base_setup():
     wing = SUAVE.Components.Wings.Wing()
     wing.tag = 'horizontal_stabilizer'
 
-    wing.aspect_ratio = 5.5
-    wing.sweep = 30 * Units.deg
+    wing.aspect_ratio = 5.0
+    wing.sweep = 10 * Units.deg
     wing.thickness_to_chord = 0.11
     wing.taper = 0.3
     wing.span_efficiency = 0.9
@@ -233,7 +233,7 @@ def base_setup():
     wing.chords.tip = 0.883  # FIXME
     wing.chords.mean_aerodynamic = 2.3840
 
-    wing.areas.reference = 130
+    wing.areas.reference = 131.
     wing.areas.wetted = 2.0 * wing.areas.reference
     wing.areas.exposed = 0.8 * wing.areas.wetted
     wing.areas.affected = 0.6 * wing.areas.reference
@@ -242,8 +242,8 @@ def base_setup():
     wing.chords.root = 0.5 * wing.areas.reference / (0.5 * wing.spans.projected * 0.5 * (1 + wing.taper))
     wing.chords.tip = wing.taper * wing.chords.root
 
-    wing.twists.root = 2.0 * Units.degrees
-    wing.twists.tip = 2.0 * Units.degrees
+    wing.twists.root = 0.0 * Units.degrees
+    wing.twists.tip = 0.0 * Units.degrees
 
     wing.origin = [31., 0, 0]  # need to fix
     # wing.aerodynamic_center      = [3,0,0] # Need to fix  ---> MUST INCLUDE A SIZING CALL, TO GENERATE PLANFORM
@@ -263,15 +263,15 @@ def base_setup():
     wing = SUAVE.Components.Wings.Wing()
     wing.tag = 'vertical_stabilizer'
 
-    wing.aspect_ratio = 1.7  #
-    wing.sweep = 30 * Units.deg
+    wing.aspect_ratio = 2.5  #
+    wing.sweep = 35 * Units.deg
     wing.thickness_to_chord = 0.10
     wing.taper = 0.2
     wing.span_efficiency = 0.9
 
     wing.chords.mean_aerodynamic = 4.98
 
-    wing.areas.reference = 50.0  #
+    wing.areas.reference = 39.  #
 
     wing.spans.projected = np.sqrt(wing.aspect_ratio * wing.areas.reference)
 
