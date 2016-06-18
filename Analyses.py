@@ -11,6 +11,7 @@ import SUAVE
 
 from Optimize import AVL_analysis
 from empty_saga import empty
+from stability_saga import Fidelity_Zero
 
 
 # ----------------------------------------------------------------------
@@ -94,11 +95,11 @@ def base(vehicle):
         aerodynamics.features = vehicle
         analyses.append(aerodynamics)
 
-    # ------------------------------------------------------------------
-    #  Stability Analysis
-    stability = SUAVE.Analyses.Stability.Fidelity_Zero()
-    stability.geometry = vehicle
-    analyses.append(stability)
+    # # ------------------------------------------------------------------
+    # #  Stability Analysis
+    # stability = Fidelity_Zero()#SUAVE.Analyses.Stability.Fidelity_Zero()
+    # stability.geometry = vehicle
+    # analyses.append(stability)
 
     #  Noise Analysis
     noise = SUAVE.Analyses.Noise.Fidelity_One()

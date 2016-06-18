@@ -151,12 +151,14 @@ def plot_mission(results, show=True, line_style='bo-'):
         axes = fig.add_subplot(3, 1, 1)
         axes.plot(time, altitude, line_style)
         axes.set_ylabel('Altitude (m)', axis_font)
+        axes.minorticks_on()
         axes.grid(True)
 
         axes = fig.add_subplot(3, 1, 2)
         axes.plot(time, mass, 'ro-', label='Aircraft mass')
         axes.plot(time, fuel_burn, line_style, label='Fuel burn')
         axes.plot(time, sprayed_weight, 'go-', label='Aerosol released')
+        axes.minorticks_on()
         axes.set_ylabel('Weight (kg)', axis_font)
         axes.grid(True)
         if i==0:
