@@ -937,6 +937,7 @@ def post_process(nexus):
                       "c_r_v",
                       "S_wet"
                       ]
+    print output_array[output_indices.index('l_fus')]
     fuel_burn_sec = np.zeros(1)
     for i in range(1, len(results.base.segments)):
         fuel_burn_sec = np.hstack((fuel_burn_sec, results.base.segments[i - 1].conditions.weights.fuel_burn[-1]))
@@ -995,7 +996,7 @@ def post_process(nexus):
     print_compress_drag(nexus.vehicle_configurations.cruise, Analyses, filename=output_folder + 'compress_drag.dat')
 
     # print mission breakdown
-    # print_mission_breakdown(nexus.results.base,
-    #                         filename=output_folder + 'mission_breakdown.dat')  # FIXME fuel weight adds aerosol = wrong!!!!!
+    print_mission_breakdown(nexus.results.base,
+                            filename=output_folder + 'mission_breakdown.dat')  # FIXME fuel weight adds aerosol = wrong!!!!!
 
     return nexus
