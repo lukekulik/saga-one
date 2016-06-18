@@ -36,7 +36,7 @@ def main():
 
     print 'constraints=', problem.all_constraints()
 
-    Plot_Mission.plot_mission(problem.results, show=True)
+    Plot_Mission.plot_mission(problem.results, show=False)
 
     return
 
@@ -64,7 +64,7 @@ def setup():
         ['spray_cruise_speed', 210., (205., 212.), 200, Units['m/s']],
 
         ['cruise1_distance', 1050., (1000., 1200.), 1075., Units.km],
-        ['cruise2_distance', 1194., (1000., 1300.), 1225., Units.km],
+        ['cruise2_distance', 1173., (1000., 1300.), 1225., Units.km],
         ['cruise3_distance', 1001., (900., 1200.), 1000., Units.km],
 
         ['cruise_outgoing_distance', 3393., (3200., 3500.),3300., Units.km],

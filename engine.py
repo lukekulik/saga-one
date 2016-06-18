@@ -107,10 +107,10 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
 
     # Component 10 : Payload power draw
 
-    # generator = Generator()
-    # generator.tag = 'generator'
-    # generator.power_draw = 1 / gt_engine.number_of_engines
-    # gt_engine.generator = generator
+    generator = Generator()
+    generator.tag = 'generator'
+    generator.power_draw = 1 / gt_engine.number_of_engines
+    gt_engine.generator = generator
 
     # Engine setup for noise module
     gt_engine.core_nozzle_diameter = 0.92
