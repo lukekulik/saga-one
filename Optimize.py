@@ -56,17 +56,23 @@ def setup():
 
     problem.inputs = np.array([
         # Variable inputs
-        ['wing_area', 700., (650., 705.), 500., Units.meter**2],
-        ['MTOW', 207e3, (195e3, 210e3), 200e3, Units.kg],
-        ['alt_outgoing_cruise', 13.14, (11., 14.), 13., Units.km],  #explain the physics behing the optimizer
+        ['wing_area', 700., (650., 725.), 500., Units.meter**2],
+        ['MTOW', 207e3, (207e3, 207e3), 200e3, Units.kg],
+        ['alt_outgoing_cruise', 13.14, (9., 14.), 13., Units.km],  # 13.15 #explain the physics behing the optimizer
         ['design_thrust', 110e3, (100e3, 120e3), 100e3, Units.N],
-        ['outgoing_cruise_speed', 191., (180., 212.), 200, Units['m/s']],
+        ['outgoing_cruise_speed', 190., (180., 212.), 200., Units['m/s']], #191
         ['spray_cruise_speed', 210., (205., 212.), 200, Units['m/s']],
+
+        ['cruise1_distance', 1050., (1000., 1200.), 1075., Units.km],
+        ['cruise2_distance', 1203., (1000., 1300.), 1225., Units.km],
+        ['cruise3_distance', 1001., (900., 1200.), 1000., Units.km],
+
+        ['cruise_outgoing_distance', 3393., (3200., 3500.),3300., Units.km],
         # climb throttle as input?
 
         # "Set" inputs
-        ['AR', 13., (13., 15.), 15, Units.less], # aerosol resleased per kg of fuel ratio max?
-        ['payload', 35e3, (35e3, 35e3), 30e3, Units.kg],
+        ['AR', 13., (12., 14.), 13., Units.less], # aerosol released per kg of fuel ratio max?
+        ['payload', 40e3, (35e3, 35e3), 30e3, Units.kg],
         # speeds???
     ])
 
@@ -77,7 +83,7 @@ def setup():
     # throw an error if the user isn't specific about wildcards
     # [ tag, scaling, units ]
     problem.objective = np.array([
-        ['fuel_burn', 40000., Units.kg]
+        ['fuel_burn', 60000., Units.kg]
     ])
 
     # -------------------------------------------------------------------
@@ -88,12 +94,14 @@ def setup():
     problem.constraints = np.array([
 
         # ['min_throttle', '>', 0., 1e-1, Units.less],
-        ['max_throttle', '<', 1., 1, Units.less],
+        ['max_throttle', '<', 1., 1., Units.less],
         # ['main_mission_time', '<', 11.1, 10, Units.h],
         ['design_range_fuel_margin', '>', 0.1, 1E-1, Units.less],
         # ['take_off_field_length', '<', 2500., 2500, Units.m],
         # ['landing_field_length', '<', 2500., 2500, Units.m],
-        ['clmax', '<', 1.1, 1, Units.less]
+        ['clmax', '<', 1.1, 1, Units.less],
+        ['non_spraying_range','>',3500., 3500.,Units.km],
+        ['spraying_range', '>', 3500., 3500., Units.km]
         # main mission range
 
     ])
@@ -148,6 +156,16 @@ def setup():
         ['MTOW_delta', 'summary.MTOW_delta'],
 
         ['cruise_speed', 'missions.base.segments.cruise_empty.air_speed'],
+
+        ['cruise1_distance', 'missions.base.segments.cruise_1.distance'],
+        ['cruise2_distance', 'missions.base.segments.cruise_2.distance'],
+        ['cruise3_distance', 'missions.base.segments.cruise_final.distance'],
+        ['cruise_outgoing_distance', 'missions.base.segments.cruise_outgoing.distance'],
+
+        ['non_spraying_range', 'summary.empty_range'],
+        ['spraying_range', 'summary.spray_range'],
+
+
         # [
         #    "missions.base.segments.cruise_highlift.air_speed",
         #

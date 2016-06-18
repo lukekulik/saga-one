@@ -105,7 +105,7 @@ def tube(S_fus, diff_p_fus, w_fus, h_fus, l_nose, l_center,l_tail, l_fus, Nlim, 
     A_side = 1.6*(0.5*h_fus*l_nose*1.05 + h_fus*l_center + 0.2*l_tail*(h_fus+0.6*h_fus)/2 + 0.8*l_tail*(0.6*h_fus+1.1*t_hor)/2)
     A_top = 1.6*(0.5*w_fus*l_nose*1.05 + w_fus*l_center + 0.2*l_tail*(w_fus+0.9*w_fus)/2 + 0.8*l_tail*(0.9*w_fus+1.1*t_ver)/2)
     Sw_fus = k_ar*(A_side+A_top)/2. + Sw_gf
-    print 'SW_fus = ', Sw_fus
+    # print 'SW_fus = ', Sw_fus
     #Sw_fus = 472
     W_fus = 0.92*0.9*0.328*Klg*(MTOW*2.20462262 *Nlim)**0.5*(l_fus/0.3048)**0.25*(Sw_fus/(0.3048**2))**0.302*(l_fus/d_fus)**0.1*0.45359237#kg
     fuselage_weight = W_fus

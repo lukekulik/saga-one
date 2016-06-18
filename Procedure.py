@@ -28,7 +28,7 @@ from SUAVE.Methods.Propulsion.turbofan_sizing import turbofan_sizing
 from print_engine_data import print_engine_data
 from print_mission_breakdown import print_mission_breakdown
 
-numpy_export = False
+numpy_export = True
 
 
 def pretty_print(d, indent=0):  # recursive printer
@@ -519,25 +519,135 @@ def post_process(nexus):
 
     # pretty_print(results)
 
-    # Static stability calculations
-    CMA = -10.
-    for segment in results.base.segments.values():
-        max_CMA = np.max(segment.conditions.stability.static.cm_alpha[:, 0])
-        # lamda with a min/max?
-        if max_CMA > CMA:
-            CMA = max_CMA
+    #start comment
 
-    # Dynamics stability calculations
-    dyn_stab = np.zeros(6)
-    # j=0
+    # # Static stability calculations
+    # CMA = -10.
+    # for segment in results.base.segments.values():
+    #     max_CMA = np.max(segment.conditions.stability.static.cm_alpha[:, 0])
+    #     # lamda with a min/max?
+    #     if max_CMA > CMA:
+    #         CMA = max_CMA
+    #
+    # # Dynamics stability calculations
+    # # j=0
+    #
+    # cn_r = np.array([])
+    # cl_p = np.array([])
+    # cl_beta = np.array([])
+    # cm_q = np.array([])
+    # cm_alpha_dot = np.array([])
+    # cz_alpha = np.array([])
+    # cy_phi = np.array([])
+    # cl_r = np.array([])
+    #
+    # cl_psi = np.array([])
+    # cz_u = np.array([])
+    # cz_alpha_dot = np.array([])
+    # cz_q = np.array([])
+    # cx_u = np.array([])
+    # cx_alpha = np.array([])
+    #
+    # eigen_modes = np.array([])
+    #
+    # for segment in results.base.segments.values():
+    #     # max_CMA = np.max(segment.conditions.stability.static.cm_alpha[:, 0])
+    #
+    #     # print segment.conditions.stability.dynamic.keys()
+    #     # pretty_print(segment.conditions.stability)
+    #     stability_model = segment.conditions.stability.stability_model
+    #
+    #     cn_r = np.append(cn_r,segment.conditions.stability.dynamic.cn_r[:,0])
+    #     # cl_p = np.append(cl_p,segment.conditions.stability.dynamic.cl_p)
+    #     # cl_beta = np.append(cl_beta,segment.conditions.stability.dynamic.cl_beta)
+    #     cm_q = np.append(cm_q,segment.conditions.stability.dynamic.cm_q[:, 0])
+    #     cm_alpha_dot = np.append(cm_alpha_dot,segment.conditions.stability.dynamic.cm_alpha_dot[:, 0])
+    #     cz_alpha = np.append(cz_alpha,segment.conditions.stability.dynamic.cz_alpha[:, 0])
+    #
+    #     cy_phi = np.append(cy_phi,segment.conditions.stability.dynamic.cy_phi[:,0])
+    #     cl_r = np.append(cl_r,segment.conditions.stability.dynamic.cl_r[:,0] )
+    #
+    #     cl_psi = np.append(cl_psi,segment.conditions.stability.dynamic.cl_psi[:,0] )
+    #     cz_u = np.append(cz_u,segment.conditions.stability.dynamic.cz_u[:,0] )
+    #     cz_alpha_dot = np.append(cz_alpha_dot,segment.conditions.stability.dynamic.cz_alpha_dot[:,0] )
+    #     cz_q = np.append(cz_q,segment.conditions.stability.dynamic.cz_q[:,0] )
+    #     cx_u = np.append(cx_u,segment.conditions.stability.dynamic.cx_u[:,0] )
+    #     cx_alpha = np.append(cx_alpha,segment.conditions.stability.dynamic.cx_alpha[:,0] )
+    #
+    #
+    #     eigen_modes = np.append(eigen_modes,
+    #                             np.array([stability_model.dutch_roll.natural_frequency,
+    #                                       stability_model.dutch_roll.damping_ratio,
+    #                                       stability_model.spiral_tau,
+    #                                       stability_model.roll_tau,
+    #                                       stability_model.short_period.natural_frequency,
+    #                                       stability_model.short_period.damping_ratio,
+    #                                       stability_model.phugoid.natural_frequency,
+    #                                       stability_model.phugoid.damping_ratio])
+    #                             )
+    #
+    # # stability_model = results.stability_model
+    # #
+    # # eigen_modes = np.array([stability_model.dutch_roll.natural_frequency,
+    # # stability_model.dutch_roll.damping_ratio,
+    # # stability_model.spiral_tau,
+    # # stability_model.roll_tau,
+    # # stability_model.short_period.natural_frequency,
+    # # stability_model.short_period.damping_ratio,
+    # # stability_model.phugoid.natural_frequency,
+    # # stability_model.phugoid.damping_ratio])
+    #
+    # dyn_stab = np.array([cn_r,cl_p,cl_beta,cm_q,cm_alpha_dot,cz_alpha,
+    # cy_phi,
+    # cl_r,
+    # cl_psi,
+    # cz_u,
+    # cz_alpha_dot,
+    # cz_q,
+    # cx_u,
+    # cx_alpha,
+    # eigen_modes])
+    # # lol = vehicle.stability_model.dutch_roll
+
+    # stop comments
+
+    # stability_model = self.stability_model
+
+    # cn_r
+        #         cl_p
+        #         cl_beta
+        #         cm_q
+        #         cm_alpha_dot
+        #         cz_alpha
+
+
+
+        # lamda with a min/max?
+        # if max_CMA > CMA:
+        #     CMA = max_CMA
+
+
+
+
+
+
+    # lst=[]
+    #
     # for element in results.base.segments.conditions.stability.dynamic.values():
     #
-    #     max = np.max(element[:, 0])
-    #     min = np.min(element[:, 0])
-    #     avg = np.mean(element[:, 0])
+    #     lst.append(element)
     #
-
-
+    # for segment in results.base.segments.values():
+    #
+    #
+    #
+    #     max_CMA = np.max(segment.conditions.stability.static.cm_alpha[:, 0])
+    #     # lamda with a min/max?
+    #     if max_CMA > CMA:
+    #         CMA = max_CMA
+    #
+    #
+    #
 
     # for derivative in
 
@@ -845,6 +955,7 @@ def post_process(nexus):
         np.save(output_folder + "output_indices.npy", output_indices)
         np.save(output_folder + "output_array_segments.npy", output_array_segments)
         np.save(output_folder + "output_segment_indices.npy", output_segment_indices)
+        # np.save(output_folder + "dynamic_stability.npy",dyn_stab)
 
     for value in unscaled_inputs:
         problem_inputs.append(value)
@@ -884,7 +995,7 @@ def post_process(nexus):
     print_compress_drag(nexus.vehicle_configurations.cruise, Analyses, filename=output_folder + 'compress_drag.dat')
 
     # print mission breakdown
-    print_mission_breakdown(nexus.results.base,
-                            filename=output_folder + 'mission_breakdown.dat')  # FIXME fuel weight adds aerosol = wrong!!!!!
+    # print_mission_breakdown(nexus.results.base,
+    #                         filename=output_folder + 'mission_breakdown.dat')  # FIXME fuel weight adds aerosol = wrong!!!!!
 
     return nexus

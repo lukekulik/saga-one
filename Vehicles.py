@@ -50,8 +50,8 @@ def base_setup():
     # ------------------------------------------------------------------
 
     # mass properties
-    vehicle.mass_properties.max_takeoff = 0  # selected in Optimize.py
-    vehicle.mass_properties.takeoff = 0  # selected in Optimize.py
+    vehicle.mass_properties.max_takeoff = 207000.  # selected in Optimize.py
+    vehicle.mass_properties.takeoff = 207000.  # selected in Optimize.py
     vehicle.mass_properties.max_payload = 0. * Units.kg  # selected in Optimize.py
     vehicle.mass_properties.payload = 0. * Units.kg  # selected in Optimize.py
 
@@ -63,8 +63,8 @@ def base_setup():
     # vehicle.mass_properties.max_fuel                  = 30000.
 
     # vehicle.mass_properties.center_of_gravity = [18., 0, 0]
-    # vehicle.mass_properties.moments_of_inertia.tensor = [[10 ** 5, 0, 0], [0, 10 ** 6, 0, ],
-    #                                                      [0, 0, 10 ** 7]]  # Not Correct
+    vehicle.mass_properties.moments_of_inertia.tensor = [[49623674.97, 0, 0], [0, 6014300.75, 0, ],
+                                                         [0, 0, 55301371.20]] # from Arent
 
     # envelope properties
     vehicle.envelope.ultimate_load = 3.75
@@ -442,7 +442,7 @@ def configs_setup(vehicle):
     config.tag = 'cruise'
 
     config.maximum_lift_coefficient = 1.4
-    config.propulsors.turbofan.generator.power_draw = 0.5e6 / config.propulsors.turbofan.number_of_engines  # MW per engine
+    # config.propulsors.turbofan.generator.power_draw = 0.5e6 / config.propulsors.turbofan.number_of_engines  # MW per engine
 
     configs.append(config)
 
@@ -454,7 +454,7 @@ def configs_setup(vehicle):
     config.tag = 'cruise_spraying'
 
     config.maximum_lift_coefficient = 1.4
-    config.propulsors.turbofan.generator.power_draw = 2.5e6 / config.propulsors.turbofan.number_of_engines  # MW per engine
+    # config.propulsors.turbofan.generator.power_draw = 2.5e6 / config.propulsors.turbofan.number_of_engines  # MW per engine
 
     configs.append(config)
 
