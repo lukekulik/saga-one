@@ -64,7 +64,7 @@ def base_setup():
 
     # vehicle.mass_properties.center_of_gravity = [18., 0, 0]
     vehicle.mass_properties.moments_of_inertia.tensor = [[49623674.97, 0, 0], [0, 6014300.75, 0, ],
-                                                         [0, 0, 55301371.20]] # from Arent
+                                                         [0, 0, 55301371.20]]  # from Arent
 
     # envelope properties
     vehicle.envelope.ultimate_load = 3.75
@@ -92,8 +92,8 @@ def base_setup():
 
     fuselage.lengths.nose = 7.0
     fuselage.lengths.cabin = 9.771
-    fuselage.lengths.tail = 22.3 - (0.7 * 7.61) + 0.80 * 7.87 #7.61 is the MAC 7.87 is the tail root chrod
-    #print 'l_tail = ', fuselage.lengths.tail
+    fuselage.lengths.tail = 22.3 - (0.7 * 7.61) + 0.80 * 7.87  # 7.61 is the MAC 7.87 is the tail root chrod
+    # print 'l_tail = ', fuselage.lengths.tail
     fuselage.lengths.total = fuselage.lengths.nose + fuselage.lengths.cabin + fuselage.lengths.tail
     fuselage.lengths.fore_space = 0.
     fuselage.lengths.aft_space = 0.
@@ -182,7 +182,8 @@ def base_setup():
     wing.chords.tip = wing.chords.root * wing.taper
     wing.chords.mean_aerodynamic = 2. * wing.chords.root / 3. * (1 + wing.taper + wing.taper ** 2) / (1 + wing.taper)
 
-    wing.areas.wetted = S_wet_w("sc3.dat", wing.taper, wing.areas.reference, wing.spans.projected, wing.chords.root, 100, fuselage.effective_diameter, fuselage.origin[1],
+    wing.areas.wetted = S_wet_w("sc3.dat", wing.taper, wing.areas.reference, wing.spans.projected, wing.chords.root,
+                                100, fuselage.effective_diameter, fuselage.origin[1],
                                 twin)  # 2.0 * wing.areas.reference
     wing.areas.exposed = 0.8 * wing.areas.wetted
     wing.areas.affected = 0.6 * wing.areas.reference
@@ -303,7 +304,7 @@ def base_setup():
     wing = SUAVE.Components.Wings.Wing()
     wing.tag = 'strut'
 
-    wing.aspect_ratio = 29.13  #So high
+    wing.aspect_ratio = 29.13  # So high
     wing.sweep = 0. * Units.deg
     wing.thickness_to_chord = 0.1
     wing.taper = 1.
@@ -311,7 +312,7 @@ def base_setup():
 
     wing.chords.mean_aerodynamic = 3.36
 
-    wing.areas.reference = 2.*28.2927  #
+    wing.areas.reference = 2. * 28.2927  #
 
     wing.spans.projected = np.sqrt(wing.aspect_ratio * wing.areas.reference)
 

@@ -6,6 +6,7 @@ from SUAVE.Methods.Geometry.Two_Dimensional.Cross_Section.Propulsion import comp
 from Generator import Generator
 from Jet_JP7 import Jet_JP7
 
+
 def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total):
     # initialize the gas turbine network
 
@@ -95,7 +96,6 @@ def engine_caluclations(altitude, bypass, mach_number, num_engine, thrust_total)
     fan_nozzle.pressure_ratio = 0.99
     # add the fan nozzle to the network
     gt_engine.fan_nozzle = fan_nozzle
-
 
     # Component 9 : fan
     fan = SUAVE.Components.Energy.Converters.Fan()

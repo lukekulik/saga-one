@@ -61,7 +61,9 @@ def lateral_directional(velocity, Cn_Beta, S_gross_w, density, span, I_z, Cn_r, 
             J.H. Blakelock, "Automatic Control of Aircraft and Missiles" Wiley & Sons, Inc. New York, 1991, p 118-124.
     """
 
-    tuple =  (velocity, Cn_Beta, S_gross_w, density, span, I_z, Cn_r, I_x, Cl_p, J_xz, Cl_r, Cl_Beta, Cn_p, Cy_phi, Cy_psi, Cy_Beta, mass)
+    tuple = (
+        velocity, Cn_Beta, S_gross_w, density, span, I_z, Cn_r, I_x, Cl_p, J_xz, Cl_r, Cl_Beta, Cn_p, Cy_phi, Cy_psi,
+        Cy_Beta, mass)
 
     velocity = np.mean(velocity)
     Cn_Beta = np.mean(Cn_Beta)
@@ -83,13 +85,15 @@ def lateral_directional(velocity, Cn_Beta, S_gross_w, density, span, I_z, Cn_r, 
 
     # constructing matrix of coefficients
     A = (
-    0, -span * 0.5 / velocity * Cl_p, I_x / S_gross_w / (0.5 * density * velocity ** 2) / span)  # L moment phi term
+        0, -span * 0.5 / velocity * Cl_p, I_x / S_gross_w / (0.5 * density * velocity ** 2) / span)  # L moment phi term
     B = (
-    0, -span * 0.5 / velocity * Cl_r, -J_xz / S_gross_w / (0.5 * density * velocity ** 2.) / span)  # L moment psi term
+        0, -span * 0.5 / velocity * Cl_r,
+        -J_xz / S_gross_w / (0.5 * density * velocity ** 2.) / span)  # L moment psi term
     C = (-Cl_Beta)  # L moment Beta term
     D = (0, - span * 0.5 / velocity * Cn_p,
          -J_xz / S_gross_w / (0.5 * density * velocity ** 2.) / span)  # N moment phi term
-    E =  np.array([0, - span * 0.5 / velocity * Cn_r, I_z / S_gross_w / (0.5 * density * velocity ** 2.) / span ])  # N moment psi term
+    E = np.array([0, - span * 0.5 / velocity * Cn_r,
+                  I_z / S_gross_w / (0.5 * density * velocity ** 2.) / span])  # N moment psi term
     F = (-Cn_Beta)  # N moment Beta term
     G = (-Cy_phi)  # Y force phi term
     H = (-Cy_psi, mass * velocity / S_gross_w / (0.5 * density * velocity ** 2.))

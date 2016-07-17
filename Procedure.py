@@ -9,6 +9,7 @@
 
 import SUAVE
 import numpy as np
+import os
 from SUAVE.Analyses.Process import Process
 from SUAVE.Core import Units, Data
 from SUAVE.Input_Output.Results import print_parasite_drag, \
@@ -44,6 +45,9 @@ def pretty_print(d, indent=0):  # recursive printer
 
 
 output_folder = "output/"
+
+if not os.path.exists(output_folder):
+    os.makedirs(output_folder)
 
 
 # ----------------------------------------------------------------------
@@ -522,7 +526,7 @@ def post_process(nexus):
 
     # pretty_print(results)
 
-    #start comment
+    # start comment
 
     # # Static stability calculations
     # CMA = -10.
@@ -617,17 +621,17 @@ def post_process(nexus):
     # stability_model = self.stability_model
 
     # cn_r
-        #         cl_p
-        #         cl_beta
-        #         cm_q
-        #         cm_alpha_dot
-        #         cz_alpha
+    #         cl_p
+    #         cl_beta
+    #         cm_q
+    #         cm_alpha_dot
+    #         cz_alpha
 
 
 
-        # lamda with a min/max?
-        # if max_CMA > CMA:
-        #     CMA = max_CMA
+    # lamda with a min/max?
+    # if max_CMA > CMA:
+    #     CMA = max_CMA
 
 
 
@@ -835,7 +839,7 @@ def post_process(nexus):
 
     output_segment_indices = ["CL", "alpha", "dynamic_visc", "air_density", "mach", "reynolds_number"]
 
-    C_L_des = np.average(output_array_segments[0,112:176]) #Average CL over the spraying cruise
+    C_L_des = np.average(output_array_segments[0, 112:176])  # Average CL over the spraying cruise
     # print C_L_des
 
     # print output_array_segments[segment_output_indexes.index("CL")]
@@ -975,7 +979,7 @@ def post_process(nexus):
     file_out.write('\n')
     file_out.close()
 
-    #print vehicle.weight_breakdown.wing
+    # print vehicle.weight_breakdown.wing
 
     print_weight_breakdown(nexus.vehicle_configurations.base, filename=output_folder + 'weight_breakdown.dat')
     #

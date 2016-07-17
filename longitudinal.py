@@ -81,22 +81,20 @@ def longitudinal(velocity, density, S_gross_w, mac, Cm_q, Cz_alpha, mass, Cm_alp
     Cx_u = np.mean(Cx_u)
     Cx_alpha = np.mean(Cx_alpha)
 
-
-
-
     # constructing matrix of coefficients
     A = (- Cx_u, mass * velocity / S_gross_w / (0.5 * density * velocity ** 2.))  # X force U term
     B = (-Cx_alpha)  # X force alpha term
     C = (-Cw * np.cos(Theta))  # X force theta term
     D = (-Cz_u)  # Z force U term
     E = (-Cz_alpha, (mass * velocity / S_gross_w / (
-    0.5 * density * velocity ** 2.) - mac * 0.5 / velocity * Cz_alpha_dot))  # Z force alpha term
+        0.5 * density * velocity ** 2.) - mac * 0.5 / velocity * Cz_alpha_dot))  # Z force alpha term
     F = (- Cw * np.sin(Theta), (-mass * velocity / S_gross_w / (
-    0.5 * density * velocity ** 2.) - mac * 0.5 / velocity * Cz_q))  # Z force theta term
-    G = (0.)  # M moment U term
+        0.5 * density * velocity ** 2.) - mac * 0.5 / velocity * Cz_q))  # Z force theta term
+    G = 0.  # M moment U term
     H = (-Cm_alpha, -mac * 0.5 / velocity * Cm_alpha_dot)  # M moment alpha term
     I = (
-    0., - mac * 0.5 / velocity * Cm_q, Iy / S_gross_w / (0.5 * density * velocity ** 2) / mac)  # M moment theta term
+        0., - mac * 0.5 / velocity * Cm_q,
+        Iy / S_gross_w / (0.5 * density * velocity ** 2) / mac)  # M moment theta term
 
     # Taking the determinant of the matrix ([A, B, C],[D, E, F],[G, H, I])
     EI = P.polymul(E, I)

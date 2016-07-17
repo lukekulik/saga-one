@@ -193,7 +193,7 @@ class Turbofan(Propulsor):
         mdot = thrust.outputs.fuel_flow_rate
         output_power = thrust.outputs.power
         F_vec = conditions.ones_row(3) * 0.0
-        if F_vec[:, 0].shape != F[:,0].shape:
+        if F_vec[:, 0].shape != F[:, 0].shape:
             F_vec[:, 0] = np.mean(F[:, 0])
         else:
             F_vec[:, 0] = F[:, 0]

@@ -704,7 +704,6 @@ def takeoff_mission_setup(analyses):
     return mission
 
 
-
 def sideline_mission_setup(analyses):
     # ------------------------------------------------------------------
     #   Initialize the Mission segment for takeoff
@@ -731,7 +730,7 @@ def sideline_mission_setup(analyses):
     segment.analyses.extend(analyses.takeoff)
     segment.altitude_start = 35. * Units.fts
     segment.altitude_end = 1600 * Units.fts
-    segment.air_speed = 123 * Units['m/s']#85.4 * Units['m/s']
+    segment.air_speed = 123 * Units['m/s']  # 85.4 * Units['m/s']
     segment.throttle = 0.7
     segment.state.numerics.number_control_points = 10
     # segment.state.numerics.discretization_method = SUAVE.Methods.Utilities.Chebyshev.linear_data
@@ -806,6 +805,7 @@ def landing_mission_setup(analyses):
     mission.append_segment(segment)
 
     return mission
+
 
 # ----------------------------------------------------------------------
 #   Call Main

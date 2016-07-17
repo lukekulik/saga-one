@@ -170,8 +170,9 @@ class Fidelity_Zero(Stability):
                                                                        2][2], dynamic_stability.cn_r)
 
             if dynamic_stability.cl_p != 0:
-                stability_model.roll_tau = Approximations.roll(configuration.mass_properties.moments_of_inertia.tensor[2][2], Sref, density,
-                                                               velocity, Span, dynamic_stability.cl_p)
+                stability_model.roll_tau = Approximations.roll(
+                    configuration.mass_properties.moments_of_inertia.tensor[2][2], Sref, density,
+                    velocity, Span, dynamic_stability.cl_p)
                 dynamic_stability.cy_phi = Supporting_Functions.cy_phi(aero.lift_coefficient)
                 dynamic_stability.cl_r = Supporting_Functions.cl_r(aero.lift_coefficient)  # Will need to be changed
                 stability_model.spiral_tau = Approximations.spiral(conditions.weights.total_mass, velocity, density,
@@ -192,7 +193,7 @@ class Fidelity_Zero(Stability):
 
             dynamic_stability.cn_p = 0.135
 
-            dynamic_stability.cy_psi = 0 #FIXME
+            dynamic_stability.cy_psi = 0  # FIXME
 
             # Dynamic Stability Full Linearized Methods
             if dynamic_stability.cl_p != 0 and dynamic_stability.cl_beta != 0:
@@ -211,31 +212,31 @@ class Fidelity_Zero(Stability):
                                                                            conditions.lift_curve_slope)
 
                 lateral_directional = lateral_directional123(velocity, static_stability.cn_beta,
-                                                                                    Sref, density, Span,
-                                                                                    configuration.mass_properties.moments_of_inertia.tensor[
-                                                                                        2][2], dynamic_stability.cn_r,
-                                                                                    configuration.mass_properties.moments_of_inertia.tensor[
-                                                                                        0][0], dynamic_stability.cl_p,
-                                                                                    configuration.mass_properties.moments_of_inertia.tensor[
-                                                                                        0][2], dynamic_stability.cl_r,
-                                                                                    dynamic_stability.cl_beta,
-                                                                                    dynamic_stability.cn_p,
-                                                                                    dynamic_stability.cy_phi,
-                                                                                    dynamic_stability.cy_psi,
-                                                                                    dynamic_stability.cy_beta,
-                                                                                    conditions.weights.total_mass)
+                                                             Sref, density, Span,
+                                                             configuration.mass_properties.moments_of_inertia.tensor[
+                                                                 2][2], dynamic_stability.cn_r,
+                                                             configuration.mass_properties.moments_of_inertia.tensor[
+                                                                 0][0], dynamic_stability.cl_p,
+                                                             configuration.mass_properties.moments_of_inertia.tensor[
+                                                                 0][2], dynamic_stability.cl_r,
+                                                             dynamic_stability.cl_beta,
+                                                             dynamic_stability.cn_p,
+                                                             dynamic_stability.cy_phi,
+                                                             dynamic_stability.cy_psi,
+                                                             dynamic_stability.cy_beta,
+                                                             conditions.weights.total_mass)
                 longitudinal = longi123(velocity, density, Sref, mac,
-                                                                      dynamic_stability.cm_q,
-                                                                      dynamic_stability.cz_alpha,
-                                                                      conditions.weights.total_mass,
-                                                                      static_stability.cm_alpha,
-                                                                      configuration.mass_properties.moments_of_inertia.tensor[
-                                                                          1][1], dynamic_stability.cm_alpha_dot,
-                                                                      dynamic_stability.cz_u,
-                                                                      dynamic_stability.cz_alpha_dot,
-                                                                      dynamic_stability.cz_q, -aero.lift_coefficient,
-                                                                      theta, dynamic_stability.cx_u,
-                                                                      dynamic_stability.cx_alpha)
+                                        dynamic_stability.cm_q,
+                                        dynamic_stability.cz_alpha,
+                                        conditions.weights.total_mass,
+                                        static_stability.cm_alpha,
+                                        configuration.mass_properties.moments_of_inertia.tensor[
+                                            1][1], dynamic_stability.cm_alpha_dot,
+                                        dynamic_stability.cz_u,
+                                        dynamic_stability.cz_alpha_dot,
+                                        dynamic_stability.cz_q, -aero.lift_coefficient,
+                                        theta, dynamic_stability.cx_u,
+                                        dynamic_stability.cx_alpha)
                 stability_model.dutch_roll.natural_frequency = lateral_directional.dutch_natural_frequency
                 stability_model.dutch_roll.damping_ratio = lateral_directional.dutch_damping_ratio
                 stability_model.spiral_tau = lateral_directional.spiral_tau

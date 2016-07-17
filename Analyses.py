@@ -80,7 +80,7 @@ def base(vehicle):
         # aerodynamics_avl.geometry = vehicle
         # aerodynamics_avl.training.angle_of_attack = np.array([-5.,0.,15.]) * Units.deg
         #
-        #aerodynamics.process.compute.lift = aerodynamics_avl
+        # aerodynamics.process.compute.lift = aerodynamics_avl
 
         # aerodynamics_avl.process.compute.lift.aerodynamics_avl = aerodynamics_avl
         # aerodynamics.initialize()

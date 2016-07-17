@@ -18,7 +18,6 @@ from SUAVE.Components.Energy.Energy_Component import Energy_Component
 
 class Generator(Energy_Component):
     def __defaults__(self):
-
         self.power_draw = 0.0
         self.reference_temperature = 288.15
         self.reference_pressure = 1.01325 * 10 ** 5
@@ -60,10 +59,10 @@ class Generator(Energy_Component):
 
         self.outputs.work_done = self.outputs.power / mdot_core
 
-        self.outputs.work_done[mdot_core==0] = 0
-            # print mdot_core
+        self.outputs.work_done[mdot_core == 0] = 0
+        # print mdot_core
 
 
-            # print self.outputs.work_done
+        # print self.outputs.work_done
 
     __call__ = compute

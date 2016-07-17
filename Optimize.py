@@ -81,22 +81,22 @@ def setup():
 
     problem.inputs = np.array([
         # Variable inputs
-        ['wing_area', 700., (650., 725.), 500., Units.meter**2],
+        ['wing_area', 700., (650., 725.), 500., Units.meter ** 2],
         ['MTOW', 207e3, (207e3, 207e3), 200e3, Units.kg],
         ['alt_outgoing_cruise', 13.14, (9., 14.), 13., Units.km],  # 13.15 #explain the physics behing the optimizer
         ['design_thrust', 110e3, (100e3, 120e3), 100e3, Units.N],
-        ['outgoing_cruise_speed', 190., (180., 212.), 200., Units['m/s']], #191
+        ['outgoing_cruise_speed', 190., (180., 212.), 200., Units['m/s']],  # 191
         ['spray_cruise_speed', 210., (205., 212.), 200, Units['m/s']],
 
         ['cruise1_distance', 1050., (1000., 1200.), 1075., Units.km],
         ['cruise2_distance', 1173., (1000., 1300.), 1225., Units.km],
         ['cruise3_distance', 1001., (900., 1200.), 1000., Units.km],
 
-        ['cruise_outgoing_distance', 3393., (3200., 3500.),3300., Units.km],
+        ['cruise_outgoing_distance', 3393., (3200., 3500.), 3300., Units.km],
         # climb throttle as input?
 
         # "Set" inputs
-        ['AR', 13., (12., 14.), 13., Units.less], # aerosol released per kg of fuel ratio max?
+        ['AR', 13., (12., 14.), 13., Units.less],  # aerosol released per kg of fuel ratio max?
         ['payload', 35e3, (35e3, 35e3), 30e3, Units.kg],
         # speeds???
     ])
@@ -125,7 +125,7 @@ def setup():
         # ['take_off_field_length', '<', 2500., 2500, Units.m],
         # ['landing_field_length', '<', 2500., 2500, Units.m],
         ['clmax', '<', 1.1, 1, Units.less],
-        ['non_spraying_range','>',3500., 3500.,Units.km],
+        ['non_spraying_range', '>', 3500., 3500., Units.km],
         ['spraying_range', '>', 3500., 3500., Units.km]
         # main mission range
 
@@ -153,7 +153,6 @@ def setup():
                                 'missions.base.segments.cruise_final.air_speed']],
 
         ['outgoing_cruise_speed', 'missions.base.segments.cruise_outgoing.air_speed'],
-
 
         ['AR', 'vehicle_configurations.*.wings.main_wing.aspect_ratio'],
 
@@ -189,7 +188,6 @@ def setup():
 
         ['non_spraying_range', 'summary.empty_range'],
         ['spraying_range', 'summary.spray_range'],
-
 
         # [
         #    "missions.base.segments.cruise_highlift.air_speed",

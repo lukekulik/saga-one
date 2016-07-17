@@ -1,4 +1,4 @@
-#Jet A1
+# Jet A1
 #
 # Created:  Unk 2013, SUAVE TEAM
 # Modified: Apr 2015, SUAVE TEAM
@@ -9,16 +9,15 @@
 
 from SUAVE.Attributes.Propellants.Propellant import Propellant
 
+
 # ----------------------------------------------------------------------
 #  Jet_A1 Propellant Class
 # ----------------------------------------------------------------------
 
 class Jet_JP7(Propellant):
-
     """ Physical properties of Jet A-1; reactant = O2 """
 
     def __defaults__(self):
-
         self.tag = 'JP-7'
         self.reactant = 'O2'
         self.density = 790.0  # kg/m^3 (15 C, 1 atm)

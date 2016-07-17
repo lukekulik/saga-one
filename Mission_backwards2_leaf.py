@@ -466,8 +466,6 @@ def base(analyses):
     # add to mission
     mission.append_segment(segment)
 
-
-
     segment = Segments.Cruise.Constant_Speed_Constant_Altitude(base_segment)
     segment.tag = "cruise_incoming"
 
@@ -489,8 +487,6 @@ def base(analyses):
 
     # add to mission
     mission.append_segment(segment)
-
-
 
     # ------------------------------------------------------------------
     #   Second Descent Segment: consant speed, constant segment rate
