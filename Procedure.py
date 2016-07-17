@@ -28,7 +28,7 @@ from SUAVE.Methods.Propulsion.turbofan_sizing import turbofan_sizing
 from print_engine_data import print_engine_data
 from print_mission_breakdown import print_mission_breakdown
 
-numpy_export = True
+numpy_export = False
 
 
 def pretty_print(d, indent=0):  # recursive printer
@@ -189,6 +189,9 @@ def evaluate_field_length(configs, analyses, mission, results):
     field_length = SUAVE.Core.Data()
     field_length.takeoff = TOFL[0]
     field_length.landing = LFL[0]
+
+    print TOFL[0]
+    print LFL[0]
 
     results.field_length = field_length
     return results

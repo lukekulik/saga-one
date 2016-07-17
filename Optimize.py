@@ -30,13 +30,38 @@ def main():
     print "SUAVE initialized...\n"
     problem = setup()  # "problem" is a nexus
 
+    # problem.optimization_problem.inputs = np.array([
+    #     # Variable inputs
+    #     ['wing_area', 700., (650., 750.), 500., Units.meter ** 2],
+    #     ['MTOW', 207, (190, 210), 200, Units['tonne']],
+    #     ['alt_outgoing_cruise', 13.14, (9., 14.), 13., Units.km],  # 13.15 #explain the physics behing the optimizer
+    #     ['design_thrust', 110e3, (100e3, 120e3), 100e3, Units.N],
+    #     ['outgoing_cruise_speed', 190., (180., 212.), 200., Units['m/s']],  # 191
+    #     ['spray_cruise_speed', 210., (205., 212.), 200, Units['m/s']],
+    #
+    #     ['cruise1_distance', 1050., (1000., 1200.), 1075., Units.km],
+    #     ['cruise2_distance', 1173., (1000., 1300.), 1225., Units.km],
+    #     ['cruise3_distance', 1001., (900., 1200.), 1000., Units.km],
+    #
+    #     ['cruise_outgoing_distance', 3393., (3200., 3500.), 3300., Units.km],
+    #     # climb throttle as input?
+    #
+    #     # "Set" inputs
+    #     ['AR', 13., (12., 14.), 13., Units.less],  # aerosol released per kg of fuel ratio max?
+    #     ['payload', 35e3, (35e3, 35e3), 30e3, Units.kg],
+    #     # speeds???
+    # ])
+    #
+    # variable_sweep(problem,"Fuel burn [kg]", "Fuel margin","Wing area [$m^2$]","MTOW [tonne]","MTOWS")
+
+
     output = problem.objective()  # uncomment this line when using the default inputs
     # variable_sweep(problem)  # uncomment this to view some contours of the problem
     # output = scipy_setup.SciPy_Solve(problem, solver='SLSQP')  # uncomment this to optimize the values
 
     print 'constraints=', problem.all_constraints()
 
-    Plot_Mission.plot_mission(problem.results, show=True)
+    Plot_Mission.plot_mission(problem.results, show=False)
 
     return
 
@@ -219,7 +244,7 @@ def variable_sweep(problem, color_label, bar_label, xlabel, ylabel, title):
     objective = outputs.objective
     constraints = outputs.constraint_val
     plt.figure(0)
-    CS = plt.contourf(inputs[0, :], inputs[1, :], objective, 20, linewidths=2)
+    CS = plt.contourf(inputs[0, :], inputs[1, :], objective, 20, linewidths=2, cmap='hot')
     cbar = plt.colorbar(CS)
     cbar.ax.set_ylabel(color_label)
     # cbar.ax.set_ylabel('fuel burn (kg)')
