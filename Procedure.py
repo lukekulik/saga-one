@@ -26,8 +26,8 @@ from SUAVE.Methods.Performance import estimate_landing_field_length
 from SUAVE.Methods.Performance import estimate_take_off_field_length
 from SUAVE.Methods.Propulsion.turbofan_sizing import turbofan_sizing
 
-from print_engine_data import print_engine_data
-from print_mission_breakdown import print_mission_breakdown
+from supporting.print_engine_data import print_engine_data
+from supporting.print_mission_breakdown import print_mission_breakdown
 
 numpy_export = False
 

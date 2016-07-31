@@ -10,8 +10,8 @@
 import SUAVE
 
 from Optimize import AVL_analysis
-from empty_saga import empty
-from stability_saga import Fidelity_Zero
+from supporting.empty_saga import empty
+from supporting.stability_saga import Fidelity_Zero
 
 
 # ----------------------------------------------------------------------

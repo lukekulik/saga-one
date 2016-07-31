@@ -13,7 +13,7 @@ from SUAVE.Core import Units, Data
 from SUAVE.Optimization import Nexus, carpet_plot
 
 import Analyses
-import Mission_backwards2
+import Mission
 import Plot_Mission
 import Procedure
 import Vehicles
@@ -220,7 +220,7 @@ def setup():
     # -------------------------------------------------------------------
     #  Missions
     # -------------------------------------------------------------------
-    nexus.missions = Mission_backwards2.setup(nexus.analyses)
+    nexus.missions = Mission.setup(nexus.analyses)
 
     # -------------------------------------------------------------------
     #  Procedure

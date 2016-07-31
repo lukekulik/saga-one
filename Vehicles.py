@@ -11,8 +11,8 @@ import SUAVE
 import numpy as np
 from SUAVE.Core import Units
 
-from S_wetted_wing import S_wet_w, S_wet_fus
-from engine import engine_caluclations
+from supporting.S_wetted_wing import S_wet_w, S_wet_fus
+from supporting.engine import engine_caluclations
 
 
 # ----------------------------------------------------------------------
@@ -182,7 +182,7 @@ def base_setup():
     wing.chords.tip = wing.chords.root * wing.taper
     wing.chords.mean_aerodynamic = 2. * wing.chords.root / 3. * (1 + wing.taper + wing.taper ** 2) / (1 + wing.taper)
 
-    wing.areas.wetted = S_wet_w("sc3.dat", wing.taper, wing.areas.reference, wing.spans.projected, wing.chords.root,
+    wing.areas.wetted = S_wet_w("supporting/sc3.dat", wing.taper, wing.areas.reference, wing.spans.projected, wing.chords.root,
                                 100, fuselage.effective_diameter, fuselage.origin[1],
                                 twin)  # 2.0 * wing.areas.reference
     wing.areas.exposed = 0.8 * wing.areas.wetted

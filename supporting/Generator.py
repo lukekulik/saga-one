@@ -1,7 +1,6 @@
-# Payload.py
+# Generator.py
 # 
-# Created:  Jun 2014, E. Botero
-# Modified: Feb 2016, T. MacDonald
+# Created:  Jun 2016, L. Kulik
 
 # ----------------------------------------------------------------------
 #  Imports
@@ -60,9 +59,6 @@ class Generator(Energy_Component):
         self.outputs.work_done = self.outputs.power / mdot_core
 
         self.outputs.work_done[mdot_core == 0] = 0
-        # print mdot_core
 
-
-        # print self.outputs.work_done
 
     __call__ = compute

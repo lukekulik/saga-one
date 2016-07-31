@@ -25,7 +25,7 @@ def setup(analyses):
     # ------------------------------------------------------------------
     #   Base Mission
     # ------------------------------------------------------------------
-    base_mission = base(analyses)
+    base_mission = base(Analyses)
     missions.base = base_mission
 
     return missions
@@ -99,7 +99,7 @@ def base(analyses):
     segment.tag = "climb_1"
 
     # connect vehicle configuration
-    segment.analyses.extend(analyses.cruise)
+    segment.analyses.extend(Analyses.cruise)
 
     # define segment attributes
     segment.atmosphere = atmosphere
@@ -125,7 +125,7 @@ def base(analyses):
     segment.tag = "climb_2"
 
     # connect vehicle configuration
-    segment.analyses.extend(analyses.cruise)
+    segment.analyses.extend(Analyses.cruise)
 
     # segment attributes
     segment.atmosphere = atmosphere
@@ -150,7 +150,7 @@ def base(analyses):
     segment.tag = "climb_3"
 
     # connect vehicle configuration
-    segment.analyses.extend(analyses.cruise)
+    segment.analyses.extend(Analyses.cruise)
 
     # segment attributes
     segment.atmosphere = atmosphere
@@ -180,7 +180,7 @@ def base(analyses):
     segment.state.unknowns.wind_angle = ones_row(1) * 5.0 * Units.deg
 
     # connect vehicle configuration
-    segment.analyses.extend(analyses.cruise)
+    segment.analyses.extend(Analyses.cruise)
 
     # segment attributes
     segment.atmosphere = atmosphere
@@ -204,7 +204,7 @@ def base(analyses):
     segment.tag = "cruise_outgoing"
 
     # connect vehicle configuration
-    segment.analyses.extend(analyses.cruise)
+    segment.analyses.extend(Analyses.cruise)
 
     # segment attributes
     segment.atmosphere = atmosphere
@@ -235,7 +235,7 @@ def base(analyses):
     segment.state.unknowns.wind_angle = ones_row(1) * 5.0 * Units.deg
 
     # connect vehicle configuration
-    segment.analyses.extend(analyses.cruise)
+    segment.analyses.extend(Analyses.cruise)
 
     # segment attributes
     segment.atmosphere = atmosphere
@@ -265,7 +265,7 @@ def base(analyses):
     segment.tag = "climb_6"
 
     # connect vehicle configuration
-    segment.analyses.extend(analyses.cruise)
+    segment.analyses.extend(Analyses.cruise)
 
     # define segment attributes
     segment.atmosphere = atmosphere
@@ -295,7 +295,7 @@ def base(analyses):
     segment.tag = "cruise_1"
 
     # connect vehicle configuration
-    segment.analyses.extend(analyses.cruise_spraying)
+    segment.analyses.extend(Analyses.cruise_spraying)
 
     # segment attributes
     segment.atmosphere = atmosphere
@@ -330,7 +330,7 @@ def base(analyses):
     segment.tag = "climb_2_1"
 
     # connect vehicle configuration
-    segment.analyses.extend(analyses.cruise_spraying)
+    segment.analyses.extend(Analyses.cruise_spraying)
 
     # define segment attributes
     segment.atmosphere = atmosphere
@@ -358,7 +358,7 @@ def base(analyses):
     segment.tag = "cruise_2"
 
     # connect vehicle configuration
-    segment.analyses.extend(analyses.cruise_spraying)
+    segment.analyses.extend(Analyses.cruise_spraying)
 
     # segment attributes
     segment.atmosphere = atmosphere
@@ -394,7 +394,7 @@ def base(analyses):
     segment.state.unknowns.wind_angle = ones_row(1) * 5.0 * Units.deg
 
     # connect vehicle configuration
-    segment.analyses.extend(analyses.cruise_spraying)
+    segment.analyses.extend(Analyses.cruise_spraying)
 
     # define segment attributes
     segment.atmosphere = atmosphere
@@ -421,7 +421,7 @@ def base(analyses):
     segment.tag = "cruise_final"
 
     # connect vehicle configuration
-    segment.analyses.extend(analyses.cruise_spraying)
+    segment.analyses.extend(Analyses.cruise_spraying)
 
     # segment attributes
     segment.atmosphere = atmosphere
@@ -450,7 +450,7 @@ def base(analyses):
     segment.tag = "descent_1"
 
     # connect vehicle configuration
-    segment.analyses.extend(analyses.cruise)
+    segment.analyses.extend(Analyses.cruise)
 
     # segment attributes
     segment.atmosphere = atmosphere
@@ -470,7 +470,7 @@ def base(analyses):
     segment.tag = "cruise_incoming"
 
     # connect vehicle configuration
-    segment.analyses.extend(analyses.cruise)
+    segment.analyses.extend(Analyses.cruise)
 
     # segment attributes
     segment.atmosphere = atmosphere
@@ -496,7 +496,7 @@ def base(analyses):
     segment.tag = "descent_2"
 
     # connect vehicle configuration
-    segment.analyses.extend(analyses.cruise)
+    segment.analyses.extend(Analyses.cruise)
 
     # segment attributes
     segment.atmosphere = atmosphere
@@ -522,7 +522,7 @@ def base(analyses):
     segment.tag = "descent_final"
 
     # connect vehicle configuration
-    segment.analyses.extend(analyses.landing)
+    segment.analyses.extend(Analyses.landing)
 
     # segment attributes
     segment.atmosphere = atmosphere
@@ -565,7 +565,7 @@ def base(analyses):
     segment.tag = "reserve_climb"
 
     # connect vehicle configuration
-    segment.analyses.extend(analyses.cruise)
+    segment.analyses.extend(Analyses.cruise)
 
     # define segment attributes
     segment.atmosphere = atmosphere
@@ -590,7 +590,7 @@ def base(analyses):
     segment = Segments.Cruise.Constant_Mach_Constant_Altitude(base_segment)
     segment.tag = "reserve_cruise"
 
-    segment.analyses.extend(analyses.cruise)
+    segment.analyses.extend(Analyses.cruise)
 
     segment.mach = 0.5
     segment.distance = 1000.0 * Units.km  # 1000km for the most critical case
@@ -624,8 +624,8 @@ def base(analyses):
     segment = Segments.Descent.Linear_Mach_Constant_Rate(base_segment)
     segment.tag = "reserve_descent_1"
 
-    segment.analyses.extend(analyses.landing)
-    analyses.landing.aerodynamics.settings.spoiler_drag_increment = 0.00
+    segment.analyses.extend(Analyses.landing)
+    Analyses.landing.aerodynamics.settings.spoiler_drag_increment = 0.00
 
     segment.aerosol_mass_initial = 0 * Units.kg  # mass to be sprayed in this segment
 
@@ -679,15 +679,15 @@ def base(analyses):
 # ----------------------------------------------------------------------
 
 if __name__ == '__main__':
-    import vehicles
-    import analyses
+    import Vehicles
+    import Analyses
 
-    vehicles = vehicles.setup()
-    analyses = analyses.setup(vehicles)
-    missions = setup(analyses)
+    vehicles = Vehicles.setup()
+    analyses = Analyses.setup(Vehicles)
+    missions = setup(Analyses)
 
-    vehicles.finalize()
-    analyses.finalize()
+    Vehicles.finalize()
+    Analyses.finalize()
     missions.finalize()
 
     missions.base.evaluate()
