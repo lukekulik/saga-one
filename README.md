@@ -1,4 +1,4 @@
-# saga-one
+# SUAVE model for geoengineering aircraft
 ![SAGA rendering](rendering.png)
 
 Can aircraft delivery of stratospheric aerosol help save the climate?
