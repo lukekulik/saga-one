@@ -8,6 +8,8 @@ SAGA or Stratospheric Aerosol Geoengineering Aircraft project is a feasibility s
 ===================
  
 ![SAGA rendering](rendering.png)
+![SAGA specifications](specs.png)
+
 
 
 Can aircraft delivery of stratospheric aerosol help save the climate?
