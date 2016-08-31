@@ -4,7 +4,7 @@
 SAGA or Stratospheric Aerosol Geoengineering Aircraft project is a feasibility study of a fleet of aircraft designed to temporarily mitigate the effects of global warming. Program proposes a fleet of purpose-built aircraft to deliver 5MT of aerosol per year to altitudes between 18.5 and 19.5 km. To accommodate and appropriately investigate the requirements posed by the very unconventional SAGA mission, Stanford University Aerospace Vehicle Environment (SUAVE) is used for performance analysis in lieu of conventional methods. 
 
 
-[Final design report](SAGA_FinalDesignReport.pdf)
+<!--[Final design report](SAGA_FinalDesignReport.pdf)-->
 ===================
  
 ![SAGA rendering](rendering.png)
